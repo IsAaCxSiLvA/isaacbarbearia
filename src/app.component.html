@@ -1,0 +1,369 @@
+<div class="min-h-screen bg-black text-[#e0e0e0] font-sans flex flex-col items-center py-12 px-4 relative overflow-x-hidden">
+
+  <!-- BACKGROUND: Cinematic Fire Effect -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <!-- Bottom Glow (Rising Heat) -->
+    <div class="absolute bottom-0 left-0 w-full h-64 bg-gradient-to-t from-brand-fireOrange/15 to-transparent"></div>
+    
+    <!-- Top Glow (Ceiling Fire Source) -->
+    <div class="absolute top-0 left-0 w-full h-48 bg-gradient-to-b from-brand-fireOrange/10 to-transparent"></div>
+    
+    <!-- Rising Embers -->
+    @for (ember of embers(); track $index) {
+      <div class="ember" 
+           [style.left]="ember.left"
+           [style.width]="ember.size"
+           [style.height]="ember.size"
+           [style.animation-duration]="ember.animationDuration"
+           [style.animation-delay]="ember.animationDelay"
+           [style.opacity]="ember.opacity">
+      </div>
+    }
+
+    <!-- Falling Sparks (Top to Bottom) -->
+    @for (spark of sparks(); track $index) {
+      <div class="spark"
+           [style.left]="spark.left"
+           [style.width]="spark.size"
+           [style.height]="spark.size"
+           [style.animation-duration]="spark.animationDuration"
+           [style.animation-delay]="spark.animationDelay"
+           [style.opacity]="spark.opacity">
+      </div>
+    }
+  </div>
+
+  <!-- Main Content Wrapper with Neon Border -->
+  <div class="relative z-10 w-full max-w-md flex flex-col flex-grow neon-gold-border-container rounded-2xl">
+    
+    <!-- Profile Section -->
+    <div class="flex flex-col items-center mb-8 animate-fade-in">
+      
+      <!-- LOGO CONTAINER -->
+      <div class="relative w-80 mb-8 mt-4">
+        <img ngSrc="https://i.postimg.cc/xT0TDh50/isaacbarbearia.png" priority width="1280" height="1119" class="relative z-10 w-full h-auto object-contain transition-all duration-300" alt="Isaac Barbearia Logo">
+      </div>
+
+      <!-- EST. 2024 Banner -->
+      <div class="w-full max-w-xs flex items-center gap-4 -mt-6 mb-8 animate-fade-in">
+        <div class="h-px flex-grow bg-gradient-to-r from-transparent to-brand-gold/30"></div>
+        <span class="text-fire-gradient font-serif text-sm uppercase tracking-[0.2em] animate-shimmer">Desde 2024</span>
+        <div class="h-px flex-grow bg-gradient-to-l from-transparent to-brand-gold/30"></div>
+      </div>
+  
+      <!-- CTA Block -->
+      <div class="w-full p-3 bg-black/30 backdrop-blur-md rounded-2xl border border-white/10 shadow-2xl shadow-black mb-12 flex flex-row items-center justify-between">
+          
+          <!-- Icon Group -->
+          <div class="flex items-center gap-4">
+            <!-- WhatsApp Icon -->
+            <a href="#" target="_blank" aria-label="WhatsApp" 
+               class="w-14 h-14 flex items-center justify-center rounded-2xl bg-[#111] border border-white/10 text-brand-gold shadow-lg 
+                      hover:text-green-500 hover:border-green-500 hover:scale-110 btn-neon-green">
+               <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+               </svg>
+            </a>
+            
+            <!-- Location Icon -->
+            <a href="#" target="_blank" aria-label="Localização"
+               class="w-14 h-14 flex items-center justify-center rounded-2xl bg-[#111] border border-white/10 text-brand-gold shadow-lg
+                      hover:text-blue-500 hover:border-blue-500 hover:scale-110 btn-neon-blue">
+               <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor">
+                 <path fill-rule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
+               </svg>
+            </a>
+          </div>
+  
+          <!-- Seguir Button -->
+          <a href="https://www.instagram.com/isaac._barbearia"
+             target="_blank"
+             rel="noopener noreferrer"
+             class="btn-fire flex items-center justify-center gap-2 px-5 py-3 rounded-lg font-bold text-sm uppercase tracking-wider transition-all duration-300 transform active:scale-95">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7.8,2H16.2C19.4,2 22,4.6 22,7.8V16.2A5.8,5.8 0 0,1 16.2,22H7.8C4.6,22 2,19.4 2,16.2V7.8A5.8,5.8 0 0,1 7.8,2M7.6,4A3.6,3.6 0 0,0 4,7.6V16.4C4,18.39 5.61,20 7.6,20H16.4A3.6,3.6 0 0,0 20,16.4V7.6C20,5.61 18.39,4 16.4,4H7.6M17.25,5.5A1.25,1.25 0 0,1 18.5,6.75A1.25,1.25 0 0,1 17.25,8A1.25,1.25 0 0,1 16,6.75A1.25,1.25 0 0,1 17.25,5.5M12,7A5,5 0 0,1 17,12A5,5 0 0,1 12,17A5,5 0 0,1 7,12A5,5 0 0,1 12,7M12,9A3,3 0 0,0 9,12A3,3 0 0,0 12,15A3,3 0 0,0 15,12A3,3 0 0,0 12,9Z"/>
+              </svg>
+              <span>Seguir</span>
+          </a>
+      </div>
+  
+      <!-- Accordion List (Magma Theme Refined) -->
+      <div class="w-full relative z-20 flex flex-col gap-3">
+        @for (item of items(); track item.id) {
+          <!-- Card Wrapper: Expands and pops out when active -->
+          <div class="w-full relative transition-all duration-500 ease-in-out"
+               [class.z-30]="item.isOpen"
+               [class.z-0]="!item.isOpen"
+               [class.scale-[1.02]]="item.isOpen"
+               [class.my-2]="item.isOpen">
+  
+            <!-- Card Content -->
+            <div class="w-full overflow-hidden rounded-xl border transition-all duration-300 shadow-xl"
+                 [class.border-brand-fireOrange]="item.isOpen"
+                 [class.shadow-[0_0_25px_rgba(255,69,0,0.25)]]="item.isOpen"
+                 [class.border-white/10]="!item.isOpen"
+                 [class.bg-[#0F0F0F]]="item.isOpen"
+                 [class.bg-black]="!item.isOpen">
+  
+               <!-- Header (Always visible) -->
+               <button 
+                 (click)="toggleItem(item.id)"
+                 class="w-full relative flex items-center justify-between p-4 group/btn outline-none"
+                 [class.featured-service]="item.featured">
+                  
+                  <!-- Hover Glow -->
+                  <div class="absolute inset-0 bg-gradient-to-r from-brand-fireOrange/10 to-transparent opacity-0 group-hover/btn:opacity-100 transition-opacity duration-300"></div>
+                  
+                  <div class="flex items-center gap-4 text-left relative z-10">
+                    <!-- Icon -->
+                    <div class="text-brand-gold transition-all duration-300" 
+                         [class.text-brand-fireOrange]="item.isOpen" 
+                         [class.scale-110]="item.isOpen"
+                         [class.drop-shadow-[0_0_8px_rgba(255,69,0,0.5)]]="item.isOpen">
+                       @if (item.icon === 'scissors') { 
+                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.121 14.121L19 19m-7-7l7-7m-7 7l-2.879 2.879M12 12L9.121 9.121m0 5.758a3 3 0 10-4.243 4.243 3 3 0 004.243-4.243zm0-5.758a3 3 0 10-4.243-4.243 3 3 0 004.243 4.243z"/></svg> 
+                       }
+                       @if (item.icon === 'users') { 
+                         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Z" /></svg>
+                       }
+                       @if (item.icon === 'image') { 
+                         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" /></svg>
+                       }
+                       @if (item.icon === 'clock') { 
+                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> 
+                       }
+                       @if (item.icon === 'star') { 
+                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/></svg> 
+                       }
+                       @if (item.icon === 'calendar') { 
+                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg> 
+                       }
+                       @if (item.icon === 'map') { 
+                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg> 
+                       }
+                       @if (item.icon === 'briefcase') {
+                          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" /></svg>
+                       }
+                    </div>
+  
+                    <span class="font-sans font-medium text-sm tracking-wide transition-colors duration-300"
+                          [class.text-white]="item.isOpen"
+                          [class.text-gray-400]="!item.isOpen">
+                      {{ item.title }}
+                    </span>
+
+                    @if (item.featured) {
+                      <span class="ml-2 bg-brand-fireOrange/20 text-brand-fireOrange border border-brand-fireOrange/50 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
+                        Essencial
+                      </span>
+                    }
+                  </div>
+  
+                  <!-- Chevron -->
+                  <svg class="w-4 h-4 text-gray-500 transition-transform duration-300 relative z-10"
+                       [class.rotate-180]="item.isOpen"
+                       [class.text-brand-fireOrange]="item.isOpen"
+                       fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                  </svg>
+               </button>
+  
+               <!-- Expandable Body -->
+               <div class="grid transition-all duration-300 ease-in-out" 
+                    [style.grid-template-rows]="item.isOpen ? '1fr' : '0fr'">
+                 <div class="overflow-hidden">
+                   <div class="px-6 pb-6 pt-2 border-t border-brand-fireOrange/20 bg-black/40">
+                     
+                     <!-- Content Switch -->
+                     @if (item.type === 'text') {
+                       <p class="text-gray-300 font-light leading-relaxed text-sm animate-fade-in">{{ item.content }}</p>
+                     }
+  
+                     @if (item.type === 'hours') {
+                       <p class="text-center text-gray-300 font-light whitespace-pre-line leading-loose text-sm animate-fade-in">{{ item.content }}</p>
+                     }
+  
+                     @if (item.type === 'team') {
+                       <div class="space-y-4 animate-fade-in">
+                         @for (member of item.teamMembers; track member.name) {
+                           <div class="flex items-center gap-4 bg-white/5 p-3 rounded-lg border border-white/10">
+                             <img [src]="member.imageUrl" [alt]="member.name" class="w-16 h-16 rounded-full object-cover border-2 border-brand-gold">
+                             <div>
+                               <h4 class="font-bold text-white text-sm">{{ member.name }}</h4>
+                               <p class="text-brand-fireOrange text-xs font-medium uppercase tracking-wider">{{ member.specialty }}</p>
+                             </div>
+                           </div>
+                         }
+                       </div>
+                     }
+  
+                     @if (item.type === 'projects') {
+                       <div class="grid grid-cols-2 gap-3 animate-fade-in">
+                         @for (project of item.projectGallery; track project.title) {
+                           <div class="bg-white/5 p-4 rounded-lg border border-white/10 flex flex-col items-center text-center h-full">
+                            <img [src]="project.imageUrl" [alt]="project.title" class="w-20 h-20 rounded-full object-cover border-2 border-brand-gold/50 mb-3">
+                            <div class="flex-grow mb-3">
+                              <h4 class="font-bold text-white text-sm">{{ project.title }}</h4>
+                              <p class="text-[10px] text-gray-400 mt-1 font-medium tracking-wider">{{ project.date }} - {{ project.location }}</p>
+                            </div>
+                            <a [href]="project.projectUrl" 
+                               target="_blank" 
+                               rel="noopener noreferrer"
+                               class="bg-brand-fireOrange/20 text-brand-fireOrange border border-brand-fireOrange/50 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider hover:bg-brand-fireOrange hover:text-black transition-colors duration-300">
+                               Visitar
+                            </a>
+                           </div>
+                         }
+                       </div>
+                     }
+  
+                     @if (item.type === 'partners') {
+                       <div class="animate-fade-in">
+                          <div class="grid grid-cols-2 gap-3 mb-4">
+                              @for (partner of item.partners; track partner.name) {
+                                <div class="bg-white/5 border border-white/10 rounded-lg p-3 flex flex-col items-center text-center hover:border-brand-fireOrange/50 hover:bg-white/10 transition-all duration-300 group/partner cursor-default">
+                                   <!-- Circle Image -->
+                                   <div class="w-12 h-12 rounded-full overflow-hidden mb-2 border border-brand-gold/20 group-hover/partner:border-brand-fireOrange group-hover/partner:scale-110 transition-all duration-500 shadow-lg">
+                                     <img [src]="partner.imageUrl" [alt]="partner.name" class="w-full h-full object-cover grayscale group-hover/partner:grayscale-0 transition-all duration-500">
+                                   </div>
+                                   
+                                   <h4 class="text-brand-gold font-bold text-[10px] uppercase tracking-wider mb-1 group-hover/partner:text-white transition-colors">{{ partner.name }}</h4>
+                                   <p class="text-gray-500 text-[9px] font-medium leading-tight group-hover/partner:text-brand-fireOrange transition-colors">{{ partner.role }}</p>
+                                </div>
+                              }
+                          </div>
+                          
+                          <!-- CTA Text instead of Card -->
+                          <div class="flex flex-col items-center justify-center text-center pt-2 border-t border-dashed border-white/10">
+                              <p class="text-gray-400 text-[10px] font-medium uppercase tracking-widest mb-2">Quer ser um parceiro?</p>
+                              <a href="#" class="text-brand-fireOrange hover:text-white text-xs font-bold uppercase tracking-widest flex items-center gap-2 transition-colors">
+                                  <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+                                  Entre em contato via WhatsApp
+                              </a>
+                          </div>
+                       </div>
+                     }
+  
+                     @if (item.type === 'list') {
+                       <div class="space-y-3 animate-fade-in">
+                         <div class="flex justify-between text-[10px] uppercase tracking-widest text-gray-500 mb-2 border-b border-white/5 pb-1">
+                            <span>Serviço</span>
+                            <span class="flex gap-4">
+                               <span>Realizamos?</span>
+                               <span class="w-12 text-right">Preço</span>
+                            </span>
+                         </div>
+                         @for (service of item.listItems; track service.name) {
+                           <li class="flex justify-between items-center border-b border-white/5 pb-2 hover:border-brand-fireOrange/30 transition-colors">
+                             <span class="text-gray-300 text-sm font-medium">{{ service.name }}</span>
+                             
+                             <div class="flex items-center gap-4">
+                                <!-- Badge SIM/NÃO -->
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider min-w-[3rem] text-center"
+                                      [class.bg-green-500/20]="service.available"
+                                      [class.text-green-400]="service.available"
+                                      [class.border]="service.available"
+                                      [class.border-green-500/30]="service.available"
+                                      [class.bg-red-500/10]="!service.available"
+                                      [class.text-red-500]="!service.available">
+                                   {{ service.available ? 'Sim' : 'Não' }}
+                                </span>
+  
+                                <span class="text-sm font-serif font-bold w-12 text-right" 
+                                      [class.text-brand-fireOrange]="service.available"
+                                      [class.text-gray-600]="!service.available">
+                                   {{ service.price }}
+                                </span>
+                             </div>
+                           </li>
+                         }
+                       </div>
+                     }
+  
+                     @if (item.type === 'feedback') {
+                        <div class="space-y-4 animate-fade-in">
+                         @for (review of item.testimonials; track review.name) {
+                           <div class="bg-white/5 p-3 rounded border border-white/5 hover:border-brand-fireOrange/30 transition-colors relative"
+                                [class.border-brand-fireOrange]="review.isNew">
+                             @if(review.isNew) {
+                               <span class="absolute top-0 right-0 bg-brand-fireOrange text-black text-[9px] px-2 py-0.5 font-bold uppercase rounded-bl-md">Novo</span>
+                             }
+                             <div class="flex justify-between mb-1">
+                               <span class="text-brand-gold text-xs font-bold">{{ review.name }}</span>
+                               <div class="flex text-brand-fireOrange text-[10px]">
+                                 @for (i of [1,2,3,4,5]; track i) {
+                                   @if (i <= review.rating) { ★ } @else { ☆ }
+                                 }
+                               </div>
+                             </div>
+                             <p class="text-gray-400 text-xs italic">"{{ review.comment }}"</p>
+                           </div>
+                         }
+  
+                         <!-- TOGGLE BUTTON FOR REVIEW FORM -->
+                         <div class="pt-2 text-center">
+                            <button (click)="toggleReviewForm()" class="bg-white/10 text-white hover:bg-brand-fireOrange hover:text-black border border-white/20 px-6 py-2 rounded-full text-xs uppercase tracking-widest font-bold transition-all duration-300">
+                               {{ showReviewForm() ? 'Cancelar' : 'Escrever Avaliação' }}
+                            </button>
+                         </div>
+  
+                         <!-- FORMULARIO DE AVALIACAO (EXPANDIVEL) -->
+                         @if (showReviewForm()) {
+                           <div class="pt-4 mt-2 border-t border-white/10 animate-slide-down">
+                             <h4 class="text-brand-gold text-sm font-bold mb-3 uppercase tracking-wider text-center">Sua Opinião Importa</h4>
+                             
+                             <!-- Rating Input -->
+                             <div class="flex justify-center gap-3 mb-4">
+                               @for (star of [1,2,3,4,5]; track star) {
+                                 <button (click)="setReviewRating(star)" class="text-2xl focus:outline-none transition-transform hover:scale-125">
+                                   <span [class.text-brand-fireOrange]="star <= newReviewRating()" 
+                                         [class.text-gray-600]="star > newReviewRating()"
+                                         [class.drop-shadow-[0_0_5px_rgba(255,140,0,0.8)]]="star <= newReviewRating()">
+                                     ★
+                                   </span>
+                                 </button>
+                               }
+                             </div>
+  
+                             <!-- Inputs -->
+                             <div class="space-y-3">
+                               <input type="text" 
+                                      [(ngModel)]="newReviewName" 
+                                      placeholder="Seu Nome" 
+                                      class="w-full bg-white/5 border border-white/10 rounded-md text-sm p-3 text-white placeholder-gray-500 focus:border-brand-fireOrange focus:ring-1 focus:ring-brand-fireOrange outline-none transition-all">
+                               
+                               <textarea 
+                                      [(ngModel)]="newReviewMessage" 
+                                      placeholder="Escreva sua mensagem aqui..." 
+                                      rows="3"
+                                      class="w-full bg-white/5 border border-white/10 rounded-md text-sm p-3 text-white placeholder-gray-500 focus:border-brand-fireOrange focus:ring-1 focus:ring-brand-fireOrange outline-none transition-all resize-none"></textarea>
+                               
+                               <button (click)="submitReview()" 
+                                       class="w-full bg-gradient-to-r from-brand-fireOrange to-red-700 text-white font-bold py-3 rounded-md text-sm uppercase tracking-widest hover:shadow-[0_0_20px_rgba(255,69,0,0.4)] active:scale-95 transition-all">
+                                 Enviar Avaliação
+                               </button>
+                             </div>
+                           </div>
+                         }
+  
+                        </div>
+                     }
+  
+                   </div>
+                 </div>
+               </div>
+  
+            </div>
+          </div>
+        }
+      </div>
+  
+    </div>
+  
+    <footer class="mt-auto py-8 text-center opacity-60">
+      <p class="text-[9px] text-gray-500 uppercase tracking-widest">Isaac Barbearia &copy; {{ currentYear }}</p>
+    </footer>
+
+  </div>
+
+</div>
