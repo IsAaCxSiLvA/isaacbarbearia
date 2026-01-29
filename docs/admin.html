@@ -374,6 +374,9 @@
       <button onclick="showTab('profissionais')">Profissionais</button>
       <button onclick="showTab('parceiros')">Parceiros</button>
       <button onclick="showTab('participacoes')">Participação</button>
+      <button onclick="showTab('localizacao')">Localização</button>
+      <button onclick="showTab('horarios')">Horários</button>
+      <button onclick="showTab('agendamento')">Agendamento</button>
       <button onclick="showTab('avaliacoes')">Avaliações</button>
       <button class="btn-logout" onclick="logout()">Sair</button>
     </div>
@@ -441,6 +444,43 @@
       <div class="cards" id="part-list"></div>
     </div>
 
+    <!-- LOCALIZAÇÃO -->
+    <div id="localizacao" class="tab-content">
+      <h2>Localização</h2>
+      <form onsubmit="saveLocalizacao(event)">
+        <input type="text" id="loc-endereco" placeholder="Endereço completo" required>
+        <input type="text" id="loc-bairro" placeholder="Bairro" required>
+        <input type="text" id="loc-cidade" placeholder="Cidade" required>
+        <input type="text" id="loc-referencia" placeholder="Referência (ex: Próximo à praça)" required>
+        <button type="submit">Salvar Localização</button>
+      </form>
+      <div id="loc-display" style="margin-top: 20px; padding: 15px; background: #2a2a2a; border-radius: 8px; border: 1px solid #333;"></div>
+    </div>
+
+    <!-- HORÁRIOS -->
+    <div id="horarios" class="tab-content">
+      <h2>Horários de Funcionamento</h2>
+      <form onsubmit="saveHorarios(event)">
+        <input type="text" id="hor-seg-sex" placeholder="Seg-Sex (ex: 09:00 às 20:00)" required>
+        <input type="text" id="hor-sabado" placeholder="Sábado (ex: 09:00 às 18:00)" required>
+        <input type="text" id="hor-domingo" placeholder="Domingo (ex: Fechado)" required>
+        <button type="submit">Salvar Horários</button>
+      </form>
+      <div id="hor-display" style="margin-top: 20px; padding: 15px; background: #2a2a2a; border-radius: 8px; border: 1px solid #333;"></div>
+    </div>
+
+    <!-- AGENDAMENTO -->
+    <div id="agendamento" class="tab-content">
+      <h2>Informações de Agendamento</h2>
+      <form onsubmit="saveAgendamento(event)">
+        <input type="text" id="agen-whatsapp" placeholder="Número WhatsApp (ex: 11 99999-9999)" required>
+        <input type="tel" id="agen-telefone" placeholder="Telefone (ex: 11 3333-3333)" required>
+        <textarea id="agen-info" placeholder="Informações adicionais sobre agendamento" required></textarea>
+        <button type="submit">Salvar Agendamento</button>
+      </form>
+      <div id="agen-display" style="margin-top: 20px; padding: 15px; background: #2a2a2a; border-radius: 8px; border: 1px solid #333;"></div>
+    </div>
+
     <!-- AVALIAÇÕES -->
     <div id="avaliacoes" class="tab-content">
       <h2>Avaliações dos Clientes</h2>
@@ -451,7 +491,7 @@
   <script type="module">
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { getAuth, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
-    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, setDoc, getDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
 
     const firebaseConfig = {
       apiKey: "AIzaSyDE2tWDNCDrY6O20EWrDt-NkvZmCm_MR10",
@@ -675,11 +715,131 @@
       }
     };
 
+    // Localização
+    window.saveLocalizacao = async (e) => {
+      e.preventDefault();
+      const data = {
+        endereco: document.getElementById('loc-endereco').value,
+        bairro: document.getElementById('loc-bairro').value,
+        cidade: document.getElementById('loc-cidade').value,
+        referencia: document.getElementById('loc-referencia').value
+      };
+      await setDoc(doc(db, 'config', 'localizacao'), data);
+      displayLocalizacao(data);
+      e.target.reset();
+    };
+
+    async function displayLocalizacao(data) {
+      const display = document.getElementById('loc-display');
+      display.innerHTML = `
+        <p><strong>📍 ${data.endereco}</strong></p>
+        <p>${data.bairro}, ${data.cidade}</p>
+        <p><em>${data.referencia}</em></p>
+      `;
+    }
+
+    async function loadLocalizacao() {
+      try {
+        const docSnap = await getDoc(doc(db, 'config', 'localizacao'));
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          document.getElementById('loc-endereco').value = data.endereco || '';
+          document.getElementById('loc-bairro').value = data.bairro || '';
+          document.getElementById('loc-cidade').value = data.cidade || '';
+          document.getElementById('loc-referencia').value = data.referencia || '';
+          displayLocalizacao(data);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar localização:', error);
+      }
+    }
+
+    // Horários
+    window.saveHorarios = async (e) => {
+      e.preventDefault();
+      const data = {
+        segSex: document.getElementById('hor-seg-sex').value,
+        sabado: document.getElementById('hor-sabado').value,
+        domingo: document.getElementById('hor-domingo').value
+      };
+      await setDoc(doc(db, 'config', 'horarios'), data);
+      displayHorarios(data);
+      e.target.reset();
+    };
+
+    async function displayHorarios(data) {
+      const display = document.getElementById('hor-display');
+      display.innerHTML = `
+        <p><strong>⏰ Horários de Funcionamento</strong></p>
+        <p>Segunda a Sexta: ${data.segSex}</p>
+        <p>Sábado: ${data.sabado}</p>
+        <p>Domingo: ${data.domingo}</p>
+      `;
+    }
+
+    async function loadHorarios() {
+      try {
+        const docSnap = await getDoc(doc(db, 'config', 'horarios'));
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          document.getElementById('hor-seg-sex').value = data.segSex || '';
+          document.getElementById('hor-sabado').value = data.sabado || '';
+          document.getElementById('hor-domingo').value = data.domingo || '';
+          displayHorarios(data);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar horários:', error);
+      }
+    }
+
+    // Agendamento
+    window.saveAgendamento = async (e) => {
+      e.preventDefault();
+      const data = {
+        whatsapp: document.getElementById('agen-whatsapp').value,
+        telefone: document.getElementById('agen-telefone').value,
+        info: document.getElementById('agen-info').value
+      };
+      await setDoc(doc(db, 'config', 'agendamento'), data);
+      displayAgendamento(data);
+      e.target.reset();
+    };
+
+    async function displayAgendamento(data) {
+      const display = document.getElementById('agen-display');
+      display.innerHTML = `
+        <p><strong>📞 Agendamento</strong></p>
+        <p>WhatsApp: ${data.whatsapp}</p>
+        <p>Telefone: ${data.telefone}</p>
+        <p>${data.info}</p>
+      `;
+    }
+
+    async function loadAgendamento() {
+      try {
+        const docSnap = await getDoc(doc(db, 'config', 'agendamento'));
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          document.getElementById('agen-whatsapp').value = data.whatsapp || '';
+          document.getElementById('agen-telefone').value = data.telefone || '';
+          document.getElementById('agen-info').value = data.info || '';
+          displayAgendamento(data);
+        }
+      } catch (error) {
+        console.error('Erro ao carregar agendamento:', error);
+      }
+    }
+
+    // Carregar tudo
+    loadServicos();
     // Carregar tudo
     loadServicos();
     loadProfissionais();
     loadParceiros();
     loadParticipacoes();
+    loadLocalizacao();
+    loadHorarios();
+    loadAgendamento();
     loadAvaliacoes();
   </script>
 </body>
