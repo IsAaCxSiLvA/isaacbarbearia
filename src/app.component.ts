@@ -175,7 +175,7 @@ export class AppComponent implements OnInit {
 
   async startLoading() {
     const startTime = Date.now();
-    const minLoadingTime = 30000; // 30 segundos GARANTIDOS
+    const minLoadingTime = 6000; // 6 segundos GARANTIDOS (era 30000)
     
     // Carregar dados
     await this.loadDynamicData();
@@ -217,7 +217,7 @@ export class AppComponent implements OnInit {
         setTimeout(() => {
           this.isLoading.set(false);
         }, 800);
-      }, 8000);
+      }, 3000);
     }, remainingTime);
   }
 
