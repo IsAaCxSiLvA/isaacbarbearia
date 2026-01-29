@@ -56,6 +56,19 @@ export class AppComponent implements OnInit {
   telefoneLink = signal('tel:5585999999999');
   telefoneNumber = signal('(85) 99999-9999');
   agendamentoInfo = signal('O agendamento é feito preferencialmente via WhatsApp ou telefone.');
+  
+  // Localização
+  localizacaoEndereco = signal('Rua das Pedras, 123');
+  localizacaoBairro = signal('Centro');
+  localizacaoCidade = signal('Fortaleza - CE');
+  localizacaoReferencia = signal('Próximo à praça principal');
+  googleMapsLink = signal('#');
+  
+  // Horários
+  horariosSegSex = signal('09:00 às 20:00');
+  horariosSabado = signal('09:00 às 18:00');
+  horariosDomingo = signal('Fechado');
+  
   locationLink = signal('#');
   
   // Background Particles
@@ -210,13 +223,15 @@ export class AppComponent implements OnInit {
 
   async loadDynamicData() {
     try {
-      const [profissionaisSnap, parceirosSnap, participacoesSnap, avaliacoesSnap, servicosSnap, agendamentoSnap] = await Promise.all([
+      const [profissionaisSnap, parceirosSnap, participacoesSnap, avaliacoesSnap, servicosSnap, agendamentoSnap, localizacaoSnap, horariosSnap] = await Promise.all([
         getDocs(collection(this.db, 'profissionais')),
         getDocs(collection(this.db, 'parceiros')),
         getDocs(collection(this.db, 'participacoes')),
         getDocs(collection(this.db, 'avaliacoes')),
         getDocs(collection(this.db, 'servicos')),
-        getDoc(doc(this.db, 'config', 'agendamento'))
+        getDoc(doc(this.db, 'config', 'agendamento')),
+        getDoc(doc(this.db, 'config', 'localizacao')),
+        getDoc(doc(this.db, 'config', 'horarios'))
       ]);
 
       const teamMembers = profissionaisSnap.docs.map(doc => {
@@ -287,6 +302,30 @@ export class AppComponent implements OnInit {
         if (agendamentoData.info) {
           this.agendamentoInfo.set(agendamentoData.info);
         }
+      }
+
+      // Carregar dados de localização
+      if (localizacaoSnap.exists()) {
+        const locData = localizacaoSnap.data() as { endereco?: string; bairro?: string; cidade?: string; referencia?: string };
+        
+        if (locData.endereco) this.localizacaoEndereco.set(locData.endereco);
+        if (locData.bairro) this.localizacaoBairro.set(locData.bairro);
+        if (locData.cidade) this.localizacaoCidade.set(locData.cidade);
+        if (locData.referencia) this.localizacaoReferencia.set(locData.referencia);
+        
+        // Gerar link do Google Maps
+        const enderecoCompleto = `${locData.endereco || ''}, ${locData.bairro || ''}, ${locData.cidade || ''}`;
+        const encodedAddress = encodeURIComponent(enderecoCompleto);
+        this.googleMapsLink.set(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`);
+      }
+
+      // Carregar dados de horários
+      if (horariosSnap.exists()) {
+        const horData = horariosSnap.data() as { segSex?: string; sabado?: string; domingo?: string };
+        
+        if (horData.segSex) this.horariosSegSex.set(horData.segSex);
+        if (horData.sabado) this.horariosSabado.set(horData.sabado);
+        if (horData.domingo) this.horariosDomingo.set(horData.domingo);
       }
 
       if (teamMembers.length || partners.length || projectGallery.length || testimonials.length || listItems.length) {

@@ -235,13 +235,44 @@
                              </a>
                            </div>
                          </div>
+                       } @else if (item.id === 'location') {
+                         <div class="text-gray-300 font-light leading-relaxed text-sm animate-fade-in space-y-3">
+                           <div class="space-y-1">
+                             <p class="font-semibold text-brand-fireOrange">📍 {{ localizacaoEndereco() }}</p>
+                             <p>{{ localizacaoBairro() }} - {{ localizacaoCidade() }}</p>
+                             <p class="text-xs text-gray-400">{{ localizacaoReferencia() }}</p>
+                           </div>
+                           <a [href]="googleMapsLink()" target="_blank" 
+                              class="inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors mt-3">
+                             <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                               <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                             </svg>
+                             <span>Abrir no Google Maps</span>
+                             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                               <path d="M5 12h14M12 5l7 7-7 7"/>
+                             </svg>
+                           </a>
+                         </div>
                        } @else {
                          <p class="text-gray-300 font-light leading-relaxed text-sm animate-fade-in">{{ item.content }}</p>
                        }
                      }
   
                      @if (item.type === 'hours') {
-                       <p class="text-center text-gray-300 font-light whitespace-pre-line leading-loose text-sm animate-fade-in">{{ item.content }}</p>
+                       <div class="text-center text-gray-300 font-light text-sm animate-fade-in space-y-2">
+                         <div class="flex justify-between items-center px-4">
+                           <span class="text-gray-400">Segunda a Sexta:</span>
+                           <span class="font-semibold text-brand-fireOrange">{{ horariosSegSex() }}</span>
+                         </div>
+                         <div class="flex justify-between items-center px-4">
+                           <span class="text-gray-400">Sábado:</span>
+                           <span class="font-semibold text-brand-fireOrange">{{ horariosSabado() }}</span>
+                         </div>
+                         <div class="flex justify-between items-center px-4">
+                           <span class="text-gray-400">Domingo:</span>
+                           <span class="font-semibold text-red-400">{{ horariosDomingo() }}</span>
+                         </div>
+                       </div>
                      }
   
                      @if (item.type === 'team') {
