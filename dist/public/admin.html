@@ -554,24 +554,44 @@
       try {
         const list = document.getElementById('serv-list');
         const snapshot = await getDocs(collection(db, 'servicos'));
-        const uniqueIds = new Set();
-        const rows = [];
         
+        console.log('📊 Total de documentos no Firebase:', snapshot.size);
+        
+        // Agrupa por nome para detectar e eliminar duplicatas
+        const servicosPorNome = {};
         snapshot.forEach(doc => {
-          if (uniqueIds.has(doc.id)) return; // Pula se já foi adicionado
-          uniqueIds.add(doc.id);
-          
           const data = doc.data();
+          if (!servicosPorNome[data.nome]) {
+            servicosPorNome[data.nome] = [];
+          }
+          servicosPorNome[data.nome].push({ id: doc.id, data });
+        });
+        
+        // Exibe apenas um de cada serviço único
+        const rows = [];
+        for (const nome in servicosPorNome) {
+          const servicos = servicosPorNome[nome];
+          
+          // Se há duplicatas, avisa no console
+          if (servicos.length > 1) {
+            console.warn(`⚠️ Duplicata: "${nome}" tem ${servicos.length} entradas. IDs:`, servicos.map(s => s.id));
+          }
+          
+          // Usa apenas o primeiro
+          const servico = servicos[0];
+          const data = servico.data;
           const realizaText = data.realiza ? 'Sim' : 'Não';
           const precoText = data.realiza && data.preco > 0 ? `R$ ${data.preco.toFixed(0)}` : '-';
           rows.push(`<tr>
             <td data-label="Serviço">${data.nome}</td>
             <td data-label="Realizamos?">${realizaText}</td>
             <td data-label="Preço">${precoText}</td>
-            <td data-label="Ações"><button class="btn-delete" onclick="deleteServico('${doc.id}')">Deletar</button></td>
+            <td data-label="Ações"><button class="btn-delete" onclick="deleteServico('${servico.id}')">Deletar</button></td>
           </tr>`);
-        });
+        }
+        
         list.innerHTML = rows.join('');
+        console.log('✅ Renderizados', rows.length, 'serviços únicos de', snapshot.size, 'documentos');
       } finally {
         isLoadingServicos = false;
       }
