@@ -300,24 +300,15 @@
                          @for (project of item.projectGallery; track project.title) {
                            <div class="bg-gradient-to-br from-white/10 to-white/5 p-5 rounded-lg border border-brand-fireOrange/30 hover:border-brand-fireOrange/60 hover:shadow-[0_0_20px_rgba(255,140,0,0.2)] transition-all duration-300 group">
                             <!-- Título em destaque -->
-                            <h4 class="font-bold text-white text-lg mb-3 group-hover:text-brand-fireOrange transition-colors">{{ project.title }}</h4>
+                            <h4 class="font-bold text-white text-lg mb-3 group-hover:text-brand-fireOrange transition-colors uppercase tracking-wide">{{ project.title }}</h4>
                             
-                            <!-- Descrição -->
-                            <p class="text-gray-300 text-sm leading-relaxed mb-4">{{ project.description || 'Participação comunitária' }}</p>
+                            <!-- Descrição (pode vir do campo location se description estiver vazio) -->
+                            <p class="text-gray-300 text-sm leading-relaxed mb-4">{{ project.location || project.description || 'Participação comunitária' }}</p>
                             
-                            <!-- Rodapé: Data e Local -->
-                            <div class="flex items-center gap-3 pt-3 border-t border-white/10">
-                              <div class="flex items-center gap-1.5 text-xs text-brand-gold">
-                                <span class="inline-block">📅</span>
-                                <span class="font-medium">{{ project.date }}</span>
-                              </div>
-                              @if (project.location) {
-                                <span class="text-gray-600">•</span>
-                                <div class="flex items-center gap-1.5 text-xs text-gray-400">
-                                  <span class="inline-block">📍</span>
-                                  <span>{{ project.location }}</span>
-                                </div>
-                              }
+                            <!-- Rodapé: Data -->
+                            <div class="flex items-center gap-2 pt-3 border-t border-white/10">
+                              <span class="text-brand-gold text-xs">📅</span>
+                              <span class="text-brand-gold text-xs font-medium">{{ project.date }}</span>
                             </div>
                            </div>
                          }
