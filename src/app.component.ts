@@ -12,7 +12,7 @@ interface AccordionItem {
   icon: 'scissors' | 'star' | 'calendar' | 'clock' | 'map' | 'briefcase' | 'users' | 'image';
   featured?: boolean;
   content?: string;
-  listItems?: { name: string; price: string; available: boolean }[];
+  listItems?: { name: string; price: string; available: boolean | string }[];
   testimonials?: { name: string; comment: string; rating: number; isNew?: boolean }[];
   partners?: { name: string; role: string; imageUrl: string }[];
   teamMembers?: { name: string; specialty: string; imageUrl: string }[];
