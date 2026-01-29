@@ -51,6 +51,7 @@ export class AppComponent implements OnInit {
   // Loading State
   isLoading = signal(true);
   loadingProgress = signal(0);
+  private hasLoadingStarted = false; // Guard para só rodar uma vez
   
   // Agendamento
   whatsappLink = signal('https://wa.me/5585999999999');
@@ -170,7 +171,10 @@ export class AppComponent implements OnInit {
   ]);
 
   ngOnInit() {
-    this.startLoading();
+    if (!this.hasLoadingStarted) {
+      this.hasLoadingStarted = true;
+      this.startLoading();
+    }
     this.generateEmbers();
     this.generateSparks();
   }
@@ -187,7 +191,7 @@ export class AppComponent implements OnInit {
     });
     
     const startTime = Date.now();
-    const minTime = 12000; // 12 segundos mínimo
+    const minTime = 5000; // 5 segundos para teste, depois volta para 12000
     console.log('⏱️ Iniciando animação com minTime=' + minTime + 'ms');
     
     // Animar barra continuamente FORA da zone para não disparar change detection a cada 500ms
