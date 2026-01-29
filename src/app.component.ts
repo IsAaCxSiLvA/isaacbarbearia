@@ -179,48 +179,32 @@ export class AppComponent implements OnInit {
   }
 
   async startLoading() {
-    this.ngZone.run(() => {
-      this.isLoading.set(true);
-      this.loadingProgress.set(0);
-    });
+    // Versão SUPER SIMPLES: só espera 5 segundos e esconde
+    this.isLoading.set(true);
+    this.loadingProgress.set(0);
     
-    const startTime = Date.now();
-    const minTime = 5000; // 5 segundos
+    // Animar progresso
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 4; // 4% a cada 200ms = 100% em 5 segundos
+      if (progress <= 100) {
+        this.loadingProgress.set(progress);
+      }
+    }, 200);
     
-    // Animar barra
-    const interval = this.ngZone.runOutsideAngular(() => {
-      return setInterval(() => {
-        const elapsed = Date.now() - startTime;
-        const percent = Math.min((elapsed / minTime) * 100, 100);
-        this.ngZone.run(() => {
-          this.loadingProgress.set(percent);
-        });
-      }, 500);
-    });
+    // Carregar dados em background
+    this.loadDynamicData();
     
-    // Carregar dados
-    await this.loadDynamicData();
-    
-    // Esperar pelos 5 segundos
-    const totalElapsed = Date.now() - startTime;
-    if (totalElapsed < minTime) {
-      await new Promise(r => setTimeout(r, minTime - totalElapsed));
-    }
-    
-    // Limpar e esconder
-    this.ngZone.runOutsideAngular(() => {
+    // Esperar 5 segundos GARANTIDOS
+    setTimeout(() => {
       clearInterval(interval);
-    });
-    
-    this.ngZone.run(() => {
       this.loadingProgress.set(100);
-    });
-    
-    await new Promise(r => setTimeout(r, 500));
-    
-    this.ngZone.run(() => {
-      this.isLoading.set(false);
-    });
+      
+      // Esconder depois de mais 500ms
+      setTimeout(() => {
+        this.isLoading.set(false);
+      }, 500);
+    }, 5000);
   }
 
   async loadDynamicData() {
