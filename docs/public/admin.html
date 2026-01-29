@@ -384,6 +384,9 @@
     <!-- SERVIÇOS -->
     <div id="servicos" class="tab-content active">
       <h2>Gerenciar Serviços & Preços</h2>
+      <button onclick="limparDuplicatas()" style="margin-bottom: 15px; background: #e74c3c; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+        🗑️ Limpar Duplicatas do Firebase
+      </button>
       <form onsubmit="addServico(event)">
         <input type="text" id="serv-nome" placeholder="Nome do Serviço" required>
         <select id="serv-realiza" required>
@@ -596,6 +599,44 @@
         isLoadingServicos = false;
       }
     }
+
+    window.limparDuplicatas = async () => {
+      if (!confirm('Isso vai remover TODAS as duplicatas. Deseja continuar?')) return;
+      
+      try {
+        const snapshot = await getDocs(collection(db, 'servicos'));
+        const servicosPorNome = {};
+        
+        // Agrupa por nome
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          if (!servicosPorNome[data.nome]) {
+            servicosPorNome[data.nome] = [];
+          }
+          servicosPorNome[data.nome].push({ id: doc.id, data });
+        });
+        
+        // Deleta duplicatas (mantém apenas o primeiro)
+        let deletados = 0;
+        for (const nome in servicosPorNome) {
+          const servicos = servicosPorNome[nome];
+          if (servicos.length > 1) {
+            // Deleta do segundo em diante
+            for (let i = 1; i < servicos.length; i++) {
+              await deleteDoc(doc(db, 'servicos', servicos[i].id));
+              deletados++;
+              console.log(`🗑️ Deletado duplicata de "${nome}" (ID: ${servicos[i].id})`);
+            }
+          }
+        }
+        
+        alert(`✅ ${deletados} duplicata(s) removida(s)!`);
+        loadServicos();
+      } catch (error) {
+        console.error('Erro ao limpar duplicatas:', error);
+        alert('❌ Erro ao limpar duplicatas. Veja o console.');
+      }
+    };
 
     window.deleteServico = async (id) => {
       await deleteDoc(doc(db, 'servicos', id));
