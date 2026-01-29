@@ -282,7 +282,7 @@ export class AppComponent implements OnInit {
         if (locData.referencia) this.localizacaoReferencia.set(locData.referencia);
         
         // Link fixo do Google Maps
-        this.googleMapsLink.set('https://share.google/tW3DimlzuvFPH2zz7');
+        this.googleMapsLink.set('https://share.google/Q4GvyJhu3aPv7HcgA');
       }
 
       // Carregar dados de horários
