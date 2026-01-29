@@ -174,6 +174,7 @@ export class AppComponent implements OnInit {
   }
 
   async startLoading() {
+    console.log('🟢 Loading started');
     this.isLoading.set(true);
     this.loadingProgress.set(0);
     
@@ -185,13 +186,18 @@ export class AppComponent implements OnInit {
       const elapsed = Date.now() - startTime;
       const percent = Math.min((elapsed / minTime) * 100, 100);
       this.loadingProgress.set(percent);
-    }, 50);
+      console.log(`Progress: ${percent.toFixed(1)}%`);
+    }, 500);
     
     // Carregar dados
+    console.log('Loading data...');
     await this.loadDynamicData();
+    console.log('Data loaded');
     
     // Esperar pelo menos 12 segundos
     const totalElapsed = Date.now() - startTime;
+    console.log(`Elapsed: ${totalElapsed}ms, remaining: ${Math.max(0, minTime - totalElapsed)}ms`);
+    
     if (totalElapsed < minTime) {
       await new Promise(r => setTimeout(r, minTime - totalElapsed));
     }
@@ -200,13 +206,16 @@ export class AppComponent implements OnInit {
     clearInterval(interval);
     
     // Garantir 100%
+    console.log('Setting to 100%');
     this.loadingProgress.set(100);
     
     // Aguardar um pouco (mostrando a barra completa)
     await new Promise(r => setTimeout(r, 500));
     
     // SAIR DA TELA
+    console.log('🔴 Hiding loading screen');
     this.isLoading.set(false);
+    console.log('🔴 isLoading is now:', this.isLoading());
   }
 
   async loadDynamicData() {
