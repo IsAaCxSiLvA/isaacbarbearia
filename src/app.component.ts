@@ -116,12 +116,7 @@ export class AppComponent implements OnInit {
       isOpen: false,
       type: 'partners',
       icon: 'briefcase',
-      partners: [
-        { name: 'Iron Gym', role: '10% OFF na Mensalidade', imageUrl: 'https://picsum.photos/id/237/200/200' },
-        { name: 'Viking Pub', role: '1ª Chopp Grátis', imageUrl: 'https://picsum.photos/id/292/200/200' },
-        { name: 'Tattoo Ink', role: 'Flash Day Exclusivo', imageUrl: 'https://picsum.photos/id/1062/200/200' },
-        { name: 'Rota 66 Moto Clube', role: 'Desconto em Eventos', imageUrl: 'https://picsum.photos/id/1118/200/200' }
-      ]
+      partners: []
     },
     {
       id: 'feedback',
