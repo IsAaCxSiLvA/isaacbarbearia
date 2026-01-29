@@ -177,14 +177,14 @@ export class AppComponent implements OnInit {
     const startTime = Date.now();
     const minLoadingTime = 12000; // 12 segundos
     
-    this.isLoading.set(true); // Garante que tela está visível
-    this.loadingProgress.set(0); // Começa do zero
+    this.isLoading.set(true);
+    this.loadingProgress.set(0);
     
     // Iniciar animação contínua desde o início
     const animationInterval = setInterval(() => {
       const elapsed = Date.now() - startTime;
-      const progress = (elapsed / minLoadingTime) * 100;
-      this.loadingProgress.set(Math.min(progress, 99)); // Máximo 99% enquanto carrega
+      const progress = Math.min((elapsed / minLoadingTime) * 100, 99.9); // Para em 99.9%
+      this.loadingProgress.set(progress);
     }, 100);
     
     // Carregar dados em paralelo
@@ -192,18 +192,20 @@ export class AppComponent implements OnInit {
     
     // Aguardar o tempo mínimo de 12 segundos
     const elapsed = Date.now() - startTime;
-    if (elapsed < minLoadingTime) {
-      await new Promise(resolve => setTimeout(resolve, minLoadingTime - elapsed));
+    const remaining = Math.max(0, minLoadingTime - elapsed);
+    
+    if (remaining > 0) {
+      await new Promise(resolve => setTimeout(resolve, remaining));
     }
     
-    // Completar a 100%
+    // Parar a animação contínua
     clearInterval(animationInterval);
+    
+    // Forçar a 100% e esperar
     this.loadingProgress.set(100);
+    await new Promise(resolve => setTimeout(resolve, 1000)); // 1 segundo em 100%
     
-    // Aguardar um pouco antes de desaparecer (transição suave)
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    // Esconder tela de loading
+    // Desaparecer
     this.isLoading.set(false);
   }
 
