@@ -183,7 +183,7 @@ export class AppComponent implements OnInit {
     // Iniciar animação contínua desde o início
     const animationInterval = setInterval(() => {
       const elapsed = Date.now() - startTime;
-      const progress = Math.min((elapsed / minLoadingTime) * 100, 99.9); // Para em 99.9%
+      const progress = Math.min((elapsed / minLoadingTime) * 100, 100); // Até 100%
       this.loadingProgress.set(progress);
     }, 100);
     
@@ -203,7 +203,7 @@ export class AppComponent implements OnInit {
     
     // Forçar a 100% e esperar
     this.loadingProgress.set(100);
-    await new Promise(resolve => setTimeout(resolve, 1000)); // 1 segundo em 100%
+    await new Promise(resolve => setTimeout(resolve, 800)); // 800ms em 100%
     
     // Desaparecer
     this.isLoading.set(false);
