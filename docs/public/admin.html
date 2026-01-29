@@ -548,19 +548,20 @@
 
     async function loadServicos() {
       const list = document.getElementById('serv-list');
-      list.innerHTML = '';
       const snapshot = await getDocs(collection(db, 'servicos'));
+      const rows = [];
       snapshot.forEach(doc => {
         const data = doc.data();
         const realizaText = data.realiza ? 'Sim' : 'Não';
         const precoText = data.realiza && data.preco > 0 ? `R$ ${data.preco.toFixed(0)}` : '-';
-        list.innerHTML += `<tr>
+        rows.push(`<tr>
           <td data-label="Serviço">${data.nome}</td>
           <td data-label="Realizamos?">${realizaText}</td>
           <td data-label="Preço">${precoText}</td>
           <td data-label="Ações"><button class="btn-delete" onclick="deleteServico('${doc.id}')">Deletar</button></td>
-        </tr>`;
+        </tr>`);
       });
+      list.innerHTML = rows.join('');
     }
 
     window.deleteServico = async (id) => {
@@ -583,18 +584,19 @@
 
     async function loadProfissionais() {
       const list = document.getElementById('prof-list');
-      list.innerHTML = '';
       const snapshot = await getDocs(collection(db, 'profissionais'));
+      const rows = [];
       snapshot.forEach(doc => {
         const data = doc.data();
         const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">` : '-';
-        list.innerHTML += `<tr>
+        rows.push(`<tr>
           <td data-label="Nome">${data.nome}</td>
           <td data-label="Especialidade">${data.especialidade}</td>
           <td data-label="Imagem">${imgHtml}</td>
           <td data-label="Ações"><button class="btn-delete" onclick="deleteProfissional('${doc.id}')">Deletar</button></td>
-        </tr>`;
+        </tr>`);
       });
+      list.innerHTML = rows.join('');
     }
 
     window.deleteProfissional = async (id) => {
@@ -615,17 +617,18 @@
 
     async function loadParceiros() {
       const list = document.getElementById('parc-list');
-      list.innerHTML = '';
       const snapshot = await getDocs(collection(db, 'parceiros'));
+      const rows = [];
       snapshot.forEach(doc => {
         const data = doc.data();
         const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;border:2px solid #ff8c00;">` : '-';
-        list.innerHTML += `<tr>
+        rows.push(`<tr>
           <td data-label="Nome">${data.nome}</td>
           <td data-label="Logo">${imgHtml}</td>
           <td data-label="Ações"><button class="btn-delete" onclick="deleteParceiro('${doc.id}')">Deletar</button></td>
-        </tr>`;
+        </tr>`);
       });
+      list.innerHTML = rows.join('');
     }
 
     window.deleteParceiro = async (id) => {
@@ -647,17 +650,18 @@
 
     async function loadParticipacoes() {
       const list = document.getElementById('part-list');
-      list.innerHTML = '';
       const snapshot = await getDocs(collection(db, 'participacoes'));
+      const cards = [];
       snapshot.forEach(doc => {
         const data = doc.data();
-        list.innerHTML += `<div class="card">
+        cards.push(`<div class="card">
           <h3>${data.titulo}</h3>
           <p>${data.descricao || ''}</p>
           <p><strong>Data:</strong> ${data.data}</p>
           <button class="btn-delete" onclick="deleteParticipacao('${doc.id}')">Deletar</button>
-        </div>`;
+        </div>`);
       });
+      list.innerHTML = cards.join('');
     }
 
     window.deleteParticipacao = async (id) => {
@@ -673,24 +677,25 @@
       try {
         onSnapshot(collection(db, 'avaliacoes'), (snapshot) => {
           console.log('Snapshot recebido:', snapshot.docs.length, 'documentos');
-          list.innerHTML = '';
           
           if (snapshot.empty) {
             list.innerHTML = '<p style="text-align: center; color: #999;">Nenhuma avaliação ainda</p>';
             return;
           }
           
+          const cards = [];
           snapshot.forEach(doc => {
             const data = doc.data();
             console.log('Renderizando avaliação:', data);
-            list.innerHTML += `<div class="card">
+            cards.push(`<div class="card">
               <h3>${data.cliente || 'Sem nome'}</h3>
               <p><strong>Estrelas:</strong> ${data.estrelas || 0}/5</p>
               <p>${data.comentario || 'Sem comentário'}</p>
               <p><small>${data.data || 'Sem data'}</small></p>
               <button class="btn-delete" onclick="deleteAvaliacao('${doc.id}')">Deletar</button>
-            </div>`;
+            </div>`);
           });
+          list.innerHTML = cards.join('');
         }, (error) => {
           console.error('Erro ao carregar avaliações:', error);
           list.innerHTML = '<p style="color: red;">Erro ao carregar avaliações</p>';
