@@ -373,15 +373,19 @@
                              <span class="text-gray-300 text-sm font-medium">{{ service.name }}</span>
                              
                              <div class="flex items-center gap-4">
-                                <!-- Badge SIM/NÃO -->
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider min-w-[3rem] text-center"
-                                      [class.bg-green-500/20]="service.available"
-                                      [class.text-green-400]="service.available"
-                                      [class.border]="service.available"
-                                      [class.border-green-500/30]="service.available"
-                                      [class.bg-red-500/10]="!service.available"
-                                      [class.text-red-500]="!service.available">
-                                   {{ service.available ? 'Sim' : 'Não' }}
+                                <!-- Badge SIM/NÃO/EM BREVE -->
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider min-w-[3.5rem] text-center"
+                                      [class.bg-green-500/20]="service.available === true"
+                                      [class.text-green-400]="service.available === true"
+                                      [class.border]="service.available === true"
+                                      [class.border-green-500/30]="service.available === true"
+                                      [class.bg-red-500/10]="service.available === false"
+                                      [class.text-red-500]="service.available === false"
+                                      [class.bg-yellow-500/20]="service.available === 'soon'"
+                                      [class.text-yellow-400]="service.available === 'soon'"
+                                      [class.border]="service.available === 'soon'"
+                                      [class.border-yellow-500/30]="service.available === 'soon'">
+                                   {{ service.available === true ? 'Sim' : service.available === false ? 'Não' : 'Em Breve' }}
                                 </span>
   
                                 <span class="text-sm font-serif font-bold w-12 text-right" 

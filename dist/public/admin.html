@@ -393,6 +393,7 @@
           <option value="">Realizamos este serviço?</option>
           <option value="true">Sim</option>
           <option value="false">Não</option>
+          <option value="soon">Em Breve</option>
         </select>
         <input type="number" id="serv-preco" placeholder="Preço (em R$)" step="0.01" min="0">
         <button type="submit">Adicionar Serviço</button>
@@ -538,12 +539,17 @@
     // Serviços
     window.addServico = async (e) => {
       e.preventDefault();
-      const realiza = document.getElementById('serv-realiza').value === 'true';
+      const realizaValue = document.getElementById('serv-realiza').value;
+      let realiza;
+      if (realizaValue === 'true') realiza = true;
+      else if (realizaValue === 'false') realiza = false;
+      else if (realizaValue === 'soon') realiza = 'soon';
+      
       const preco = document.getElementById('serv-preco').value;
       await addDoc(collection(db, 'servicos'), {
         nome: document.getElementById('serv-nome').value,
         realiza: realiza,
-        preco: realiza && preco ? parseFloat(preco) : 0
+        preco: realiza === true && preco ? parseFloat(preco) : 0
       });
       e.target.reset();
       loadServicos();
@@ -583,8 +589,8 @@
           // Usa apenas o primeiro
           const servico = servicos[0];
           const data = servico.data;
-          const realizaText = data.realiza ? 'Sim' : 'Não';
-          const precoText = data.realiza && data.preco > 0 ? `R$ ${data.preco.toFixed(0)}` : '-';
+          const realizaText = data.realiza === true ? 'Sim' : data.realiza === false ? 'Não' : 'Em Breve';
+          const precoText = data.realiza === true && data.preco > 0 ? `R$ ${data.preco.toFixed(0)}` : '-';
           rows.push(`<tr>
             <td data-label="Serviço">${data.nome}</td>
             <td data-label="Realizamos?">${realizaText}</td>
