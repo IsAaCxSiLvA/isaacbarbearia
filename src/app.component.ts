@@ -2,7 +2,7 @@ import { Component, signal, ChangeDetectionStrategy, OnInit } from '@angular/cor
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, addDoc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, addDoc, doc, getDoc } from 'firebase/firestore';
 
 interface AccordionItem {
   id: string;
@@ -49,6 +49,10 @@ export class AppComponent implements OnInit {
   // Loading State
   isLoading = signal(true);
   loadingProgress = signal(0);
+  
+  // Agendamento
+  whatsappLink = signal('https://wa.me/5585999999999');
+  locationLink = signal('#');
   
   // Background Particles
   embers = signal<Particle[]>([]); // Rising from bottom
@@ -202,12 +206,13 @@ export class AppComponent implements OnInit {
 
   async loadDynamicData() {
     try {
-      const [profissionaisSnap, parceirosSnap, participacoesSnap, avaliacoesSnap, servicosSnap] = await Promise.all([
+      const [profissionaisSnap, parceirosSnap, participacoesSnap, avaliacoesSnap, servicosSnap, agendamentoSnap] = await Promise.all([
         getDocs(collection(this.db, 'profissionais')),
         getDocs(collection(this.db, 'parceiros')),
         getDocs(collection(this.db, 'participacoes')),
         getDocs(collection(this.db, 'avaliacoes')),
-        getDocs(collection(this.db, 'servicos'))
+        getDocs(collection(this.db, 'servicos')),
+        getDoc(doc(this.db, 'config', 'agendamento'))
       ]);
 
       const teamMembers = profissionaisSnap.docs.map(doc => {
@@ -258,6 +263,15 @@ export class AppComponent implements OnInit {
           rating: data.estrelas || 5
         };
       });
+
+      // Carregar dados de agendamento
+      if (agendamentoSnap.exists()) {
+        const agendamentoData = agendamentoSnap.data() as { whatsapp?: string; telefone?: string; info?: string };
+        if (agendamentoData.whatsapp) {
+          const numero = agendamentoData.whatsapp.replace(/\D/g, '');
+          this.whatsappLink.set(`https://wa.me/${numero}`);
+        }
+      }
 
       if (teamMembers.length || partners.length || projectGallery.length || testimonials.length || listItems.length) {
         this.items.update(items => items.map(item => {

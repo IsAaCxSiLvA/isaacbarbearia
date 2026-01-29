@@ -807,10 +807,12 @@
 
     async function displayAgendamento(data) {
       const display = document.getElementById('agen-display');
+      const whatsappLink = `https://wa.me/${data.whatsapp.replace(/\D/g, '')}`;
+      const telefoneLink = `tel:${data.telefone.replace(/\D/g, '')}`;
       display.innerHTML = `
         <p><strong>📞 Agendamento</strong></p>
-        <p>WhatsApp: ${data.whatsapp}</p>
-        <p>Telefone: ${data.telefone}</p>
+        <p>WhatsApp: <a href="${whatsappLink}" target="_blank" style="color: #ff8c00; text-decoration: none;">${data.whatsapp} 💬</a></p>
+        <p>Telefone: <a href="${telefoneLink}" style="color: #ff8c00; text-decoration: none;">${data.telefone} ☎️</a></p>
         <p>${data.info}</p>
       `;
     }
