@@ -281,10 +281,8 @@ export class AppComponent implements OnInit {
         if (locData.cidade) this.localizacaoCidade.set(locData.cidade);
         if (locData.referencia) this.localizacaoReferencia.set(locData.referencia);
         
-        // Gerar link do Google Maps
-        const enderecoCompleto = `${locData.endereco || ''}, ${locData.bairro || ''}, ${locData.cidade || ''}`;
-        const encodedAddress = encodeURIComponent(enderecoCompleto);
-        this.googleMapsLink.set(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`);
+        // Link fixo do Google Maps
+        this.googleMapsLink.set('https://share.google/tW3DimlzuvFPH2zz7');
       }
 
       // Carregar dados de horários
