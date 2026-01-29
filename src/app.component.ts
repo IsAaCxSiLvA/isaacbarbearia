@@ -150,31 +150,52 @@ export class AppComponent implements OnInit {
     this.startLoading();
     this.generateEmbers();
     this.generateSparks();
-    this.loadDynamicData();
   }
 
   async startLoading() {
-    // Simular progresso de carregamento
+    const startTime = Date.now();
+    const minLoadingTime = 10000; // 10 segundos mínimo
+    
+    // Simular progresso de carregamento mais lento
     const interval = setInterval(() => {
       this.loadingProgress.update(p => {
-        if (p >= 90) {
+        if (p >= 85) {
           clearInterval(interval);
-          return 90;
+          return 85;
         }
-        return p + Math.random() * 15;
+        return p + Math.random() * 8; // Progresso mais lento
       });
-    }, 200);
+    }, 400); // Intervalo maior
 
     // Aguardar dados carregarem
     await this.loadDynamicData();
     
-    // Completar progresso
-    this.loadingProgress.set(100);
+    // Calcular tempo restante para completar 10 segundos
+    const elapsedTime = Date.now() - startTime;
+    const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
     
-    // Remover tela de loading após animação
+    // Completar progresso gradualmente até 100%
     setTimeout(() => {
-      this.isLoading.set(false);
-    }, 800);
+      clearInterval(interval);
+      const finalInterval = setInterval(() => {
+        this.loadingProgress.update(p => {
+          if (p >= 100) {
+            clearInterval(finalInterval);
+            return 100;
+          }
+          return p + 3;
+        });
+      }, 150);
+      
+      // Remover tela de loading após completar
+      setTimeout(() => {
+        clearInterval(finalInterval);
+        this.loadingProgress.set(100);
+        setTimeout(() => {
+          this.isLoading.set(false);
+        }, 1000);
+      }, 2000);
+    }, remainingTime);
   }
 
   async loadDynamicData() {
