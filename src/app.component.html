@@ -254,7 +254,9 @@
                            </a>
                          </div>
                        } @else {
-                         <p class="text-gray-300 font-light leading-relaxed text-sm animate-fade-in">{{ item.content }}</p>
+                         @if (item.content) {
+                           <p class="text-gray-300 font-light leading-relaxed text-sm animate-fade-in">{{ item.content }}</p>
+                         }
                        }
                      }
   
