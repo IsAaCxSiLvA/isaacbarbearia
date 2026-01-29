@@ -180,35 +180,31 @@ export class AppComponent implements OnInit {
     this.isLoading.set(true); // Garante que tela está visível
     this.loadingProgress.set(0); // Começa do zero
     
-    // Carregar dados em paralelo com animação
-    const dataPromise = this.loadDynamicData();
+    // Iniciar animação contínua desde o início
+    const animationInterval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const progress = (elapsed / minLoadingTime) * 100;
+      this.loadingProgress.set(Math.min(progress, 99)); // Máximo 99% enquanto carrega
+    }, 100);
     
-    // Aguardar dados + tempo mínimo em paralelo
-    await dataPromise;
+    // Carregar dados em paralelo
+    await this.loadDynamicData();
+    
+    // Aguardar o tempo mínimo de 12 segundos
     const elapsed = Date.now() - startTime;
-    const remainingTime = Math.max(0, minLoadingTime - elapsed);
+    if (elapsed < minLoadingTime) {
+      await new Promise(resolve => setTimeout(resolve, minLoadingTime - elapsed));
+    }
     
-    // Animar progresso suavemente do progresso atual até 100% durante tempo restante
-    const animationStartTime = Date.now();
-    const animationDuration = Math.max(remainingTime, 2000); // Mínimo 2 segundos para animação final
+    // Completar a 100%
+    clearInterval(animationInterval);
+    this.loadingProgress.set(100);
     
-    return new Promise(resolve => {
-      const animationInterval = setInterval(() => {
-        const animationElapsed = Date.now() - animationStartTime;
-        const animationProgress = Math.min((animationElapsed / animationDuration) * 100, 100);
-        this.loadingProgress.set(animationProgress);
-        
-        if (animationProgress >= 100) {
-          clearInterval(animationInterval);
-          
-          // Manter em 100% por 800ms antes de desaparecer
-          setTimeout(() => {
-            this.isLoading.set(false);
-            resolve(null);
-          }, 800);
-        }
-      }, 100); // Atualizar a cada 100ms para animação suave
-    });
+    // Aguardar um pouco antes de desaparecer (transição suave)
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    // Esconder tela de loading
+    this.isLoading.set(false);
   }
 
   async loadDynamicData() {
