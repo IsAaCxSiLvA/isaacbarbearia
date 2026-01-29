@@ -154,23 +154,23 @@ export class AppComponent implements OnInit {
 
   async startLoading() {
     const startTime = Date.now();
-    const minLoadingTime = 10000; // 10 segundos mínimo
+    const minLoadingTime = 15000; // 15 segundos mínimo
     
-    // Simular progresso de carregamento mais lento
+    // Simular progresso de carregamento bem mais lento
     const interval = setInterval(() => {
       this.loadingProgress.update(p => {
-        if (p >= 85) {
+        if (p >= 70) {
           clearInterval(interval);
-          return 85;
+          return 70;
         }
-        return p + Math.random() * 8; // Progresso mais lento
+        return p + Math.random() * 3; // Progresso bem mais lento
       });
-    }, 400); // Intervalo maior
+    }, 600); // Intervalo bem maior
 
     // Aguardar dados carregarem
     await this.loadDynamicData();
     
-    // Calcular tempo restante para completar 10 segundos
+    // Calcular tempo restante para completar 15 segundos
     const elapsedTime = Date.now() - startTime;
     const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
     
@@ -183,9 +183,9 @@ export class AppComponent implements OnInit {
             clearInterval(finalInterval);
             return 100;
           }
-          return p + 3;
+          return p + 2;
         });
-      }, 150);
+      }, 250);
       
       // Remover tela de loading após completar
       setTimeout(() => {
@@ -193,8 +193,8 @@ export class AppComponent implements OnInit {
         this.loadingProgress.set(100);
         setTimeout(() => {
           this.isLoading.set(false);
-        }, 1000);
-      }, 2000);
+        }, 1200);
+      }, 3500);
     }, remainingTime);
   }
 
