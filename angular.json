@@ -17,11 +17,15 @@
               "browser": "."
             },
             "browser": "index.tsx",
-            "tsConfig": "tsconfig.json"
+            "tsConfig": "tsconfig.json",
+            "assets": [
+              "public"
+            ]
           },
           "configurations": {
             "production": {
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "baseHref": "/isaacbarbearia/"
             },
             "development": {
               "optimization": false,
@@ -48,5 +52,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "0f7b7b39-f95c-4471-ab6e-aabd5598324a"
   }
 }

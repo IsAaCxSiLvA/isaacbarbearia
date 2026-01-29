@@ -1,0 +1,121 @@
+<div class="admin-container">
+  <h1>Painel Admin - Isaac Barbearia</h1>
+  
+  <div class="tabs">
+    <button [class.active]="tabAtual === 'profissionais'" (click)="tabAtual = 'profissionais'">
+      Profissionais
+    </button>
+    <button [class.active]="tabAtual === 'parceiros'" (click)="tabAtual = 'parceiros'">
+      Parceiros
+    </button>
+    <button [class.active]="tabAtual === 'participacoes'" (click)="tabAtual = 'participacoes'">
+      Participação
+    </button>
+    <button [class.active]="tabAtual === 'avaliacoes'" (click)="tabAtual = 'avaliacoes'">
+      Avaliações
+    </button>
+    <button (click)="logout()" class="btn-logout">Sair</button>
+  </div>
+
+  <!-- PROFISSIONAIS -->
+  <div *ngIf="tabAtual === 'profissionais'" class="tab-content">
+    <h2>Gerenciar Profissionais</h2>
+    
+    <form (ngSubmit)="adicionarProfissional()">
+      <input [(ngModel)]="novoProfissional.nome" name="nome" placeholder="Nome" required>
+      <input [(ngModel)]="novoProfissional.especialidade" name="especialidade" placeholder="Especialidade" required>
+      <input [(ngModel)]="novoProfissional.telefone" name="telefone" placeholder="Telefone">
+      <button type="submit">Adicionar Profissional</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Especialidade</th>
+          <th>Telefone</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let prof of profissionais">
+          <td>{{ prof.nome }}</td>
+          <td>{{ prof.especialidade }}</td>
+          <td>{{ prof.telefone }}</td>
+          <td>
+            <button (click)="deletarProfissional(prof.id)" class="btn-delete">Deletar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PARCEIROS -->
+  <div *ngIf="tabAtual === 'parceiros'" class="tab-content">
+    <h2>Gerenciar Parceiros e Convênios</h2>
+    
+    <form (ngSubmit)="adicionarParceiro()">
+      <input [(ngModel)]="novoParceiro.nome" name="nome" placeholder="Nome do Parceiro" required>
+      <input [(ngModel)]="novoParceiro.descricao" name="descricao" placeholder="Descrição">
+      <input [(ngModel)]="novoParceiro.desconto" name="desconto" placeholder="Desconto (%)">
+      <button type="submit">Adicionar Parceiro</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Descrição</th>
+          <th>Desconto</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let parc of parceiros">
+          <td>{{ parc.nome }}</td>
+          <td>{{ parc.descricao }}</td>
+          <td>{{ parc.desconto }}%</td>
+          <td>
+            <button (click)="deletarParceiro(parc.id)" class="btn-delete">Deletar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PARTICIPAÇÃO COMUNITÁRIA -->
+  <div *ngIf="tabAtual === 'participacoes'" class="tab-content">
+    <h2>Participação Comunitária</h2>
+    
+    <form (ngSubmit)="adicionarParticipacao()">
+      <input [(ngModel)]="novaParticipacao.titulo" name="titulo" placeholder="Título do Evento" required>
+      <textarea [(ngModel)]="novaParticipacao.descricao" name="descricao" placeholder="Descrição"></textarea>
+      <input [(ngModel)]="novaParticipacao.data" name="data" type="date" required>
+      <button type="submit">Adicionar Evento</button>
+    </form>
+
+    <div class="cards">
+      <div *ngFor="let part of participacoes" class="card">
+        <h3>{{ part.titulo }}</h3>
+        <p>{{ part.descricao }}</p>
+        <p><strong>Data:</strong> {{ part.data }}</p>
+        <button (click)="deletarParticipacao(part.id)" class="btn-delete">Deletar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AVALIAÇÕES -->
+  <div *ngIf="tabAtual === 'avaliacoes'" class="tab-content">
+    <h2>Avaliações dos Clientes</h2>
+    
+    <div class="cards">
+      <div *ngFor="let aval of avaliacoes" class="card-avaliacao">
+        <h3>{{ aval.cliente }}</h3>
+        <p><strong>Estrelas:</strong> {{ aval.estrelas }}/5</p>
+        <p>{{ aval.comentario }}</p>
+        <p><small>{{ aval.data }}</small></p>
+        <button (click)="deletarAvaliacao(aval.id)" class="btn-delete">Deletar</button>
+      </div>
+    </div>
+  </div>
+</div>

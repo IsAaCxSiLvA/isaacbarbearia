@@ -1,6 +1,8 @@
 import { Component, signal, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, getDocs, addDoc } from 'firebase/firestore';
 
 interface AccordionItem {
   id: string;
@@ -33,6 +35,16 @@ interface Particle {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit {
+  private firebaseConfig = {
+    apiKey: 'AIzaSyDE2tWDNCDrY6O20EWrDt-NkvZmCm_MR10',
+    authDomain: 'isaacbarbearia-admin.firebaseapp.com',
+    projectId: 'isaacbarbearia-admin',
+    storageBucket: 'isaacbarbearia-admin.firebasestorage.app',
+    messagingSenderId: '308982033120',
+    appId: '1:308982033120:web:38b82c1a3ca9e933be7e85'
+  };
+  private app = initializeApp(this.firebaseConfig);
+  private db = getFirestore(this.app);
   
   // Background Particles
   embers = signal<Particle[]>([]); // Rising from bottom
@@ -142,6 +154,77 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.generateEmbers();
     this.generateSparks();
+    this.loadDynamicData();
+  }
+
+  async loadDynamicData() {
+    try {
+      const [profissionaisSnap, parceirosSnap, participacoesSnap, avaliacoesSnap] = await Promise.all([
+        getDocs(collection(this.db, 'profissionais')),
+        getDocs(collection(this.db, 'parceiros')),
+        getDocs(collection(this.db, 'participacoes')),
+        getDocs(collection(this.db, 'avaliacoes'))
+      ]);
+
+      const teamMembers = profissionaisSnap.docs.map(doc => {
+        const data = doc.data() as { nome?: string; especialidade?: string; imagem?: string };
+        return {
+          name: data.nome || 'Profissional',
+          specialty: data.especialidade || 'Especialidade',
+          imageUrl: data.imagem || `https://picsum.photos/seed/${encodeURIComponent(data.nome || doc.id)}/200/200`
+        };
+      });
+
+      const partners = parceirosSnap.docs.map(doc => {
+        const data = doc.data() as { nome?: string; descricao?: string; desconto?: string; imagem?: string };
+        const role = data.desconto ? `${data.desconto}% OFF` : (data.descricao || 'Parceiro');
+        return {
+          name: data.nome || 'Parceiro',
+          role,
+          imageUrl: data.imagem || `https://picsum.photos/seed/${encodeURIComponent(data.nome || doc.id)}/200/200`
+        };
+      });
+
+      const projectGallery = participacoesSnap.docs.map(doc => {
+        const data = doc.data() as { titulo?: string; descricao?: string; data?: string };
+        return {
+          title: data.titulo || 'Evento',
+          imageUrl: `https://picsum.photos/seed/${encodeURIComponent(data.titulo || doc.id)}/300/300`,
+          projectUrl: '#',
+          date: data.data || 'Data a definir',
+          location: data.descricao || 'Comunidade'
+        };
+      });
+
+      const testimonials = avaliacoesSnap.docs.map(doc => {
+        const data = doc.data() as { cliente?: string; comentario?: string; estrelas?: number };
+        return {
+          name: data.cliente || 'Cliente',
+          comment: data.comentario || 'Ótimo atendimento!',
+          rating: data.estrelas || 5
+        };
+      });
+
+      if (teamMembers.length || partners.length || projectGallery.length || testimonials.length) {
+        this.items.update(items => items.map(item => {
+          if (item.id === 'team' && teamMembers.length) {
+            return { ...item, teamMembers };
+          }
+          if (item.id === 'partnerships' && partners.length) {
+            return { ...item, partners };
+          }
+          if (item.id === 'projects' && projectGallery.length) {
+            return { ...item, projectGallery };
+          }
+          if (item.id === 'feedback' && testimonials.length) {
+            return { ...item, testimonials };
+          }
+          return item;
+        }));
+      }
+    } catch (error) {
+      console.error('Erro ao carregar dados do Firebase:', error);
+    }
   }
 
   generateEmbers() {
@@ -193,34 +276,61 @@ export class AppComponent implements OnInit {
     this.newReviewRating.set(stars);
   }
 
-  submitReview() {
-    if (!this.newReviewName().trim() || !this.newReviewMessage().trim()) return;
+  async submitReview() {
+    const name = this.newReviewName().trim();
+    const message = this.newReviewMessage().trim();
+    const rating = this.newReviewRating();
 
-    this.items.update(items => {
-      return items.map(item => {
-        if (item.id === 'feedback' && item.testimonials) {
-          return {
-            ...item,
-            testimonials: [
-              ...item.testimonials,
-              {
-                name: this.newReviewName(),
-                comment: this.newReviewMessage(),
-                rating: this.newReviewRating(),
-                isNew: true
-              }
-            ]
-          };
-        }
-        return item;
+    if (!name || !message) {
+      alert('Por favor, preencha nome e comentário!');
+      return;
+    }
+
+    try {
+      console.log('Salvando avaliação:', { name, message, rating });
+      
+      // Salvar no Firestore
+      const docRef = await addDoc(collection(this.db, 'avaliacoes'), {
+        cliente: name,
+        comentario: message,
+        estrelas: rating,
+        data: new Date().toLocaleDateString('pt-BR')
       });
-    });
+      
+      console.log('Avaliação salva com ID:', docRef.id);
 
-    // Reset Form
-    this.newReviewName.set('');
-    this.newReviewMessage.set('');
-    this.newReviewRating.set(5);
-    this.showReviewForm.set(false);
+      // Atualizar estado local
+      this.items.update(items => {
+        return items.map(item => {
+          if (item.id === 'feedback' && item.testimonials) {
+            return {
+              ...item,
+              testimonials: [
+                {
+                  name: name,
+                  comment: message,
+                  rating: rating,
+                  isNew: true
+                },
+                ...item.testimonials
+              ]
+            };
+          }
+          return item;
+        });
+      });
+
+      // Reset Form
+      this.newReviewName.set('');
+      this.newReviewMessage.set('');
+      this.newReviewRating.set(5);
+      this.showReviewForm.set(false);
+      
+      alert('Avaliação enviada com sucesso!');
+    } catch (error) {
+      console.error('Erro ao salvar avaliação:', error);
+      alert('Erro ao salvar avaliação. Verifique o console.');
+    }
   }
 
   currentYear = new Date().getFullYear();

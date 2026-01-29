@@ -1,0 +1,30 @@
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { FirebaseService } from '../services/firebase.service';
+import { Router } from '@angular/router';
+
+@Component({
+  selector: 'app-login',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
+})
+export class LoginComponent {
+  email = '';
+  password = '';
+  erro = '';
+
+  constructor(private firebaseService: FirebaseService, private router: Router) { }
+
+  async login() {
+    try {
+      await this.firebaseService.login(this.email, this.password);
+      this.router.navigate(['/admin']);
+    } catch (error: any) {
+      this.erro = 'Email ou senha incorretos!';
+      console.error('Erro de login:', error);
+    }
+  }
+}

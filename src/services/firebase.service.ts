@@ -1,0 +1,115 @@
+import { Injectable } from '@angular/core';
+import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from 'firebase/firestore';
+import { initializeApp } from 'firebase/app';
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
+
+const environment = {
+  firebase: {
+    apiKey: "vvmrpX2H8L7bfkEQLLETMNUBuuLaMWBDtmxf5Fuy2BQ",
+    authDomain: "isaacbarbearia-admin.firebaseapp.com",
+    projectId: "isaacbarbearia-admin",
+    storageBucket: "isaacbarbearia-admin.appspot.com",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID"
+  }
+};
+
+@Injectable({
+  providedIn: 'root'
+})
+export class FirebaseService {
+  private app = initializeApp(environment.firebase);
+  private auth = getAuth(this.app);
+  private firestore = getFirestore(this.app);
+
+  constructor() { }
+
+  // Autenticação
+  login(email: string, password: string) {
+    return signInWithEmailAndPassword(this.auth, email, password);
+  }
+
+  logout() {
+    return signOut(this.auth);
+  }
+
+  getCurrentUser() {
+    return new Promise((resolve, reject) => {
+      onAuthStateChanged(this.auth, (user) => {
+        if (user) {
+          resolve(user);
+        } else {
+          reject(null);
+        }
+      });
+    });
+  }
+
+  // Profissionais
+  async addProfissional(data: any) {
+    return addDoc(collection(this.firestore, 'profissionais'), data);
+  }
+
+  async getProfissionais() {
+    const snapshot = await getDocs(collection(this.firestore, 'profissionais'));
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  }
+
+  async updateProfissional(id: string, data: any) {
+    return updateDoc(doc(this.firestore, 'profissionais', id), data);
+  }
+
+  async deleteProfissional(id: string) {
+    return deleteDoc(doc(this.firestore, 'profissionais', id));
+  }
+
+  // Parceiros
+  async addParceiro(data: any) {
+    return addDoc(collection(this.firestore, 'parceiros'), data);
+  }
+
+  async getParceiros() {
+    const snapshot = await getDocs(collection(this.firestore, 'parceiros'));
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  }
+
+  async updateParceiro(id: string, data: any) {
+    return updateDoc(doc(this.firestore, 'parceiros', id), data);
+  }
+
+  async deleteParceiro(id: string) {
+    return deleteDoc(doc(this.firestore, 'parceiros', id));
+  }
+
+  // Participação Comunitária
+  async addParticipacao(data: any) {
+    return addDoc(collection(this.firestore, 'participacoes'), data);
+  }
+
+  async getParticipacoes() {
+    const snapshot = await getDocs(collection(this.firestore, 'participacoes'));
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  }
+
+  async updateParticipacao(id: string, data: any) {
+    return updateDoc(doc(this.firestore, 'participacoes', id), data);
+  }
+
+  async deleteParticipacao(id: string) {
+    return deleteDoc(doc(this.firestore, 'participacoes', id));
+  }
+
+  // Avaliações
+  async addAvaliacao(data: any) {
+    return addDoc(collection(this.firestore, 'avaliacoes'), data);
+  }
+
+  async getAvaliacoes() {
+    const snapshot = await getDocs(collection(this.firestore, 'avaliacoes'));
+    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+  }
+
+  async deleteAvaliacao(id: string) {
+    return deleteDoc(doc(this.firestore, 'avaliacoes', id));
+  }
+}
