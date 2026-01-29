@@ -94,7 +94,7 @@ export class AppComponent implements OnInit {
     },
     {
       id: 'team',
-      title: 'Nossos Profissionais',
+      title: 'Profissionais',
       isOpen: false,
       type: 'team',
       icon: 'users',
