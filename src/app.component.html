@@ -262,6 +262,10 @@
                      @if (item.type === 'hours') {
                        <div class="text-center text-gray-300 font-light text-sm animate-fade-in space-y-2">
                          <div class="flex justify-between items-center px-4">
+                           <span class="text-gray-400">Segunda a Sexta:</span>
+                           <span class="font-semibold text-brand-fireOrange">{{ horariosSegSex() }}</span>
+                         </div>
+                         <div class="flex justify-between items-center px-4">
                            <span class="text-gray-400">Sábado:</span>
                            <span class="font-semibold text-brand-fireOrange">{{ horariosSabado() }}</span>
                          </div>
