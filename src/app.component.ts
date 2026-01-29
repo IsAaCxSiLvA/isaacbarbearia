@@ -100,10 +100,7 @@ export class AppComponent implements OnInit {
       isOpen: false,
       type: 'team',
       icon: 'users',
-      teamMembers: [
-        { name: 'Isaac Alencar', specialty: 'Fundador & Mestre Barbeiro', imageUrl: 'https://picsum.photos/id/1005/200/200' },
-        { name: 'Bruno Santos', specialty: 'Expert em Degradê & Barba', imageUrl: 'https://picsum.photos/id/1011/200/200' },
-      ]
+      teamMembers: []
     },
     {
       id: 'projects',
@@ -111,12 +108,7 @@ export class AppComponent implements OnInit {
       isOpen: false,
       type: 'projects',
       icon: 'image',
-      projectGallery: [
-        { title: 'Projeto Bairro Livre', imageUrl: 'https://picsum.photos/seed/bairro/300/300', projectUrl: '#', date: '25/07/2024', location: 'Praça Central' },
-        { title: 'Corte Solidário', imageUrl: 'https://picsum.photos/seed/solidario/300/300', projectUrl: '#', date: '10/06/2024', location: 'Abrigo Municipal' },
-        { title: 'Barbeiros do Bem', imageUrl: 'https://picsum.photos/seed/corte2/300/300', projectUrl: '#', date: '05/04/2024', location: 'Comunidade S. Jorge' },
-        { title: 'Apoio ao Esporte Local', imageUrl: 'https://picsum.photos/seed/barba2/300/300', projectUrl: '#', date: '18/03/2024', location: 'Ginásio da Cidade' },
-      ]
+      projectGallery: []
     },
     {
       id: 'partnerships',
@@ -124,12 +116,7 @@ export class AppComponent implements OnInit {
       isOpen: false,
       type: 'partners',
       icon: 'briefcase',
-      partners: [
-        { name: 'Iron Gym', role: '10% OFF na Mensalidade', imageUrl: 'https://picsum.photos/id/237/200/200' },
-        { name: 'Viking Pub', role: '1ª Chopp Grátis', imageUrl: 'https://picsum.photos/id/292/200/200' },
-        { name: 'Tattoo Ink', role: 'Flash Day Exclusivo', imageUrl: 'https://picsum.photos/id/1062/200/200' },
-        { name: 'Rota 66 Moto Clube', role: 'Desconto em Eventos', imageUrl: 'https://picsum.photos/id/1118/200/200' }
-      ]
+      partners: []
     },
     {
       id: 'feedback',
@@ -137,11 +124,7 @@ export class AppComponent implements OnInit {
       isOpen: false,
       type: 'feedback',
       icon: 'star',
-      testimonials: [
-        { name: 'Carlos Eduardo', comment: 'Melhor degradê da região. O atendimento é vip!', rating: 5 },
-        { name: 'Rafael Silva', comment: 'Ambiente sensacional e profissionais muito qualificados.', rating: 5 },
-        { name: 'Pedro Henrique', comment: 'A consultoria de estilo mudou meu visual. Recomendo!', rating: 5 }
-      ]
+      testimonials: []
     },
     {
       id: 'booking',
