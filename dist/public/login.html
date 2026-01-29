@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Admin - Isaac Barbearia</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    .login-box {
+      background: white;
+      padding: 40px;
+      border-radius: 8px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      max-width: 400px;
+    }
+    h1 { color: #333; text-align: center; margin-bottom: 5px; font-size: 28px; }
+    p { text-align: center; color: #999; margin-bottom: 30px; }
+    form { display: flex; flex-direction: column; gap: 15px; }
+    input {
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    input:focus { outline: none; border-color: #667eea; }
+    button {
+      padding: 12px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover { background: #764ba2; }
+    .error { color: #e74c3c; text-align: center; margin-top: 10px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h1>Admin Login</h1>
+    <p>Isaac Barbearia</p>
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Senha" required>
+      <button type="submit">Entrar</button>
+    </form>
+    <p class="error" id="erro" style="display: none;"></p>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDE2tWDNCDrY6O20EWrDt-NkvZmCm_MR10",
+      authDomain: "isaacbarbearia-admin.firebaseapp.com",
+      projectId: "isaacbarbearia-admin",
+      storageBucket: "isaacbarbearia-admin.firebasestorage.app",
+      messagingSenderId: "308982033120",
+      appId: "1:308982033120:web:38b82c1a3ca9e933be7e85"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const erro = document.getElementById('erro');
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        window.location.href = '/isaacbarbearia/admin.html';
+      } catch (error) {
+        console.error('Erro de login:', error);
+        const code = error?.code || 'auth/unknown';
+        erro.textContent = `Erro ao entrar: ${code}`;
+        erro.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
