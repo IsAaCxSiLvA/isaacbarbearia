@@ -872,11 +872,13 @@
         const docSnap = await getDoc(doc(db, 'config', 'localizacao'));
         if (docSnap.exists()) {
           const data = docSnap.data();
+          console.log('Dados carregados:', data);
           document.getElementById('loc-endereco').value = data.endereco || '';
           document.getElementById('loc-bairro').value = data.bairro || '';
           document.getElementById('loc-cidade').value = data.cidade || '';
           document.getElementById('loc-referencia').value = data.referencia || '';
           document.getElementById('loc-maps-link').value = data.googleMapsLink || '';
+          console.log('Link carregado:', data.googleMapsLink);
           displayLocalizacao(data);
         }
       } catch (error) {
