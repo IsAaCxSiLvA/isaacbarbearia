@@ -213,12 +213,12 @@ export class AppComponent implements OnInit {
       });
 
       const listItems = servicosSnap.docs.map(doc => {
-        const data = doc.data() as { nome?: string; realiza?: boolean; preco?: number };
-        const price = data.realiza && data.preco && data.preco > 0 ? `R$ ${data.preco}` : '-';
+        const data = doc.data() as { nome?: string; realiza?: boolean | string; preco?: number };
+        const price = data.realiza === true && data.preco && data.preco > 0 ? `R$ ${data.preco}` : '-';
         return {
           name: data.nome || 'Serviço',
           price,
-          available: data.realiza !== false
+          available: data.realiza // pode ser true, false ou 'soon'
         };
       });
 
