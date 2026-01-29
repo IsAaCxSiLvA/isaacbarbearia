@@ -207,7 +207,7 @@ export class AppComponent implements OnInit {
             resolve(null);
           }, 800);
         }
-      }, 50); // Atualizar a cada 50ms para animação suave
+      }, 100); // Atualizar a cada 100ms para animação suave
     });
   }
 
