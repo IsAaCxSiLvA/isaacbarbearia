@@ -118,7 +118,7 @@ export class AppComponent implements OnInit {
     },
     {
       id: 'partnerships',
-      title: 'Parceiros & Convênios',
+      title: 'Parcerias',
       isOpen: false,
       type: 'partners',
       icon: 'briefcase',
@@ -254,11 +254,10 @@ export class AppComponent implements OnInit {
       });
 
       const partners = parceirosSnap.docs.map(doc => {
-        const data = doc.data() as { nome?: string; descricao?: string; desconto?: string; imagem?: string };
-        const role = data.desconto ? `${data.desconto}% OFF` : (data.descricao || 'Parceiro');
+        const data = doc.data() as { nome?: string; imagem?: string };
         return {
           name: data.nome || 'Parceiro',
-          role,
+          role: '',
           imageUrl: data.imagem || `https://picsum.photos/seed/${encodeURIComponent(data.nome || doc.id)}/200/200`
         };
       });

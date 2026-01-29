@@ -315,16 +315,15 @@
   
                      @if (item.type === 'partners') {
                        <div class="animate-fade-in">
-                          <div class="grid grid-cols-2 gap-3 mb-4">
+                          <div class="grid grid-cols-3 gap-4 mb-4">
                               @for (partner of item.partners; track partner.name) {
-                                <div class="bg-white/5 border border-white/10 rounded-lg p-3 flex flex-col items-center text-center hover:border-brand-fireOrange/50 hover:bg-white/10 transition-all duration-300 group/partner cursor-default">
-                                   <!-- Circle Image -->
-                                   <div class="w-12 h-12 rounded-full overflow-hidden mb-2 border border-brand-gold/20 group-hover/partner:border-brand-fireOrange group-hover/partner:scale-110 transition-all duration-500 shadow-lg">
-                                     <img [src]="partner.imageUrl" [alt]="partner.name" class="w-full h-full object-cover grayscale group-hover/partner:grayscale-0 transition-all duration-500">
+                                <div class="bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 rounded-xl p-4 flex flex-col items-center text-center hover:border-brand-fireOrange hover:shadow-[0_0_20px_rgba(255,140,0,0.3)] transition-all duration-500 group/partner cursor-default">
+                                   <!-- Logo com efeito -->
+                                   <div class="w-16 h-16 rounded-xl overflow-hidden mb-3 border-2 border-brand-gold/30 group-hover/partner:border-brand-fireOrange group-hover/partner:scale-110 transition-all duration-500 shadow-xl bg-white/5">
+                                     <img [src]="partner.imageUrl" [alt]="partner.name" class="w-full h-full object-cover group-hover/partner:scale-105 transition-all duration-500">
                                    </div>
                                    
-                                   <h4 class="text-brand-gold font-bold text-[10px] uppercase tracking-wider mb-1 group-hover/partner:text-white transition-colors">{{ partner.name }}</h4>
-                                   <p class="text-gray-500 text-[9px] font-medium leading-tight group-hover/partner:text-brand-fireOrange transition-colors">{{ partner.role }}</p>
+                                   <h4 class="text-brand-fireOrange font-bold text-xs uppercase tracking-wide group-hover/partner:text-white transition-colors">{{ partner.name }}</h4>
                                 </div>
                               }
                           </div>

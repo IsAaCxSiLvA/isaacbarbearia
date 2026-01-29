@@ -418,16 +418,14 @@
 
     <!-- PARCEIROS -->
     <div id="parceiros" class="tab-content">
-      <h2>Gerenciar Parceiros e Convênios</h2>
+      <h2>Gerenciar Parcerias</h2>
       <form onsubmit="addParceiro(event)">
-        <input type="text" id="parc-nome" placeholder="Nome do Parceiro" required>
-        <input type="text" id="parc-desc" placeholder="Descrição">
-        <input type="text" id="parc-desc-percent" placeholder="Desconto (%)">
-        <input type="url" id="parc-img" placeholder="Link da Imagem (URL)">
-        <button type="submit">Adicionar Parceiro</button>
+        <input type="text" id="parc-nome" placeholder="Nome da Parceria" required>
+        <input type="url" id="parc-img" placeholder="Link do Logo (URL)" required>
+        <button type="submit">Adicionar Parceria</button>
       </form>
       <table>
-        <thead><tr><th>Nome</th><th>Descrição</th><th>Desconto</th><th>Imagem</th><th>Ações</th></tr></thead>
+        <thead><tr><th>Nome</th><th>Logo</th><th>Ações</th></tr></thead>
         <tbody id="parc-list"></tbody>
       </table>
     </div>
@@ -609,8 +607,6 @@
       e.preventDefault();
       await addDoc(collection(db, 'parceiros'), {
         nome: document.getElementById('parc-nome').value,
-        descricao: document.getElementById('parc-desc').value,
-        desconto: document.getElementById('parc-desc-percent').value,
         imagem: document.getElementById('parc-img').value
       });
       e.target.reset();
@@ -623,12 +619,10 @@
       const snapshot = await getDocs(collection(db, 'parceiros'));
       snapshot.forEach(doc => {
         const data = doc.data();
-        const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">` : '-';
+        const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;border:2px solid #ff8c00;">` : '-';
         list.innerHTML += `<tr>
           <td data-label="Nome">${data.nome}</td>
-          <td data-label="Descrição">${data.descricao || '-'}</td>
-          <td data-label="Desconto">${data.desconto}%</td>
-          <td data-label="Imagem">${imgHtml}</td>
+          <td data-label="Logo">${imgHtml}</td>
           <td data-label="Ações"><button class="btn-delete" onclick="deleteParceiro('${doc.id}')">Deletar</button></td>
         </tr>`;
       });
