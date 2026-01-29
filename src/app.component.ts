@@ -332,6 +332,16 @@ export class AppComponent implements OnInit {
           }
           return item;
         }));
+      } else {
+        // Se não houver dados do Firebase, limpar os padrões
+        this.items.update(items => items.map(item => {
+          if (item.id === 'services') return { ...item, listItems: [] };
+          if (item.id === 'team') return { ...item, teamMembers: [] };
+          if (item.id === 'partnerships') return { ...item, partners: [] };
+          if (item.id === 'projects') return { ...item, projectGallery: [] };
+          if (item.id === 'feedback') return { ...item, testimonials: [] };
+          return item;
+        }));
       }
     } catch (error) {
       console.error('Erro ao carregar dados do Firebase:', error);
