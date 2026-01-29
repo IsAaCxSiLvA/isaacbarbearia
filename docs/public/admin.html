@@ -546,22 +546,30 @@
       loadServicos();
     };
 
+    let isLoadingServicos = false;
     async function loadServicos() {
-      const list = document.getElementById('serv-list');
-      const snapshot = await getDocs(collection(db, 'servicos'));
-      const rows = [];
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const realizaText = data.realiza ? 'Sim' : 'Não';
-        const precoText = data.realiza && data.preco > 0 ? `R$ ${data.preco.toFixed(0)}` : '-';
-        rows.push(`<tr>
-          <td data-label="Serviço">${data.nome}</td>
-          <td data-label="Realizamos?">${realizaText}</td>
-          <td data-label="Preço">${precoText}</td>
-          <td data-label="Ações"><button class="btn-delete" onclick="deleteServico('${doc.id}')">Deletar</button></td>
-        </tr>`);
-      });
-      list.innerHTML = rows.join('');
+      if (isLoadingServicos) return;
+      isLoadingServicos = true;
+      
+      try {
+        const list = document.getElementById('serv-list');
+        const snapshot = await getDocs(collection(db, 'servicos'));
+        const rows = [];
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const realizaText = data.realiza ? 'Sim' : 'Não';
+          const precoText = data.realiza && data.preco > 0 ? `R$ ${data.preco.toFixed(0)}` : '-';
+          rows.push(`<tr>
+            <td data-label="Serviço">${data.nome}</td>
+            <td data-label="Realizamos?">${realizaText}</td>
+            <td data-label="Preço">${precoText}</td>
+            <td data-label="Ações"><button class="btn-delete" onclick="deleteServico('${doc.id}')">Deletar</button></td>
+          </tr>`);
+        });
+        list.innerHTML = rows.join('');
+      } finally {
+        isLoadingServicos = false;
+      }
     }
 
     window.deleteServico = async (id) => {
@@ -582,21 +590,29 @@
       loadProfissionais();
     };
 
+    let isLoadingProfissionais = false;
     async function loadProfissionais() {
-      const list = document.getElementById('prof-list');
-      const snapshot = await getDocs(collection(db, 'profissionais'));
-      const rows = [];
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">` : '-';
-        rows.push(`<tr>
-          <td data-label="Nome">${data.nome}</td>
-          <td data-label="Especialidade">${data.especialidade}</td>
-          <td data-label="Imagem">${imgHtml}</td>
-          <td data-label="Ações"><button class="btn-delete" onclick="deleteProfissional('${doc.id}')">Deletar</button></td>
-        </tr>`);
-      });
-      list.innerHTML = rows.join('');
+      if (isLoadingProfissionais) return;
+      isLoadingProfissionais = true;
+      
+      try {
+        const list = document.getElementById('prof-list');
+        const snapshot = await getDocs(collection(db, 'profissionais'));
+        const rows = [];
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">` : '-';
+          rows.push(`<tr>
+            <td data-label="Nome">${data.nome}</td>
+            <td data-label="Especialidade">${data.especialidade}</td>
+            <td data-label="Imagem">${imgHtml}</td>
+            <td data-label="Ações"><button class="btn-delete" onclick="deleteProfissional('${doc.id}')">Deletar</button></td>
+          </tr>`);
+        });
+        list.innerHTML = rows.join('');
+      } finally {
+        isLoadingProfissionais = false;
+      }
     }
 
     window.deleteProfissional = async (id) => {
@@ -615,20 +631,28 @@
       loadParceiros();
     };
 
+    let isLoadingParceiros = false;
     async function loadParceiros() {
-      const list = document.getElementById('parc-list');
-      const snapshot = await getDocs(collection(db, 'parceiros'));
-      const rows = [];
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;border:2px solid #ff8c00;">` : '-';
-        rows.push(`<tr>
-          <td data-label="Nome">${data.nome}</td>
-          <td data-label="Logo">${imgHtml}</td>
-          <td data-label="Ações"><button class="btn-delete" onclick="deleteParceiro('${doc.id}')">Deletar</button></td>
+      if (isLoadingParceiros) return;
+      isLoadingParceiros = true;
+      
+      try {
+        const list = document.getElementById('parc-list');
+        const snapshot = await getDocs(collection(db, 'parceiros'));
+        const rows = [];
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;border:2px solid #ff8c00;">` : '-';
+          rows.push(`<tr>
+            <td data-label="Nome">${data.nome}</td>
+            <td data-label="Logo">${imgHtml}</td>
+            <td data-label="Ações"><button class="btn-delete" onclick="deleteParceiro('${doc.id}')">Deletar</button></td>
         </tr>`);
-      });
-      list.innerHTML = rows.join('');
+        });
+        list.innerHTML = rows.join('');
+      } finally {
+        isLoadingParceiros = false;
+      }
     }
 
     window.deleteParceiro = async (id) => {
@@ -648,20 +672,28 @@
       loadParticipacoes();
     };
 
+    let isLoadingParticipacoes = false;
     async function loadParticipacoes() {
-      const list = document.getElementById('part-list');
-      const snapshot = await getDocs(collection(db, 'participacoes'));
-      const cards = [];
-      snapshot.forEach(doc => {
-        const data = doc.data();
+      if (isLoadingParticipacoes) return;
+      isLoadingParticipacoes = true;
+      
+      try {
+        const list = document.getElementById('part-list');
+        const snapshot = await getDocs(collection(db, 'participacoes'));
+        const cards = [];
+        snapshot.forEach(doc => {
+          const data = doc.data();
         cards.push(`<div class="card">
           <h3>${data.titulo}</h3>
           <p>${data.descricao || ''}</p>
           <p><strong>Data:</strong> ${data.data}</p>
           <button class="btn-delete" onclick="deleteParticipacao('${doc.id}')">Deletar</button>
         </div>`);
-      });
-      list.innerHTML = cards.join('');
+        });
+        list.innerHTML = cards.join('');
+      } finally {
+        isLoadingParticipacoes = false;
+      }
     }
 
     window.deleteParticipacao = async (id) => {
