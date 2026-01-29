@@ -554,8 +554,13 @@
       try {
         const list = document.getElementById('serv-list');
         const snapshot = await getDocs(collection(db, 'servicos'));
+        const uniqueIds = new Set();
         const rows = [];
+        
         snapshot.forEach(doc => {
+          if (uniqueIds.has(doc.id)) return; // Pula se já foi adicionado
+          uniqueIds.add(doc.id);
+          
           const data = doc.data();
           const realizaText = data.realiza ? 'Sim' : 'Não';
           const precoText = data.realiza && data.preco > 0 ? `R$ ${data.preco.toFixed(0)}` : '-';
@@ -598,8 +603,13 @@
       try {
         const list = document.getElementById('prof-list');
         const snapshot = await getDocs(collection(db, 'profissionais'));
+        const uniqueIds = new Set();
         const rows = [];
+        
         snapshot.forEach(doc => {
+          if (uniqueIds.has(doc.id)) return;
+          uniqueIds.add(doc.id);
+          
           const data = doc.data();
           const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">` : '-';
           rows.push(`<tr>
@@ -639,8 +649,13 @@
       try {
         const list = document.getElementById('parc-list');
         const snapshot = await getDocs(collection(db, 'parceiros'));
+        const uniqueIds = new Set();
         const rows = [];
+        
         snapshot.forEach(doc => {
+          if (uniqueIds.has(doc.id)) return;
+          uniqueIds.add(doc.id);
+          
           const data = doc.data();
           const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;border:2px solid #ff8c00;">` : '-';
           rows.push(`<tr>
@@ -680,8 +695,12 @@
       try {
         const list = document.getElementById('part-list');
         const snapshot = await getDocs(collection(db, 'participacoes'));
+        const uniqueIds = new Set();
         const cards = [];
         snapshot.forEach(doc => {
+          if (uniqueIds.has(doc.id)) return;
+          uniqueIds.add(doc.id);
+          
           const data = doc.data();
         cards.push(`<div class="card">
           <h3>${data.titulo}</h3>
@@ -702,12 +721,18 @@
     };
 
     // Avaliações - Com listener em tempo real
+    let avaliacoesUnsubscribe = null;
     function loadAvaliacoes() {
       const list = document.getElementById('aval-list');
       console.log('Iniciando loadAvaliacoes...');
       
+      // Remove o listener anterior se existir
+      if (avaliacoesUnsubscribe) {
+        avaliacoesUnsubscribe();
+      }
+      
       try {
-        onSnapshot(collection(db, 'avaliacoes'), (snapshot) => {
+        avaliacoesUnsubscribe = onSnapshot(collection(db, 'avaliacoes'), (snapshot) => {
           console.log('Snapshot recebido:', snapshot.docs.length, 'documentos');
           
           if (snapshot.empty) {
@@ -715,8 +740,12 @@
             return;
           }
           
+          const uniqueIds = new Set();
           const cards = [];
           snapshot.forEach(doc => {
+            if (uniqueIds.has(doc.id)) return;
+            uniqueIds.add(doc.id);
+            
             const data = doc.data();
             console.log('Renderizando avaliação:', data);
             cards.push(`<div class="card">
