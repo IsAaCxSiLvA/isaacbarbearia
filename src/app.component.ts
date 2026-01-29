@@ -179,23 +179,23 @@ export class AppComponent implements OnInit {
   }
 
   async startLoading() {
-    // Versão SUPER SIMPLES: só espera 5 segundos e esconde
+    // Versão SUPER SIMPLES: só espera 12 segundos e esconde
     this.isLoading.set(true);
     this.loadingProgress.set(0);
     
     // Animar progresso
     let progress = 0;
     const interval = setInterval(() => {
-      progress += 4; // 4% a cada 200ms = 100% em 5 segundos
+      progress += 0.83; // ~0.83% a cada 100ms = 100% em 12 segundos
       if (progress <= 100) {
         this.loadingProgress.set(progress);
       }
-    }, 200);
+    }, 100);
     
     // Carregar dados em background
     this.loadDynamicData();
     
-    // Esperar 5 segundos GARANTIDOS
+    // Esperar 12 segundos GARANTIDOS
     setTimeout(() => {
       clearInterval(interval);
       this.loadingProgress.set(100);
@@ -204,7 +204,7 @@ export class AppComponent implements OnInit {
       setTimeout(() => {
         this.isLoading.set(false);
       }, 500);
-    }, 5000);
+    }, 12000);
   }
 
   async loadDynamicData() {
