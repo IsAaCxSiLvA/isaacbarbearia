@@ -1,4 +1,4 @@
-import { Component, signal, ChangeDetectionStrategy, OnInit, NgZone } from '@angular/core';
+import { Component, signal, OnInit, NgZone } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { initializeApp } from 'firebase/app';
@@ -31,8 +31,7 @@ interface Particle {
   selector: 'app-root',
   imports: [CommonModule, FormsModule, NgOptimizedImage],
   templateUrl: './app.component.html',
-  styleUrls: [],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: []
 })
 export class AppComponent implements OnInit {
   constructor(private ngZone: NgZone) {}
