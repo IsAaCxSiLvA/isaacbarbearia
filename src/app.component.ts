@@ -154,47 +154,49 @@ export class AppComponent implements OnInit {
 
   async startLoading() {
     const startTime = Date.now();
-    const minLoadingTime = 25000; // 25 segundos mínimo
+    const minLoadingTime = 30000; // 30 segundos GARANTIDOS
     
-    // Simular progresso de carregamento bem mais lento
-    const interval = setInterval(() => {
-      this.loadingProgress.update(p => {
-        if (p >= 60) {
-          clearInterval(interval);
-          return 60;
-        }
-        return p + Math.random() * 2; // Progresso ainda mais lento
-      });
-    }, 800); // Intervalo ainda maior
-
-    // Aguardar dados carregarem
+    // Carregar dados
     await this.loadDynamicData();
     
-    // Calcular tempo restante para completar 25 segundos
+    // Calcular tempo decorrido
     const elapsedTime = Date.now() - startTime;
     const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
     
-    // Completar progresso gradualmente até 100%
+    // Progresso inicial rápido
+    let currentProgress = 0;
+    const progressInterval = setInterval(() => {
+      currentProgress += Math.random() * 2;
+      if (currentProgress > 85) {
+        currentProgress = 85;
+        clearInterval(progressInterval);
+      }
+      this.loadingProgress.set(Math.min(currentProgress, 100));
+    }, 500);
+    
+    // Aguardar tempo mínimo
     setTimeout(() => {
-      clearInterval(interval);
-      const finalInterval = setInterval(() => {
-        this.loadingProgress.update(p => {
-          if (p >= 100) {
-            clearInterval(finalInterval);
-            return 100;
-          }
-          return p + 1.5;
-        });
-      }, 300);
+      clearInterval(progressInterval);
       
-      // Remover tela de loading após completar
+      // Completar de 85 a 100
+      let finalProgress = 85;
+      const finalInterval = setInterval(() => {
+        finalProgress += 2;
+        if (finalProgress >= 100) {
+          clearInterval(finalInterval);
+          finalProgress = 100;
+        }
+        this.loadingProgress.set(finalProgress);
+      }, 150);
+      
+      // Remover tela após completar
       setTimeout(() => {
         clearInterval(finalInterval);
         this.loadingProgress.set(100);
         setTimeout(() => {
           this.isLoading.set(false);
-        }, 1500);
-      }, 5000);
+        }, 800);
+      }, 8000);
     }, remainingTime);
   }
 
