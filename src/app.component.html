@@ -1,5 +1,44 @@
 <div class="min-h-screen bg-black text-[#e0e0e0] font-sans flex flex-col items-center py-12 px-4 relative overflow-x-hidden">
 
+  <!-- LOADING SCREEN -->
+  @if (isLoading()) {
+    <div class="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center loading-screen">
+      <!-- Fire Background Effect -->
+      <div class="absolute inset-0 bg-gradient-radial from-brand-fireOrange/20 via-black to-black animate-pulse-slow"></div>
+      
+      <!-- Animated Fire Circle -->
+      <div class="relative mb-8">
+        <div class="fire-ring"></div>
+        <div class="fire-ring fire-ring-2"></div>
+        <img src="https://i.postimg.cc/xT0TDh50/isaacbarbearia.png" 
+             alt="Isaac Barbearia" 
+             class="relative z-10 w-48 h-auto animate-fade-in">
+      </div>
+
+      <!-- Loading Text -->
+      <div class="relative z-10 text-center mb-8">
+        <h2 class="text-2xl font-bold text-fire-gradient mb-2 animate-shimmer">Isaac Barbearia</h2>
+        <p class="text-brand-gold/80 text-sm tracking-wider">Preparando a experiência...</p>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="relative z-10 w-64 h-2 bg-white/10 rounded-full overflow-hidden backdrop-blur-sm">
+        <div class="h-full bg-gradient-to-r from-brand-fireOrange via-yellow-500 to-brand-fireOrange animate-shimmer transition-all duration-300"
+             [style.width.%]="loadingProgress()"></div>
+      </div>
+
+      <!-- Percentage -->
+      <p class="relative z-10 mt-4 text-brand-fireOrange font-bold text-lg">{{ loadingProgress().toFixed(0) }}%</p>
+
+      <!-- Rising Embers -->
+      <div class="absolute inset-0 overflow-hidden pointer-events-none">
+        @for (i of [1,2,3,4,5,6,7,8]; track i) {
+          <div class="loading-ember" [style.left.%]="i * 12" [style.animation-delay.s]="i * 0.3"></div>
+        }
+      </div>
+    </div>
+  }
+
   <!-- BACKGROUND: Cinematic Fire Effect -->
   <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
     <!-- Bottom Glow (Rising Heat) -->

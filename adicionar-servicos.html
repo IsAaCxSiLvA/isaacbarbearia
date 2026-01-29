@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Adicionar Serviços Iniciais</title>
+</head>
+<body>
+  <h1>Adicionando serviços...</h1>
+  <div id="status"></div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getFirestore, collection, addDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDE2tWDNCDrY6O20EWrDt-NkvZmCm_MR10",
+      authDomain: "isaacbarbearia-admin.firebaseapp.com",
+      projectId: "isaacbarbearia-admin",
+      storageBucket: "isaacbarbearia-admin.firebasestorage.app",
+      messagingSenderId: "659556748535",
+      appId: "1:659556748535:web:30c69af3e18c5e23f7bedc"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const servicos = [
+      { nome: 'Corte Clássico', realiza: true, preco: 50 },
+      { nome: 'Barba Terapia (Toalha Quente)', realiza: true, preco: 45 },
+      { nome: 'Degradê Navalhado', realiza: true, preco: 60 },
+      { nome: 'Combo Isaac (Corte+Barba)', realiza: true, preco: 85 },
+      { nome: 'Sobrancelha', realiza: true, preco: 20 },
+      { nome: 'Pigmentação Premium', realiza: true, preco: 40 },
+      { nome: 'Química / Alisamento', realiza: false, preco: 0 },
+      { nome: 'Platinado Global', realiza: false, preco: 0 }
+    ];
+
+    const status = document.getElementById('status');
+
+    async function adicionarServicos() {
+      status.innerHTML = '<p>Iniciando...</p>';
+      
+      for (const servico of servicos) {
+        try {
+          await addDoc(collection(db, 'servicos'), servico);
+          status.innerHTML += `<p>✅ ${servico.nome} adicionado</p>`;
+        } catch (error) {
+          status.innerHTML += `<p>❌ Erro ao adicionar ${servico.nome}: ${error.message}</p>`;
+        }
+      }
+      
+      status.innerHTML += '<p><strong>Concluído!</strong> Pode fechar esta página.</p>';
+    }
+
+    adicionarServicos();
+  </script>
+</body>
+</html>

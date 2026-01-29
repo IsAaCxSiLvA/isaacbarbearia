@@ -46,6 +46,10 @@ export class AppComponent implements OnInit {
   private app = initializeApp(this.firebaseConfig);
   private db = getFirestore(this.app);
   
+  // Loading State
+  isLoading = signal(true);
+  loadingProgress = signal(0);
+  
   // Background Particles
   embers = signal<Particle[]>([]); // Rising from bottom
   sparks = signal<Particle[]>([]); // Falling from top
@@ -143,9 +147,34 @@ export class AppComponent implements OnInit {
   ]);
 
   ngOnInit() {
+    this.startLoading();
     this.generateEmbers();
     this.generateSparks();
     this.loadDynamicData();
+  }
+
+  async startLoading() {
+    // Simular progresso de carregamento
+    const interval = setInterval(() => {
+      this.loadingProgress.update(p => {
+        if (p >= 90) {
+          clearInterval(interval);
+          return 90;
+        }
+        return p + Math.random() * 15;
+      });
+    }, 200);
+
+    // Aguardar dados carregarem
+    await this.loadDynamicData();
+    
+    // Completar progresso
+    this.loadingProgress.set(100);
+    
+    // Remover tela de loading após animação
+    setTimeout(() => {
+      this.isLoading.set(false);
+    }, 800);
   }
 
   async loadDynamicData() {

@@ -252,6 +252,75 @@
         opacity: 0;
       }
     }
+
+    /* Loading Screen Styles */
+    .loading-screen {
+      animation: fadeOut 0.8s ease-out forwards;
+      animation-delay: 0s;
+    }
+
+    .loading-ember {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #FF8C00 0%, #FF4500 50%, transparent 70%);
+      bottom: 0;
+      animation: loading-rise 4s ease-in-out infinite;
+      box-shadow: 0 0 10px #FF8C00;
+    }
+
+    @keyframes loading-rise {
+      0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-100vh) translateX(30px);
+        opacity: 0;
+      }
+    }
+
+    .fire-ring {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      border: 3px solid transparent;
+      border-top-color: #FF8C00;
+      border-right-color: #FF8C00;
+      border-radius: 50%;
+      animation: spin 3s linear infinite;
+      filter: blur(1px);
+    }
+
+    .fire-ring-2 {
+      width: 220px;
+      height: 220px;
+      border-top-color: #FF4500;
+      border-right-color: #FF4500;
+      animation: spin 4s linear infinite reverse;
+      opacity: 0.6;
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+        visibility: hidden;
+      }
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .bg-gradient-radial {
+      background: radial-gradient(circle, var(--tw-gradient-stops));
+    }
   </style>
 <script type="importmap">
 {
@@ -275,5 +344,5 @@
 </head>
 <body class="antialiased selection:bg-brand-fireOrange selection:text-white">
   <app-root></app-root>
-<script src="main-2DQPLTYB.js" type="module"></script></body>
+<script src="main-GFRXVDLM.js" type="module"></script></body>
 </html>
