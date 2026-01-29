@@ -274,15 +274,17 @@ export class AppComponent implements OnInit {
 
       // Carregar dados de localização
       if (localizacaoSnap.exists()) {
-        const locData = localizacaoSnap.data() as { endereco?: string; bairro?: string; cidade?: string; referencia?: string };
+        const locData = localizacaoSnap.data() as { endereco?: string; bairro?: string; cidade?: string; referencia?: string; googleMapsLink?: string };
         
         if (locData.endereco) this.localizacaoEndereco.set(locData.endereco);
         if (locData.bairro) this.localizacaoBairro.set(locData.bairro);
         if (locData.cidade) this.localizacaoCidade.set(locData.cidade);
         if (locData.referencia) this.localizacaoReferencia.set(locData.referencia);
         
-        // Link fixo do Google Maps
-        this.googleMapsLink.set('https://share.google/Q4GvyJhu3aPv7HcgA');
+        // Link do Google Maps do Firestore
+        if (locData.googleMapsLink) {
+          this.googleMapsLink.set(locData.googleMapsLink);
+        }
       }
 
       // Carregar dados de horários
