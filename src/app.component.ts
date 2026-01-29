@@ -177,48 +177,42 @@ export class AppComponent implements OnInit {
     const startTime = Date.now();
     const minLoadingTime = 12000; // 12 segundos
     
-    // Carregar dados
-    await this.loadDynamicData();
+    this.isLoading.set(true); // Garante que tela está visível
+    this.loadingProgress.set(0); // Começa do zero
     
-    // Calcular tempo decorrido
-    const elapsedTime = Date.now() - startTime;
-    const remainingTime = Math.max(0, minLoadingTime - elapsedTime);
+    // Carregar dados em paralelo com animação
+    const dataPromise = this.loadDynamicData();
     
-    // Progresso inicial rápido
-    let currentProgress = 0;
-    const progressInterval = setInterval(() => {
-      currentProgress += Math.random() * 2;
-      if (currentProgress > 85) {
-        currentProgress = 85;
-        clearInterval(progressInterval);
-      }
-      this.loadingProgress.set(Math.min(currentProgress, 100));
-    }, 500);
-    
-    // Aguardar tempo mínimo
-    setTimeout(() => {
-      clearInterval(progressInterval);
+    // Animar progresso durante os 12 segundos
+    const animationInterval = setInterval(() => {
+      const elapsedTime = Date.now() - startTime;
+      const progress = (elapsedTime / minLoadingTime) * 100;
       
-      // Completar de 85 a 100
-      let finalProgress = 85;
-      const finalInterval = setInterval(() => {
-        finalProgress += 2;
-        if (finalProgress >= 100) {
-          clearInterval(finalInterval);
-          finalProgress = 100;
-        }
-        this.loadingProgress.set(finalProgress);
-      }, 150);
+      // Adiciona variação aleatória para parecer mais natural (máx 105%)
+      const randomVariation = Math.random() * 5;
+      const displayProgress = Math.min(progress + randomVariation, 99);
       
-      // Remover tela após completar
-      setTimeout(() => {
-        clearInterval(finalInterval);
-        this.loadingProgress.set(100);
-        setTimeout(() => {
-          this.isLoading.set(false);
-        }, 800);
-      }, 3000);
-    }, remainingTime);
+      this.loadingProgress.set(displayProgress);
+    }, 100);
+    
+    // Aguardar dados + tempo mínimo
+    await dataPromise;
+    
+    // Esperar até o mínimo de 12 segundos ter passado
+    const elapsed = Date.now() - startTime;
+    if (elapsed < minLoadingTime) {
+      await new Promise(resolve => setTimeout(resolve, minLoadingTime - elapsed));
+    }
+    
+    // Completar a 100%
+    clearInterval(animationInterval);
+    this.loadingProgress.set(100);
+    
+    // Aguardar um pouco antes de desaparecer (transição suave)
+    await new Promise(resolve => setTimeout(resolve, 800));
+    
+    // Esconder tela de loading
+    this.isLoading.set(false);
   }
 
   async loadDynamicData() {
