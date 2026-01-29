@@ -2,6 +2,7 @@
 
   <!-- LOADING SCREEN -->
   @if (isLoading()) {
+    {{ console.log('📺 HTML: isLoading é TRUE - mostrando tela') || '' }}
     <div class="fixed inset-0 z-[9999] bg-black flex flex-col items-center justify-center loading-screen">
       <!-- Fire Background Effect -->
       <div class="absolute inset-0 bg-gradient-radial from-brand-fireOrange/20 via-black to-black animate-pulse-slow"></div>
@@ -37,6 +38,8 @@
         }
       </div>
     </div>
+  } @else {
+    {{ console.log('📺 HTML: isLoading é FALSE - escondendo tela') || '' }}
   }
 
   <!-- BACKGROUND: Cinematic Fire Effect -->

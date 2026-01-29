@@ -177,59 +177,74 @@ export class AppComponent implements OnInit {
 
   async startLoading() {
     console.log('🟢 Loading started');
+    console.log('🟢 isLoading BEFORE:', this.isLoading());
+    
     this.ngZone.run(() => {
+      console.log('🟡 Dentro do NgZone.run() - setando isLoading=true e progress=0');
       this.isLoading.set(true);
       this.loadingProgress.set(0);
+      console.log('🟡 Após .set() - isLoading:', this.isLoading(), 'progress:', this.loadingProgress());
     });
     
     const startTime = Date.now();
     const minTime = 12000; // 12 segundos mínimo
+    console.log('⏱️ Iniciando animação com minTime=' + minTime + 'ms');
     
     // Animar barra continuamente FORA da zone para não disparar change detection a cada 500ms
     const interval = this.ngZone.runOutsideAngular(() => {
+      console.log('🟡 setInterval criado fora da zone');
       return setInterval(() => {
         const elapsed = Date.now() - startTime;
         const percent = Math.min((elapsed / minTime) * 100, 100);
+        
         // Atualizar o signal DENTRO da zone para disparar change detection
         this.ngZone.run(() => {
           this.loadingProgress.set(percent);
         });
-        console.log(`Progress: ${percent.toFixed(1)}%`);
+        console.log(`Progress: ${percent.toFixed(1)}% | Signal value: ${this.loadingProgress()}`);
       }, 500);
     });
     
     // Carregar dados
-    console.log('Loading data...');
+    console.log('📥 Loading data...');
     await this.loadDynamicData();
-    console.log('Data loaded');
+    console.log('✅ Data loaded');
     
     // Esperar pelo menos 12 segundos
     const totalElapsed = Date.now() - startTime;
-    console.log(`Elapsed: ${totalElapsed}ms, remaining: ${Math.max(0, minTime - totalElapsed)}ms`);
+    const remaining = Math.max(0, minTime - totalElapsed);
+    console.log(`⏱️ Elapsed: ${totalElapsed}ms, remaining: ${remaining}ms`);
     
-    if (totalElapsed < minTime) {
-      await new Promise(r => setTimeout(r, minTime - totalElapsed));
+    if (remaining > 0) {
+      console.log(`⏳ Esperando mais ${remaining}ms...`);
+      await new Promise(r => setTimeout(r, remaining));
+      console.log('✅ Tempo mínimo atingido!');
     }
     
     // Limpar animação
     this.ngZone.runOutsideAngular(() => {
       clearInterval(interval);
+      console.log('🟡 setInterval limpo');
     });
     
     // Garantir 100%
-    console.log('Setting to 100%');
+    console.log('📊 Setting to 100%');
     this.ngZone.run(() => {
       this.loadingProgress.set(100);
+      console.log('📊 Progress signal agora é:', this.loadingProgress());
     });
     
     // Aguardar um pouco (mostrando a barra completa)
+    console.log('⏳ Aguardando 500ms com barra em 100%...');
     await new Promise(r => setTimeout(r, 500));
     
     // SAIR DA TELA
-    console.log('🔴 Hiding loading screen');
+    console.log('🔴 Pronto para ESCONDER a tela!');
     this.ngZone.run(() => {
+      console.log('🔴 Dentro do NgZone.run() - setando isLoading=FALSE');
       this.isLoading.set(false);
-      console.log('🔴 isLoading is now:', this.isLoading());
+      console.log('🔴 isLoading agora é:', this.isLoading());
+      console.log('🔴 Tela deveria ter desaparecido!');
     });
   }
 
