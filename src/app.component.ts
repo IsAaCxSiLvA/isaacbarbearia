@@ -174,38 +174,38 @@ export class AppComponent implements OnInit {
   }
 
   async startLoading() {
-    const startTime = Date.now();
-    const minLoadingTime = 12000; // 12 segundos
-    
     this.isLoading.set(true);
     this.loadingProgress.set(0);
     
-    // Iniciar animação contínua desde o início
-    const animationInterval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min((elapsed / minLoadingTime) * 100, 100); // Até 100%
-      this.loadingProgress.set(progress);
-    }, 100);
+    const startTime = Date.now();
+    const minTime = 12000; // 12 segundos mínimo
     
-    // Carregar dados em paralelo
+    // Animar barra continuamente
+    const interval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const percent = Math.min((elapsed / minTime) * 100, 100);
+      this.loadingProgress.set(percent);
+    }, 50);
+    
+    // Carregar dados
     await this.loadDynamicData();
     
-    // Aguardar o tempo mínimo de 12 segundos
-    const elapsed = Date.now() - startTime;
-    const remaining = Math.max(0, minLoadingTime - elapsed);
-    
-    if (remaining > 0) {
-      await new Promise(resolve => setTimeout(resolve, remaining));
+    // Esperar pelo menos 12 segundos
+    const totalElapsed = Date.now() - startTime;
+    if (totalElapsed < minTime) {
+      await new Promise(r => setTimeout(r, minTime - totalElapsed));
     }
     
-    // Parar a animação contínua
-    clearInterval(animationInterval);
+    // Limpar animação
+    clearInterval(interval);
     
-    // Forçar a 100% e esperar
+    // Garantir 100%
     this.loadingProgress.set(100);
-    await new Promise(resolve => setTimeout(resolve, 800)); // 800ms em 100%
     
-    // Desaparecer
+    // Aguardar um pouco (mostrando a barra completa)
+    await new Promise(r => setTimeout(r, 500));
+    
+    // SAIR DA TELA
     this.isLoading.set(false);
   }
 
