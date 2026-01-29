@@ -1,4 +1,4 @@
-import { Component, signal, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy, OnInit, NgZone } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { initializeApp } from 'firebase/app';
@@ -35,6 +35,8 @@ interface Particle {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent implements OnInit {
+  constructor(private ngZone: NgZone) {}
+
   private firebaseConfig = {
     apiKey: 'AIzaSyDE2tWDNCDrY6O20EWrDt-NkvZmCm_MR10',
     authDomain: 'isaacbarbearia-admin.firebaseapp.com',
@@ -175,19 +177,26 @@ export class AppComponent implements OnInit {
 
   async startLoading() {
     console.log('🟢 Loading started');
-    this.isLoading.set(true);
-    this.loadingProgress.set(0);
+    this.ngZone.run(() => {
+      this.isLoading.set(true);
+      this.loadingProgress.set(0);
+    });
     
     const startTime = Date.now();
     const minTime = 12000; // 12 segundos mínimo
     
-    // Animar barra continuamente
-    const interval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const percent = Math.min((elapsed / minTime) * 100, 100);
-      this.loadingProgress.set(percent);
-      console.log(`Progress: ${percent.toFixed(1)}%`);
-    }, 500);
+    // Animar barra continuamente FORA da zone para não disparar change detection a cada 500ms
+    const interval = this.ngZone.runOutsideAngular(() => {
+      return setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const percent = Math.min((elapsed / minTime) * 100, 100);
+        // Atualizar o signal DENTRO da zone para disparar change detection
+        this.ngZone.run(() => {
+          this.loadingProgress.set(percent);
+        });
+        console.log(`Progress: ${percent.toFixed(1)}%`);
+      }, 500);
+    });
     
     // Carregar dados
     console.log('Loading data...');
@@ -203,19 +212,25 @@ export class AppComponent implements OnInit {
     }
     
     // Limpar animação
-    clearInterval(interval);
+    this.ngZone.runOutsideAngular(() => {
+      clearInterval(interval);
+    });
     
     // Garantir 100%
     console.log('Setting to 100%');
-    this.loadingProgress.set(100);
+    this.ngZone.run(() => {
+      this.loadingProgress.set(100);
+    });
     
     // Aguardar um pouco (mostrando a barra completa)
     await new Promise(r => setTimeout(r, 500));
     
     // SAIR DA TELA
     console.log('🔴 Hiding loading screen');
-    this.isLoading.set(false);
-    console.log('🔴 isLoading is now:', this.isLoading());
+    this.ngZone.run(() => {
+      this.isLoading.set(false);
+      console.log('🔴 isLoading is now:', this.isLoading());
+    });
   }
 
   async loadDynamicData() {
