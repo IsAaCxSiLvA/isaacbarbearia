@@ -64,7 +64,7 @@ export class AppComponent implements OnInit {
   localizacaoBairro = signal('Centro');
   localizacaoCidade = signal('Fortaleza - CE');
   localizacaoReferencia = signal('Próximo à praça principal');
-  googleMapsLink = signal('#');
+  googleMapsLink = signal('https://share.google/Q4GvyJhu3aPv7HcgA');
   
   // Horários
   horariosSegSex = signal('09:00 às 20:00');
