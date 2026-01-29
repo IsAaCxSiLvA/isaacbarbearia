@@ -183,36 +183,32 @@ export class AppComponent implements OnInit {
     // Carregar dados em paralelo com animação
     const dataPromise = this.loadDynamicData();
     
-    // Animar progresso durante os 12 segundos
-    const animationInterval = setInterval(() => {
-      const elapsedTime = Date.now() - startTime;
-      const progress = (elapsedTime / minLoadingTime) * 100;
-      
-      // Adiciona variação aleatória para parecer mais natural (máx 105%)
-      const randomVariation = Math.random() * 5;
-      const displayProgress = Math.min(progress + randomVariation, 99);
-      
-      this.loadingProgress.set(displayProgress);
-    }, 100);
-    
-    // Aguardar dados + tempo mínimo
+    // Aguardar dados + tempo mínimo em paralelo
     await dataPromise;
-    
-    // Esperar até o mínimo de 12 segundos ter passado
     const elapsed = Date.now() - startTime;
-    if (elapsed < minLoadingTime) {
-      await new Promise(resolve => setTimeout(resolve, minLoadingTime - elapsed));
-    }
+    const remainingTime = Math.max(0, minLoadingTime - elapsed);
     
-    // Completar a 100%
-    clearInterval(animationInterval);
-    this.loadingProgress.set(100);
+    // Animar progresso suavemente do progresso atual até 100% durante tempo restante
+    const animationStartTime = Date.now();
+    const animationDuration = Math.max(remainingTime, 2000); // Mínimo 2 segundos para animação final
     
-    // Aguardar um pouco antes de desaparecer (transição suave)
-    await new Promise(resolve => setTimeout(resolve, 800));
-    
-    // Esconder tela de loading
-    this.isLoading.set(false);
+    return new Promise(resolve => {
+      const animationInterval = setInterval(() => {
+        const animationElapsed = Date.now() - animationStartTime;
+        const animationProgress = Math.min((animationElapsed / animationDuration) * 100, 100);
+        this.loadingProgress.set(animationProgress);
+        
+        if (animationProgress >= 100) {
+          clearInterval(animationInterval);
+          
+          // Manter em 100% por 800ms antes de desaparecer
+          setTimeout(() => {
+            this.isLoading.set(false);
+            resolve(null);
+          }, 800);
+        }
+      }, 50); // Atualizar a cada 50ms para animação suave
+    });
   }
 
   async loadDynamicData() {
