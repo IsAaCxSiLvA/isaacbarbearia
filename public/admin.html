@@ -370,15 +370,35 @@
     <h1>Painel Admin - Isaac Barbearia</h1>
     
     <div class="tabs">
-      <button class="active" onclick="showTab('profissionais')">Profissionais</button>
+      <button class="active" onclick="showTab('servicos')">Serviços</button>
+      <button onclick="showTab('profissionais')">Profissionais</button>
       <button onclick="showTab('parceiros')">Parceiros</button>
       <button onclick="showTab('participacoes')">Participação</button>
       <button onclick="showTab('avaliacoes')">Avaliações</button>
       <button class="btn-logout" onclick="logout()">Sair</button>
     </div>
 
+    <!-- SERVIÇOS -->
+    <div id="servicos" class="tab-content active">
+      <h2>Gerenciar Serviços & Preços</h2>
+      <form onsubmit="addServico(event)">
+        <input type="text" id="serv-nome" placeholder="Nome do Serviço" required>
+        <select id="serv-realiza" required>
+          <option value="">Realizamos este serviço?</option>
+          <option value="true">Sim</option>
+          <option value="false">Não</option>
+        </select>
+        <input type="number" id="serv-preco" placeholder="Preço (em R$)" step="0.01" min="0">
+        <button type="submit">Adicionar Serviço</button>
+      </form>
+      <table>
+        <thead><tr><th>Serviço</th><th>Realizamos?</th><th>Preço</th><th>Ações</th></tr></thead>
+        <tbody id="serv-list"></tbody>
+      </table>
+    </div>
+
     <!-- PROFISSIONAIS -->
-    <div id="profissionais" class="tab-content active">
+    <div id="profissionais" class="tab-content">
       <h2>Gerenciar Profissionais</h2>
       <form onsubmit="addProfissional(event)">
         <input type="text" id="prof-nome" placeholder="Nome" required>
@@ -472,6 +492,42 @@
     window.logout = async () => {
       await signOut(auth);
       window.location.href = '/isaacbarbearia/login.html';
+    };
+
+    // Serviços
+    window.addServico = async (e) => {
+      e.preventDefault();
+      const realiza = document.getElementById('serv-realiza').value === 'true';
+      const preco = document.getElementById('serv-preco').value;
+      await addDoc(collection(db, 'servicos'), {
+        nome: document.getElementById('serv-nome').value,
+        realiza: realiza,
+        preco: realiza && preco ? parseFloat(preco) : 0
+      });
+      e.target.reset();
+      loadServicos();
+    };
+
+    async function loadServicos() {
+      const list = document.getElementById('serv-list');
+      list.innerHTML = '';
+      const snapshot = await getDocs(collection(db, 'servicos'));
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const realizaText = data.realiza ? 'Sim' : 'Não';
+        const precoText = data.realiza && data.preco > 0 ? `R$ ${data.preco.toFixed(0)}` : '-';
+        list.innerHTML += `<tr>
+          <td data-label="Serviço">${data.nome}</td>
+          <td data-label="Realizamos?">${realizaText}</td>
+          <td data-label="Preço">${precoText}</td>
+          <td data-label="Ações"><button class="btn-delete" onclick="deleteServico('${doc.id}')">Deletar</button></td>
+        </tr>`;
+      });
+    }
+
+    window.deleteServico = async (id) => {
+      await deleteDoc(doc(db, 'servicos', id));
+      loadServicos();
     };
 
     // Profissionais
@@ -620,9 +676,11 @@
     };
 
     // Carregar tudo
-    document.getElementById('prof-form').addEventListener('submit', addProfissional);
-    document.getElementById('parc-form').addEventListener('submit', addParceiro);
-    document.getElementById('part-form').addEventListener('submit', addParticipacao);
+    loadServicos();
+    loadProfissionais();
+    loadParceiros();
+    loadParticipacoes();
+    loadAvaliacoes();
   </script>
 </body>
 </html>

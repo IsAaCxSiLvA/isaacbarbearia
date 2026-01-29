@@ -65,16 +65,7 @@ export class AppComponent implements OnInit {
       featured: true,
       type: 'list',
       icon: 'scissors',
-      listItems: [
-        { name: 'Corte Clássico', price: 'R$ 50', available: true },
-        { name: 'Barba Terapia (Toalha Quente)', price: 'R$ 45', available: true },
-        { name: 'Degradê Navalhado', price: 'R$ 60', available: true },
-        { name: 'Combo Isaac (Corte+Barba)', price: 'R$ 85', available: true },
-        { name: 'Sobrancelha', price: 'R$ 20', available: true },
-        { name: 'Pigmentação Premium', price: 'R$ 40', available: true },
-        { name: 'Química / Alisamento', price: '-', available: false },
-        { name: 'Platinado Global', price: '-', available: false }
-      ]
+      listItems: []
     },
     {
       id: 'team',
@@ -159,11 +150,12 @@ export class AppComponent implements OnInit {
 
   async loadDynamicData() {
     try {
-      const [profissionaisSnap, parceirosSnap, participacoesSnap, avaliacoesSnap] = await Promise.all([
+      const [profissionaisSnap, parceirosSnap, participacoesSnap, avaliacoesSnap, servicosSnap] = await Promise.all([
         getDocs(collection(this.db, 'profissionais')),
         getDocs(collection(this.db, 'parceiros')),
         getDocs(collection(this.db, 'participacoes')),
-        getDocs(collection(this.db, 'avaliacoes'))
+        getDocs(collection(this.db, 'avaliacoes')),
+        getDocs(collection(this.db, 'servicos'))
       ]);
 
       const teamMembers = profissionaisSnap.docs.map(doc => {
@@ -172,6 +164,16 @@ export class AppComponent implements OnInit {
           name: data.nome || 'Profissional',
           specialty: data.especialidade || 'Especialidade',
           imageUrl: data.imagem || `https://picsum.photos/seed/${encodeURIComponent(data.nome || doc.id)}/200/200`
+        };
+      });
+
+      const listItems = servicosSnap.docs.map(doc => {
+        const data = doc.data() as { nome?: string; realiza?: boolean; preco?: number };
+        const price = data.realiza && data.preco && data.preco > 0 ? `R$ ${data.preco}` : '-';
+        return {
+          name: data.nome || 'Serviço',
+          price,
+          available: data.realiza !== false
         };
       });
 
@@ -205,8 +207,11 @@ export class AppComponent implements OnInit {
         };
       });
 
-      if (teamMembers.length || partners.length || projectGallery.length || testimonials.length) {
+      if (teamMembers.length || partners.length || projectGallery.length || testimonials.length || listItems.length) {
         this.items.update(items => items.map(item => {
+          if (item.id === 'services' && listItems.length) {
+            return { ...item, listItems };
+          }
           if (item.id === 'team' && teamMembers.length) {
             return { ...item, teamMembers };
           }
