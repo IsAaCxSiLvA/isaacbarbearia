@@ -437,5 +437,14 @@ export class AppComponent implements OnInit {
     }
   }
 
+  // Métodos para filtrar serviços por categoria
+  getServicesBy(services: any[], status: boolean | string): any[] {
+    return services.filter(s => s.available === status);
+  }
+
+  hasServicesBy(services: any[], status: boolean | string): boolean {
+    return services.some(s => s.available === status);
+  }
+
   currentYear = new Date().getFullYear();
 }

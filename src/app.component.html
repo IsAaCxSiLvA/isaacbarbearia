@@ -360,41 +360,80 @@
                      }
   
                      @if (item.type === 'list') {
-                       <div class="space-y-3 animate-fade-in">
-                         <div class="flex justify-between text-[10px] uppercase tracking-widest text-gray-500 mb-2 border-b border-white/5 pb-1">
-                            <span>Serviço</span>
-                            <span class="flex gap-4">
-                               <span>Realizamos?</span>
-                               <span class="w-12 text-right">Preço</span>
-                            </span>
-                         </div>
-                         @for (service of item.listItems; track service.name) {
-                           <li class="flex justify-between items-center border-b border-white/5 pb-2 hover:border-brand-fireOrange/30 transition-colors">
-                             <span class="text-gray-300 text-sm font-medium">{{ service.name }}</span>
-                             
-                             <div class="flex items-center gap-4">
-                                <!-- Badge SIM/NÃO/EM BREVE -->
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider min-w-[3.5rem] text-center"
-                                      [class.bg-green-500/20]="service.available === true"
-                                      [class.text-green-400]="service.available === true"
-                                      [class.border]="service.available === true"
-                                      [class.border-green-500/30]="service.available === true"
-                                      [class.bg-red-500/10]="service.available === false"
-                                      [class.text-red-500]="service.available === false"
-                                      [class.bg-yellow-500/20]="service.available === 'soon'"
-                                      [class.text-yellow-400]="service.available === 'soon'"
-                                      [class.border]="service.available === 'soon'"
-                                      [class.border-yellow-500/30]="service.available === 'soon'">
-                                   {{ service.available === true ? 'Sim' : service.available === false ? 'Não' : 'Em Breve' }}
-                                </span>
-  
-                                <span class="text-sm font-serif font-bold w-12 text-right" 
-                                      [class.text-brand-fireOrange]="service.available"
-                                      [class.text-gray-600]="!service.available">
-                                   {{ service.price }}
-                                </span>
+                       <div class="space-y-5 animate-fade-in">
+                         <!-- CATEGORIA: SIM (Realizamos) -->
+                         @if (hasServicesBy(item.listItems, true)) {
+                           <div class="space-y-2">
+                             <div class="text-xs font-bold text-green-400 uppercase tracking-widest px-3 py-1 border-b border-green-500/30 flex items-center gap-2">
+                               <span class="w-2 h-2 rounded-full bg-green-400"></span>
+                               Realizamos
                              </div>
-                           </li>
+                             <ul class="space-y-1">
+                               @for (service of getServicesBy(item.listItems, true); track service.name) {
+                                 <li class="flex justify-between items-center border-b border-white/5 pb-2 hover:border-brand-fireOrange/30 transition-colors">
+                                   <span class="text-gray-300 text-sm font-medium">{{ service.name }}</span>
+                                   <div class="flex items-center gap-4">
+                                     <span class="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider min-w-[3.5rem] text-center bg-green-500/20 text-green-400 border border-green-500/30">
+                                       Sim
+                                     </span>
+                                     <span class="text-sm font-serif font-bold w-12 text-right text-brand-fireOrange">
+                                       {{ service.price }}
+                                     </span>
+                                   </div>
+                                 </li>
+                               }
+                             </ul>
+                           </div>
+                         }
+
+                         <!-- CATEGORIA: EM BREVE -->
+                         @if (hasServicesBy(item.listItems, 'soon')) {
+                           <div class="space-y-2">
+                             <div class="text-xs font-bold text-yellow-400 uppercase tracking-widest px-3 py-1 border-b border-yellow-500/30 flex items-center gap-2">
+                               <span class="w-2 h-2 rounded-full bg-yellow-400"></span>
+                               Em Breve
+                             </div>
+                             <ul class="space-y-1">
+                               @for (service of getServicesBy(item.listItems, 'soon'); track service.name) {
+                                 <li class="flex justify-between items-center border-b border-white/5 pb-2 hover:border-brand-fireOrange/30 transition-colors opacity-70">
+                                   <span class="text-gray-400 text-sm font-medium">{{ service.name }}</span>
+                                   <div class="flex items-center gap-4">
+                                     <span class="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider min-w-[3.5rem] text-center bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
+                                       Em Breve
+                                     </span>
+                                     <span class="text-sm font-serif font-bold w-12 text-right text-gray-500">
+                                       {{ service.price }}
+                                     </span>
+                                   </div>
+                                 </li>
+                               }
+                             </ul>
+                           </div>
+                         }
+
+                         <!-- CATEGORIA: NÃO (Não Realizamos) -->
+                         @if (hasServicesBy(item.listItems, false)) {
+                           <div class="space-y-2">
+                             <div class="text-xs font-bold text-red-500 uppercase tracking-widest px-3 py-1 border-b border-red-500/30 flex items-center gap-2">
+                               <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                               Não Realizamos
+                             </div>
+                             <ul class="space-y-1">
+                               @for (service of getServicesBy(item.listItems, false); track service.name) {
+                                 <li class="flex justify-between items-center border-b border-white/5 pb-2 hover:border-brand-fireOrange/30 transition-colors opacity-50">
+                                   <span class="text-gray-500 text-sm font-medium line-through">{{ service.name }}</span>
+                                   <div class="flex items-center gap-4">
+                                     <span class="text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider min-w-[3.5rem] text-center bg-red-500/10 text-red-500">
+                                       Não
+                                     </span>
+                                     <span class="text-sm font-serif font-bold w-12 text-right text-gray-600">
+                                       -
+                                     </span>
+                                   </div>
+                                 </li>
+                               }
+                             </ul>
+                           </div>
                          }
                        </div>
                      }
