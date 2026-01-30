@@ -348,5 +348,15 @@
 </head>
 <body class="antialiased selection:bg-brand-fireOrange selection:text-white">
   <app-root></app-root>
+  <script>
+    // Restaurar rota original do 404
+    (function() {
+      if (sessionStorage.redirect) {
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        history.replaceState(null, null, redirect);
+      }
+    })();
+  </script>
 </body>
 </html>

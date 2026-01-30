@@ -2,14 +2,14 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Page Not Found</title>
+  <title>Isaac Barbearia | Cortes de Cabelo</title>
   <script>
-    // Redirect all 404 requests to index.html
-    var path = window.location.pathname;
-    window.location.replace('/index.html?redirect=' + encodeURIComponent(path));
+    // Redireciona 404 para index.html preservando a rota
+    sessionStorage.redirect = location.pathname + location.search + location.hash;
+    window.location.href = '/index.html';
   </script>
 </head>
 <body>
-  Redirecionando...
+  Carregando...
 </body>
 </html>
