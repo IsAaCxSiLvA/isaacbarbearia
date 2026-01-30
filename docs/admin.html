@@ -1,17 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0;url=/isaacbarbearia/public/admin.html">
-  <title>Redirecionando...</title>
-</head>
-<body>
-  <p>Redirecionando para o painel admin...</p>
-  <script>
-    window.location.href = '/isaacbarbearia/public/admin.html';
-  </script>
-</body>
-</html>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Admin - Isaac Barbearia</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: Arial, sans-serif; 
+      background: #1a1a1a; 
+      color: #e0e0e0;
+    }
+    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+    h1 { 
+      color: #ff8c00; 
+      text-align: center; 
+      margin-bottom: 30px; 
+      text-shadow: 0 0 10px rgba(255, 140, 0, 0.3);
+    }
     h2 { 
       color: #ff8c00; 
       margin-bottom: 20px; 
@@ -371,19 +377,23 @@
       <button onclick="showTab('localizacao')">Localização</button>
       <button onclick="showTab('horarios')">Horários</button>
       <button onclick="showTab('agendamento')">Agendamento</button>
-      <button onclick="showTab('avaliacoes')">Avaliações</button>
+      <button onclick="showTab('avaliacoes')">Feedback</button>
       <button class="btn-logout" onclick="logout()">Sair</button>
     </div>
 
     <!-- SERVIÇOS -->
     <div id="servicos" class="tab-content active">
       <h2>Gerenciar Serviços & Preços</h2>
+      <button onclick="limparDuplicatas()" style="margin-bottom: 15px; background: #e74c3c; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+        🗑️ Limpar Duplicatas do Firebase
+      </button>
       <form onsubmit="addServico(event)">
         <input type="text" id="serv-nome" placeholder="Nome do Serviço" required>
         <select id="serv-realiza" required>
           <option value="">Realizamos este serviço?</option>
           <option value="true">Sim</option>
           <option value="false">Não</option>
+          <option value="soon">Em Breve</option>
         </select>
         <input type="number" id="serv-preco" placeholder="Preço (em R$)" step="0.01" min="0">
         <button type="submit">Adicionar Serviço</button>
@@ -444,6 +454,7 @@
         <input type="text" id="loc-bairro" placeholder="Bairro" required>
         <input type="text" id="loc-cidade" placeholder="Cidade" required>
         <input type="text" id="loc-referencia" placeholder="Referência (ex: Próximo à praça)" required>
+        <input type="text" id="loc-maps-link" placeholder="Link do Google Maps (share.google/...)">
         <button type="submit">Salvar Localização</button>
       </form>
       <div id="loc-display" style="margin-top: 20px; padding: 15px; background: #2a2a2a; border-radius: 8px; border: 1px solid #333;"></div>
@@ -473,9 +484,9 @@
       <div id="agen-display" style="margin-top: 20px; padding: 15px; background: #2a2a2a; border-radius: 8px; border: 1px solid #333;"></div>
     </div>
 
-    <!-- AVALIAÇÕES -->
+    <!-- FEEDBACK -->
     <div id="avaliacoes" class="tab-content">
-      <h2>Avaliações dos Clientes</h2>
+      <h2>Feedback dos Clientes</h2>
       <div class="cards" id="aval-list"></div>
     </div>
   </div>
@@ -529,33 +540,110 @@
     // Serviços
     window.addServico = async (e) => {
       e.preventDefault();
-      const realiza = document.getElementById('serv-realiza').value === 'true';
+      const realizaValue = document.getElementById('serv-realiza').value;
+      let realiza;
+      if (realizaValue === 'true') realiza = true;
+      else if (realizaValue === 'false') realiza = false;
+      else if (realizaValue === 'soon') realiza = 'soon';
+      
       const preco = document.getElementById('serv-preco').value;
       await addDoc(collection(db, 'servicos'), {
         nome: document.getElementById('serv-nome').value,
         realiza: realiza,
-        preco: realiza && preco ? parseFloat(preco) : 0
+        preco: realiza === true && preco ? parseFloat(preco) : 0
       });
       e.target.reset();
       loadServicos();
     };
 
+    let isLoadingServicos = false;
     async function loadServicos() {
-      const list = document.getElementById('serv-list');
-      list.innerHTML = '';
-      const snapshot = await getDocs(collection(db, 'servicos'));
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const realizaText = data.realiza ? 'Sim' : 'Não';
-        const precoText = data.realiza && data.preco > 0 ? `R$ ${data.preco.toFixed(0)}` : '-';
-        list.innerHTML += `<tr>
-          <td data-label="Serviço">${data.nome}</td>
-          <td data-label="Realizamos?">${realizaText}</td>
-          <td data-label="Preço">${precoText}</td>
-          <td data-label="Ações"><button class="btn-delete" onclick="deleteServico('${doc.id}')">Deletar</button></td>
-        </tr>`;
-      });
+      if (isLoadingServicos) return;
+      isLoadingServicos = true;
+      
+      try {
+        const list = document.getElementById('serv-list');
+        const snapshot = await getDocs(collection(db, 'servicos'));
+        
+        console.log('📊 Total de documentos no Firebase:', snapshot.size);
+        
+        // Agrupa por nome para detectar e eliminar duplicatas
+        const servicosPorNome = {};
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          if (!servicosPorNome[data.nome]) {
+            servicosPorNome[data.nome] = [];
+          }
+          servicosPorNome[data.nome].push({ id: doc.id, data });
+        });
+        
+        // Exibe apenas um de cada serviço único
+        const rows = [];
+        for (const nome in servicosPorNome) {
+          const servicos = servicosPorNome[nome];
+          
+          // Se há duplicatas, avisa no console
+          if (servicos.length > 1) {
+            console.warn(`⚠️ Duplicata: "${nome}" tem ${servicos.length} entradas. IDs:`, servicos.map(s => s.id));
+          }
+          
+          // Usa apenas o primeiro
+          const servico = servicos[0];
+          const data = servico.data;
+          const realizaText = data.realiza === true ? 'Sim' : data.realiza === false ? 'Não' : 'Em Breve';
+          const precoText = data.realiza === true && data.preco > 0 ? `R$ ${data.preco.toFixed(0)}` : '-';
+          rows.push(`<tr>
+            <td data-label="Serviço">${data.nome}</td>
+            <td data-label="Realizamos?">${realizaText}</td>
+            <td data-label="Preço">${precoText}</td>
+            <td data-label="Ações"><button class="btn-delete" onclick="deleteServico('${servico.id}')">Deletar</button></td>
+          </tr>`);
+        }
+        
+        list.innerHTML = rows.join('');
+        console.log('✅ Renderizados', rows.length, 'serviços únicos de', snapshot.size, 'documentos');
+      } finally {
+        isLoadingServicos = false;
+      }
     }
+
+    window.limparDuplicatas = async () => {
+      if (!confirm('Isso vai remover TODAS as duplicatas. Deseja continuar?')) return;
+      
+      try {
+        const snapshot = await getDocs(collection(db, 'servicos'));
+        const servicosPorNome = {};
+        
+        // Agrupa por nome
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          if (!servicosPorNome[data.nome]) {
+            servicosPorNome[data.nome] = [];
+          }
+          servicosPorNome[data.nome].push({ id: doc.id, data });
+        });
+        
+        // Deleta duplicatas (mantém apenas o primeiro)
+        let deletados = 0;
+        for (const nome in servicosPorNome) {
+          const servicos = servicosPorNome[nome];
+          if (servicos.length > 1) {
+            // Deleta do segundo em diante
+            for (let i = 1; i < servicos.length; i++) {
+              await deleteDoc(doc(db, 'servicos', servicos[i].id));
+              deletados++;
+              console.log(`🗑️ Deletado duplicata de "${nome}" (ID: ${servicos[i].id})`);
+            }
+          }
+        }
+        
+        alert(`✅ ${deletados} duplicata(s) removida(s)!`);
+        loadServicos();
+      } catch (error) {
+        console.error('Erro ao limpar duplicatas:', error);
+        alert('❌ Erro ao limpar duplicatas. Veja o console.');
+      }
+    };
 
     window.deleteServico = async (id) => {
       await deleteDoc(doc(db, 'servicos', id));
@@ -575,20 +663,34 @@
       loadProfissionais();
     };
 
+    let isLoadingProfissionais = false;
     async function loadProfissionais() {
-      const list = document.getElementById('prof-list');
-      list.innerHTML = '';
-      const snapshot = await getDocs(collection(db, 'profissionais'));
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">` : '-';
-        list.innerHTML += `<tr>
-          <td data-label="Nome">${data.nome}</td>
-          <td data-label="Especialidade">${data.especialidade}</td>
-          <td data-label="Imagem">${imgHtml}</td>
-          <td data-label="Ações"><button class="btn-delete" onclick="deleteProfissional('${doc.id}')">Deletar</button></td>
-        </tr>`;
-      });
+      if (isLoadingProfissionais) return;
+      isLoadingProfissionais = true;
+      
+      try {
+        const list = document.getElementById('prof-list');
+        const snapshot = await getDocs(collection(db, 'profissionais'));
+        const uniqueIds = new Set();
+        const rows = [];
+        
+        snapshot.forEach(doc => {
+          if (uniqueIds.has(doc.id)) return;
+          uniqueIds.add(doc.id);
+          
+          const data = doc.data();
+          const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">` : '-';
+          rows.push(`<tr>
+            <td data-label="Nome">${data.nome}</td>
+            <td data-label="Especialidade">${data.especialidade}</td>
+            <td data-label="Imagem">${imgHtml}</td>
+            <td data-label="Ações"><button class="btn-delete" onclick="deleteProfissional('${doc.id}')">Deletar</button></td>
+          </tr>`);
+        });
+        list.innerHTML = rows.join('');
+      } finally {
+        isLoadingProfissionais = false;
+      }
     }
 
     window.deleteProfissional = async (id) => {
@@ -607,19 +709,33 @@
       loadParceiros();
     };
 
+    let isLoadingParceiros = false;
     async function loadParceiros() {
-      const list = document.getElementById('parc-list');
-      list.innerHTML = '';
-      const snapshot = await getDocs(collection(db, 'parceiros'));
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;border:2px solid #ff8c00;">` : '-';
-        list.innerHTML += `<tr>
-          <td data-label="Nome">${data.nome}</td>
-          <td data-label="Logo">${imgHtml}</td>
-          <td data-label="Ações"><button class="btn-delete" onclick="deleteParceiro('${doc.id}')">Deletar</button></td>
-        </tr>`;
-      });
+      if (isLoadingParceiros) return;
+      isLoadingParceiros = true;
+      
+      try {
+        const list = document.getElementById('parc-list');
+        const snapshot = await getDocs(collection(db, 'parceiros'));
+        const uniqueIds = new Set();
+        const rows = [];
+        
+        snapshot.forEach(doc => {
+          if (uniqueIds.has(doc.id)) return;
+          uniqueIds.add(doc.id);
+          
+          const data = doc.data();
+          const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;border:2px solid #ff8c00;">` : '-';
+          rows.push(`<tr>
+            <td data-label="Nome">${data.nome}</td>
+            <td data-label="Logo">${imgHtml}</td>
+            <td data-label="Ações"><button class="btn-delete" onclick="deleteParceiro('${doc.id}')">Deletar</button></td>
+        </tr>`);
+        });
+        list.innerHTML = rows.join('');
+      } finally {
+        isLoadingParceiros = false;
+      }
     }
 
     window.deleteParceiro = async (id) => {
@@ -639,19 +755,32 @@
       loadParticipacoes();
     };
 
+    let isLoadingParticipacoes = false;
     async function loadParticipacoes() {
-      const list = document.getElementById('part-list');
-      list.innerHTML = '';
-      const snapshot = await getDocs(collection(db, 'participacoes'));
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        list.innerHTML += `<div class="card">
+      if (isLoadingParticipacoes) return;
+      isLoadingParticipacoes = true;
+      
+      try {
+        const list = document.getElementById('part-list');
+        const snapshot = await getDocs(collection(db, 'participacoes'));
+        const uniqueIds = new Set();
+        const cards = [];
+        snapshot.forEach(doc => {
+          if (uniqueIds.has(doc.id)) return;
+          uniqueIds.add(doc.id);
+          
+          const data = doc.data();
+        cards.push(`<div class="card">
           <h3>${data.titulo}</h3>
           <p>${data.descricao || ''}</p>
           <p><strong>Data:</strong> ${data.data}</p>
           <button class="btn-delete" onclick="deleteParticipacao('${doc.id}')">Deletar</button>
-        </div>`;
-      });
+        </div>`);
+        });
+        list.innerHTML = cards.join('');
+      } finally {
+        isLoadingParticipacoes = false;
+      }
     }
 
     window.deleteParticipacao = async (id) => {
@@ -660,31 +789,42 @@
     };
 
     // Avaliações - Com listener em tempo real
+    let avaliacoesUnsubscribe = null;
     function loadAvaliacoes() {
       const list = document.getElementById('aval-list');
       console.log('Iniciando loadAvaliacoes...');
       
+      // Remove o listener anterior se existir
+      if (avaliacoesUnsubscribe) {
+        avaliacoesUnsubscribe();
+      }
+      
       try {
-        onSnapshot(collection(db, 'avaliacoes'), (snapshot) => {
+        avaliacoesUnsubscribe = onSnapshot(collection(db, 'avaliacoes'), (snapshot) => {
           console.log('Snapshot recebido:', snapshot.docs.length, 'documentos');
-          list.innerHTML = '';
           
           if (snapshot.empty) {
             list.innerHTML = '<p style="text-align: center; color: #999;">Nenhuma avaliação ainda</p>';
             return;
           }
           
+          const uniqueIds = new Set();
+          const cards = [];
           snapshot.forEach(doc => {
+            if (uniqueIds.has(doc.id)) return;
+            uniqueIds.add(doc.id);
+            
             const data = doc.data();
             console.log('Renderizando avaliação:', data);
-            list.innerHTML += `<div class="card">
+            cards.push(`<div class="card">
               <h3>${data.cliente || 'Sem nome'}</h3>
               <p><strong>Estrelas:</strong> ${data.estrelas || 0}/5</p>
               <p>${data.comentario || 'Sem comentário'}</p>
               <p><small>${data.data || 'Sem data'}</small></p>
               <button class="btn-delete" onclick="deleteAvaliacao('${doc.id}')">Deletar</button>
-            </div>`;
+            </div>`);
           });
+          list.innerHTML = cards.join('');
         }, (error) => {
           console.error('Erro ao carregar avaliações:', error);
           list.innerHTML = '<p style="color: red;">Erro ao carregar avaliações</p>';
@@ -710,7 +850,8 @@
         endereco: document.getElementById('loc-endereco').value,
         bairro: document.getElementById('loc-bairro').value,
         cidade: document.getElementById('loc-cidade').value,
-        referencia: document.getElementById('loc-referencia').value
+        referencia: document.getElementById('loc-referencia').value,
+        googleMapsLink: document.getElementById('loc-maps-link').value
       };
       await setDoc(doc(db, 'config', 'localizacao'), data);
       displayLocalizacao(data);
@@ -723,6 +864,7 @@
         <p><strong>📍 ${data.endereco}</strong></p>
         <p>${data.bairro}, ${data.cidade}</p>
         <p><em>${data.referencia}</em></p>
+        <p><strong>🗺️ Google Maps:</strong> <a href="${data.googleMapsLink}" target="_blank" style="color: #ff8c00; text-decoration: underline;">${data.googleMapsLink || 'Não configurado'}</a></p>
       `;
     }
 
@@ -731,10 +873,13 @@
         const docSnap = await getDoc(doc(db, 'config', 'localizacao'));
         if (docSnap.exists()) {
           const data = docSnap.data();
+          console.log('Dados carregados:', data);
           document.getElementById('loc-endereco').value = data.endereco || '';
           document.getElementById('loc-bairro').value = data.bairro || '';
           document.getElementById('loc-cidade').value = data.cidade || '';
           document.getElementById('loc-referencia').value = data.referencia || '';
+          document.getElementById('loc-maps-link').value = data.googleMapsLink || '';
+          console.log('Link carregado:', data.googleMapsLink);
           displayLocalizacao(data);
         }
       } catch (error) {
@@ -820,9 +965,7 @@
       }
     }
 
-    // Carregar tudo
-    loadServicos();
-    // Carregar tudo
+    // Carregar tudo ao iniciar
     loadServicos();
     loadProfissionais();
     loadParceiros();
