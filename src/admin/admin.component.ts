@@ -102,7 +102,7 @@ export class AdminComponent implements OnInit {
       await this.firebaseService.deleteAvaliacao(id);
       this.carregarDados();
     } catch (error) {
-      console.error('Erro ao deletar avaliação:', error);
+      console.error('Erro ao deletar feedback:', error);
     }
   }
 

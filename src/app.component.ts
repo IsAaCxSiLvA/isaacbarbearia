@@ -391,7 +391,7 @@ export class AppComponent implements OnInit {
     }
 
     try {
-      console.log('Salvando avaliação:', { name, message, rating });
+      console.log('Salvando feedback:', { name, message, rating });
       
       // Salvar no Firestore
       const docRef = await addDoc(collection(this.db, 'avaliacoes'), {
@@ -401,7 +401,7 @@ export class AppComponent implements OnInit {
         data: new Date().toLocaleDateString('pt-BR')
       });
       
-      console.log('Avaliação salva com ID:', docRef.id);
+      console.log('Feedback salvo com ID:', docRef.id);
 
       // Atualizar estado local
       this.items.update(items => {
@@ -430,10 +430,10 @@ export class AppComponent implements OnInit {
       this.newReviewRating.set(5);
       this.showReviewForm.set(false);
       
-      alert('Avaliação enviada com sucesso!');
+      alert('Feedback enviado com sucesso!');
     } catch (error) {
-      console.error('Erro ao salvar avaliação:', error);
-      alert('Erro ao salvar avaliação. Verifique o console.');
+      console.error('Erro ao salvar feedback:', error);
+      alert('Erro ao salvar feedback. Verifique o console.');
     }
   }
 
