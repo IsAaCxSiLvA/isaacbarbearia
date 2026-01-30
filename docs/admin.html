@@ -512,7 +512,7 @@
     // Verifica autenticação
     onAuthStateChanged(auth, (user) => {
       if (!user) {
-        window.location.href = '/isaacbarbearia/login.html';
+        window.location.href = '/login.html';
       } else {
         // Carregar dados APÓS autenticação
         console.log('Usuário autenticado, carregando dados...');
@@ -534,7 +534,7 @@
     // Logout
     window.logout = async () => {
       await signOut(auth);
-      window.location.href = '/isaacbarbearia/login.html';
+      window.location.href = '/login.html';
     };
 
     // Serviços
