@@ -82,7 +82,7 @@
 
       try {
         await signInWithEmailAndPassword(auth, email, password);
-        window.location.href = '/isaacbarbearia/admin.html';
+        window.location.href = '/admin.html';
       } catch (error) {
         console.error('Erro de login:', error);
         const code = error?.code || 'auth/unknown';
