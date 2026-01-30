@@ -120,7 +120,7 @@ export class AppComponent implements OnInit {
     },
     {
       id: 'feedback',
-      title: 'Avaliações',
+      title: 'Feedback',
       isOpen: false,
       type: 'feedback',
       icon: 'star',
