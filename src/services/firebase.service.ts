@@ -5,12 +5,12 @@ import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from
 
 const environment = {
   firebase: {
-    apiKey: "vvmrpX2H8L7bfkEQLLETMNUBuuLaMWBDtmxf5Fuy2BQ",
+    apiKey: "AIzaSyDE2tWDNCDrY6O20EWrDt-NkvZmCm_MR10",
     authDomain: "isaacbarbearia-admin.firebaseapp.com",
     projectId: "isaacbarbearia-admin",
-    storageBucket: "isaacbarbearia-admin.appspot.com",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    storageBucket: "isaacbarbearia-admin.firebasestorage.app",
+    messagingSenderId: "308982033120",
+    appId: "1:308982033120:web:38b82c1a3ca9e933be7e85"
   }
 };
 
