@@ -814,8 +814,12 @@
           servicosPorNome[data.nome].push({ id: doc.id, data });
         });
         
-        // Exibe apenas um de cada serviço único
-        const rows = [];
+        // Agrupa serviços por status
+        const servicosPorStatus = {
+          sim: [],
+          nao: [],
+          embreve: []
+        };
         
         for (const nome in servicosPorNome) {
           const servicos = servicosPorNome[nome];
@@ -828,24 +832,47 @@
           // Usa apenas o primeiro
           const servico = servicos[0];
           const data = servico.data;
-          const realizaText = data.realiza === true ? 'Sim' : data.realiza === false ? 'Não' : 'Em Breve';
-          const precoText = data.realiza === true && data.preco > 0 ? `R$ ${data.preco.toFixed(0)}` : '-';
           
-          // Define cor baseada no status
-          let color = 'color-yellow'; // Em Breve
           if (data.realiza === true) {
-            color = 'color-green'; // Sim - Verde
+            servicosPorStatus.sim.push({ servico, data });
           } else if (data.realiza === false) {
-            color = 'color-red'; // Não - Vermelho
+            servicosPorStatus.nao.push({ servico, data });
+          } else {
+            servicosPorStatus.embreve.push({ servico, data });
           }
-          
-          rows.push(`<div class="card ${color}">
-            <h3>${data.nome}</h3>
-            <p><strong>Realizamos:</strong> ${realizaText}</p>
-            <p><strong>Preço:</strong> ${precoText}</p>
-            <button class="btn-delete" onclick="deleteServico('${servico.id}')">Deletar</button>
-          </div>`);
         }
+        
+        const rows = [];
+        
+        // Renderiza Sim (Verde)
+        servicosPorStatus.sim.forEach(item => {
+          const precoText = item.data.preco > 0 ? `R$ ${item.data.preco.toFixed(0)}` : '-';
+          rows.push(`<div class="card color-green">
+            <h3>${item.data.nome}</h3>
+            <p><strong>Realizamos:</strong> Sim</p>
+            <p><strong>Preço:</strong> ${precoText}</p>
+            <button class="btn-delete" onclick="deleteServico('${item.servico.id}')">Deletar</button>
+          </div>`);
+        });
+        
+        // Renderiza Não (Vermelho)
+        servicosPorStatus.nao.forEach(item => {
+          rows.push(`<div class="card color-red">
+            <h3>${item.data.nome}</h3>
+            <p><strong>Realizamos:</strong> Não</p>
+            <p><strong>Preço:</strong> -</p>
+            <button class="btn-delete" onclick="deleteServico('${item.servico.id}')">Deletar</button>
+          </div>`);
+        });
+        
+        // Renderiza Em Breve (Amarelo)
+        servicosPorStatus.embreve.forEach(item => {
+          rows.push(`<div class="card color-yellow">
+            <h3>${item.data.nome}</h3>
+            <p><strong>Realizamos:</strong> Em Breve</p>
+            <p><strong>Preço:</strong> -</p>
+            <button class="btn-delete" onclick="deleteServico('${item.servico.id}')">Deletar</button>
+          </div>`);
         
         list.innerHTML = rows.join('');
         // Atualizar o contador na aba
