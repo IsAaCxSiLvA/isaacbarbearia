@@ -10,7 +10,8 @@ service cloud.firestore {
     match /avaliacoes/{doc=**} {
       allow read: if true;
       allow create: if request.auth != null && request.auth.token.email != null;
-      allow update, delete: if request.auth != null && request.auth.token.email == resource.data.email;
+      allow update: if request.auth != null && request.auth.token.email == resource.data.email;
+      allow delete: if request.auth != null && (request.auth.token.email == resource.data.email || isAdmin());
     }
 
     // Profissionais (Professionals)

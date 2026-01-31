@@ -780,7 +780,7 @@
         });
         list.innerHTML = rows.join('');
         // Atualizar contador
-        document.getElementById('count-profissionais').textContent = `(${rows.length})`;
+        document.getElementById('count-profissionais').textContent = rows.length;
       } finally {
         isLoadingProfissionais = false;
       }
@@ -827,7 +827,7 @@
         });
         list.innerHTML = rows.join('');
         // Atualizar contador
-        document.getElementById('count-parceiros').textContent = `(${rows.length})`;
+        document.getElementById('count-parceiros').textContent = rows.length;
       } finally {
         isLoadingParceiros = false;
       }
@@ -874,7 +874,7 @@
         });
         list.innerHTML = cards.join('');
         // Atualizar contador
-        document.getElementById('count-participacoes').textContent = `(${cards.length})`;
+        document.getElementById('count-participacoes').textContent = cards.length;
       } finally {
         isLoadingParticipacoes = false;
       }
@@ -923,7 +923,7 @@
           });
           list.innerHTML = cards.join('');
           // Atualizar contador
-          document.getElementById('count-avaliacoes').textContent = `(${cards.length})`;
+          document.getElementById('count-avaliacoes').textContent = cards.length;
         }, (error) => {
           console.error('Erro ao carregar avaliações:', error);
           list.innerHTML = '<p style="color: red;">Erro ao carregar avaliações</p>';
