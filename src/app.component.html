@@ -525,7 +525,7 @@
                                    [class.bg-blue-500/10]="avisoSelectedType() === 'info'"
                                    [class.bg-white/5]="avisoSelectedType() !== 'info'"
                                    class="px-4 py-3 text-sm font-bold uppercase tracking-wider transition-colors text-left rounded">
-                             ℹ️ Informativo
+                             Informativo
                              @if (countAvisosByType('info') > 0) {
                                <span class="ml-2 bg-blue-500/30 px-2 py-0.5 rounded text-xs">{{ countAvisosByType('info') }}</span>
                              }
@@ -539,7 +539,7 @@
                                    [class.bg-yellow-500/10]="avisoSelectedType() === 'warning'"
                                    [class.bg-white/5]="avisoSelectedType() !== 'warning'"
                                    class="px-4 py-3 text-sm font-bold uppercase tracking-wider transition-colors text-left rounded">
-                             ⚠️ Aviso
+                             Aviso
                              @if (countAvisosByType('warning') > 0) {
                                <span class="ml-2 bg-yellow-500/30 px-2 py-0.5 rounded text-xs">{{ countAvisosByType('warning') }}</span>
                              }
@@ -553,7 +553,7 @@
                                    [class.bg-red-500/10]="avisoSelectedType() === 'danger'"
                                    [class.bg-white/5]="avisoSelectedType() !== 'danger'"
                                    class="px-4 py-3 text-sm font-bold uppercase tracking-wider transition-colors text-left rounded">
-                             🔴 Importante
+                             Importante
                              @if (countAvisosByType('danger') > 0) {
                                <span class="ml-2 bg-red-500/30 px-2 py-0.5 rounded text-xs">{{ countAvisosByType('danger') }}</span>
                              }
@@ -567,7 +567,7 @@
                                    [class.bg-green-500/10]="avisoSelectedType() === 'success'"
                                    [class.bg-white/5]="avisoSelectedType() !== 'success'"
                                    class="px-4 py-3 text-sm font-bold uppercase tracking-wider transition-colors text-left rounded">
-                             ✅ Sucesso
+                             Sucesso
                              @if (countAvisosByType('success') > 0) {
                                <span class="ml-2 bg-green-500/30 px-2 py-0.5 rounded text-xs">{{ countAvisosByType('success') }}</span>
                              }
@@ -575,8 +575,8 @@
                          </div>
 
                          <!-- CONTEÚDO DAS SUB-ABAS -->
-                         @if (getAvisosByType(avisoSelectedType()).length > 0) {
-                           <div class="space-y-4">
+                         @if (avisoSelectedType() !== null && getAvisosByType(avisoSelectedType()).length > 0) {
+                           <div class="space-y-4 mt-4">
                              @for (aviso of getAvisosByType(avisoSelectedType()); track aviso.id) {
                                <div class="backdrop-blur-md bg-white/5 border-l-4 rounded-lg p-6 hover:bg-white/10 transition-all"
                                     [ngClass]="{
@@ -599,8 +599,8 @@
                                </div>
                              }
                            </div>
-                         } @else {
-                           <div class="text-center py-8 text-gray-500">
+                         } @else if (avisoSelectedType() !== null) {
+                           <div class="text-center py-8 text-gray-500 mt-4">
                              <p>Nenhum aviso deste tipo no momento.</p>
                            </div>
                          }
