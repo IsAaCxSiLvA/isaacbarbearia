@@ -48,6 +48,17 @@
       background: #ff8c00; 
       color: #000; 
     }
+    .tab-count {
+      background: #2a2a2a;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 13px;
+      margin-left: 5px;
+      font-weight: bold;
+    }
+    .tabs button.active .tab-count {
+      background: rgba(0,0,0,0.3);
+    }
     .btn-logout { 
       margin-left: auto; 
       background: #e74c3c !important;
@@ -425,13 +436,13 @@
     
     <div class="tabs">
       <button class="active" onclick="showTab('servicos')">Serviços</button>
-      <button onclick="showTab('profissionais')">Profissionais</button>
-      <button onclick="showTab('parceiros')">Parceiros</button>
-      <button onclick="showTab('participacoes')">Participação</button>
+      <button onclick="showTab('profissionais')">Profissionais <span id="count-profissionais" class="tab-count">(0)</span></button>
+      <button onclick="showTab('parceiros')">Parceiros <span id="count-parceiros" class="tab-count">(0)</span></button>
+      <button onclick="showTab('participacoes')">Participação <span id="count-participacoes" class="tab-count">(0)</span></button>
       <button onclick="showTab('localizacao')">Localização</button>
       <button onclick="showTab('horarios')">Horários</button>
       <button onclick="showTab('agendamento')">Agendamento</button>
-      <button onclick="showTab('avaliacoes')">Feedback</button>
+      <button onclick="showTab('avaliacoes')">Feedback <span id="count-avaliacoes" class="tab-count">(0)</span></button>
       <button onclick="showTab('avisos')" id="btn-avisos">Avisos <span id="badge-avisos" style="display: none; background: #e74c3c; border-radius: 50%; width: 20px; height: 20px; color: white; font-size: 12px; font-weight: bold; display: inline-flex; align-items: center; justify-content: center; margin-left: 5px;">0</span></button>
       <button class="btn-logout" onclick="logout()">Sair</button>
     </div>
@@ -761,6 +772,8 @@
           </tr>`);
         });
         list.innerHTML = rows.join('');
+        // Atualizar contador
+        document.getElementById('count-profissionais').textContent = `(${rows.length})`;
       } finally {
         isLoadingProfissionais = false;
       }
@@ -806,6 +819,8 @@
         </tr>`);
         });
         list.innerHTML = rows.join('');
+        // Atualizar contador
+        document.getElementById('count-parceiros').textContent = `(${rows.length})`;
       } finally {
         isLoadingParceiros = false;
       }
@@ -851,6 +866,8 @@
         </div>`);
         });
         list.innerHTML = cards.join('');
+        // Atualizar contador
+        document.getElementById('count-participacoes').textContent = `(${cards.length})`;
       } finally {
         isLoadingParticipacoes = false;
       }
@@ -898,6 +915,8 @@
             </div>`);
           });
           list.innerHTML = cards.join('');
+          // Atualizar contador
+          document.getElementById('count-avaliacoes').textContent = `(${cards.length})`;
         }, (error) => {
           console.error('Erro ao carregar avaliações:', error);
           list.innerHTML = '<p style="color: red;">Erro ao carregar avaliações</p>';
