@@ -1,76 +1,98 @@
 rules_version = '2';
 service cloud.firestore {
-  match /databases/{database}/documents {
-    // Padrão: negar tudo
-    match /{document=**} {
-      allow read, write: if false;
-    }
+	match /databases/{database}/documents {
+		// Padrão: negar tudo
+		match /{document=**} {
+			allow read, write: if false;
+		}
 
-    // Avaliações (Reviews)
-    match /avaliacoes/{doc=**} {
-      allow read: if true;
-      allow create: if request.auth != null && request.auth.token.email != null;
-      allow update: if request.auth != null && request.auth.token.email == resource.data.email;
-      allow delete: if request.auth != null && (request.auth.token.email == resource.data.email || isAdmin());
-    }
+		// Avaliações (Reviews)
+		match /avaliacoes/{doc=**} {
+			allow read: if true;
+			allow create: if request.auth != null && request.auth.token.email != null;
+			allow update: if request.auth != null && request.auth.token.email == resource.data.email;
+			allow delete: if request.auth != null && (request.auth.token.email == resource.data.email || isAdmin());
+		}
 
-    // Profissionais (Professionals)
-    match /profissionais/{doc=**} {
-      allow read: if true;
-      allow create, update, delete: if isAdmin();
-    }
+		// Reviews (coleções alternativas)
+		match /reviews/{doc=**} {
+			allow read: if isAdmin();
+			allow create, update, delete: if isAdmin();
+		}
 
-    // Parceiros
-    match /parceiros/{doc=**} {
-      allow read: if true;
-      allow create, update, delete: if isAdmin();
-    }
+		match /Reviews/{doc=**} {
+			allow read: if isAdmin();
+			allow create, update, delete: if isAdmin();
+		}
 
-    // Participações (Participations)
-    match /participacoes/{doc=**} {
-      allow read: if true;
-      allow create, update, delete: if isAdmin();
-    }
+		// Feedback (coleções antigas)
+		match /feedback/{doc=**} {
+			allow read: if isAdmin();
+			allow create, update, delete: if isAdmin();
+		}
 
-    // Horários (Opening hours)
-    match /horarios/{doc=**} {
-      allow read: if true;
-      allow create, update, delete: if isAdmin();
-    }
+		match /feedbacks/{doc=**} {
+			allow read: if isAdmin();
+			allow create, update, delete: if isAdmin();
+		}
 
-    // Agendamento (Scheduling)
-    match /agendamento/{doc=**} {
-      allow read: if true;
-      allow create, update, delete: if isAdmin();
-    }
+		// Profissionais (Professionals)
+		match /profissionais/{doc=**} {
+			allow read: if true;
+			allow create, update, delete: if isAdmin();
+		}
 
-    // Avisos (Warnings)
-    match /avisos/{doc=**} {
-      allow read: if true;
-      allow create, update, delete: if isAdmin();
-    }
+		// Parceiros
+		match /parceiros/{doc=**} {
+			allow read: if true;
+			allow create, update, delete: if isAdmin();
+		}
 
-    // Localização (Location)
-    match /localizacao/{doc=**} {
-      allow read: if true;
-      allow create, update, delete: if isAdmin();
-    }
+		// Participações (Participations)
+		match /participacoes/{doc=**} {
+			allow read: if true;
+			allow create, update, delete: if isAdmin();
+		}
 
-    // Serviços (Services)
-    match /servicos/{doc=**} {
-      allow read: if true;
-      allow create, update, delete: if isAdmin();
-    }
+		// Horários (Opening hours)
+		match /horarios/{doc=**} {
+			allow read: if true;
+			allow create, update, delete: if isAdmin();
+		}
 
-    // Config
-    match /config/{doc=**} {
-      allow read: if true;
-      allow create, update, delete: if isAdmin();
-    }
+		// Agendamento (Scheduling)
+		match /agendamento/{doc=**} {
+			allow read: if true;
+			allow create, update, delete: if isAdmin();
+		}
 
-    // Função para verificar se é admin
-    function isAdmin() {
-      return request.auth != null && request.auth.token.email == 'admin@isaacbarbearia.com';
-    }
-  }
+		// Avisos (Warnings)
+		match /avisos/{doc=**} {
+			allow read: if true;
+			allow create, update, delete: if isAdmin();
+		}
+
+		// Localização (Location)
+		match /localizacao/{doc=**} {
+			allow read: if true;
+			allow create, update, delete: if isAdmin();
+		}
+
+		// Serviços (Services)
+		match /servicos/{doc=**} {
+			allow read: if true;
+			allow create, update, delete: if isAdmin();
+		}
+
+		// Config
+		match /config/{doc=**} {
+			allow read: if true;
+			allow create, update, delete: if isAdmin();
+		}
+
+		// Função para verificar se é admin
+		function isAdmin() {
+			return request.auth != null && request.auth.token.email == 'admin@isaacbarbearia.com';
+		}
+	}
 }

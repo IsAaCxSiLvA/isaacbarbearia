@@ -240,6 +240,41 @@
       color: #ff8c00;
       font-size: 18px;
     }
+    .review-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .review-avatar,
+    .review-initials {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      border: 2px solid #444;
+      background: #333;
+    }
+    .review-avatar {
+      object-fit: cover;
+    }
+    .review-initials {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: bold;
+      font-size: 14px;
+      text-transform: uppercase;
+    }
+    .review-name {
+      margin: 0;
+      font-size: 18px;
+    }
+    .review-info small {
+      color: #999;
+      font-size: 12px;
+    }
     .card .servico-index {
       display: inline-flex;
       align-items: center;
@@ -1373,6 +1408,24 @@
 
     // Avaliações - Com listener em tempo real
     let avaliacoesUnsubscribe = null;
+    function getInitials(name, email) {
+      const base = (name && name.trim()) ? name.trim() : (email || '');
+      if (!base) return 'U';
+      const parts = base.split(/\s+/).filter(Boolean);
+      if (parts.length === 1) return parts[0].slice(0, 2);
+      return `${parts[0][0] || ''}${parts[1][0] || ''}`.trim();
+    }
+
+    function normalizeReviewData(data) {
+      const cliente = data.cliente ?? data.customer ?? data.nome ?? data.name ?? 'Sem nome';
+      const comentario = data.comentario ?? data.comments ?? data.comment ?? 'Sem comentário';
+      const estrelas = data.estrelas ?? data.Stars ?? data.stars ?? data.rating ?? 0;
+      const dataTexto = data.data ?? data.date ?? data.Data ?? '';
+      const email = data.email ?? data.Email ?? data.emailAddress ?? '';
+      const foto = data.photoURL ?? data.photoUrl ?? data.foto ?? data.fotoUrl ?? data.avatar ?? data.image ?? data.imagem ?? data.profilePhoto ?? '';
+      return { cliente, comentario, estrelas, dataTexto, email, foto };
+    }
+
     function renderAvaliacoes(list, docs) {
       if (!docs || docs.length === 0) {
         list.innerHTML = '<p style="text-align: center; color: #999;">Nenhuma avaliação ainda</p>';
@@ -1391,16 +1444,28 @@
         uniqueIds.add(key);
 
         const data = doc.data();
+        const collectionName = doc?.ref?.parent?.id || 'avaliacoes';
+        const review = normalizeReviewData(data);
+        const initials = getInitials(review.cliente, review.email);
+        const avatarHtml = review.foto
+          ? `<img class="review-avatar" src="${review.foto}" alt="${review.cliente}">`
+          : `<div class="review-initials">${initials}</div>`;
         const color = colors[colorIndex % colors.length];
         colorIndex++;
 
         console.log('Renderizando avaliação:', data);
         cards.push(`<div class="card ${color}">
-          <h3>${data.cliente || 'Sem nome'}</h3>
-          <p><strong>Estrelas:</strong> ${data.estrelas || 0}/5</p>
-          <p>${data.comentario || 'Sem comentário'}</p>
-          <p><small>${data.data || 'Sem data'}</small></p>
-          <button class="btn-delete" onclick="deleteAvaliacao('${doc.id}')">Deletar</button>
+          <div class="review-header">
+            ${avatarHtml}
+            <div class="review-info">
+              <h3 class="review-name">${review.cliente}</h3>
+              ${review.email ? `<small>${review.email}</small>` : ''}
+            </div>
+          </div>
+          <p><strong>Estrelas:</strong> ${review.estrelas}/5</p>
+          <p>${review.comentario}</p>
+          <p><small>${review.dataTexto || 'Sem data'}</small></p>
+          <button class="btn-delete" onclick="deleteAvaliacao('${doc.id}','${collectionName}')">Deletar</button>
         </div>`);
       });
 
@@ -1410,12 +1475,19 @@
 
     async function loadAvaliacoesFallback(list) {
       try {
-        const [feedbackSnap, feedbacksSnap] = await Promise.all([
+        const [feedbackSnap, feedbacksSnap, reviewsSnap, ReviewsSnap] = await Promise.all([
           getDocs(collection(db, 'feedback')),
-          getDocs(collection(db, 'feedbacks'))
+          getDocs(collection(db, 'feedbacks')),
+          getDocs(collection(db, 'reviews')),
+          getDocs(collection(db, 'Reviews'))
         ]);
 
-        const fallbackDocs = [...feedbackSnap.docs, ...feedbacksSnap.docs];
+        const fallbackDocs = [
+          ...feedbackSnap.docs,
+          ...feedbacksSnap.docs,
+          ...reviewsSnap.docs,
+          ...ReviewsSnap.docs
+        ];
         renderAvaliacoes(list, fallbackDocs);
       } catch (error) {
         console.error('Erro ao carregar avaliações (fallback):', error);
@@ -1451,10 +1523,10 @@
       }
     }
 
-    window.deleteAvaliacao = async (id) => {
+    window.deleteAvaliacao = async (id, collectionName = 'avaliacoes') => {
       try {
-        await deleteDoc(doc(db, 'avaliacoes', id));
-        console.log('Avaliação deletada:', id);
+        await deleteDoc(doc(db, collectionName, id));
+        console.log('Avaliação deletada:', id, 'em', collectionName);
       } catch (error) {
         console.error('Erro ao deletar avaliação:', error);
       }
