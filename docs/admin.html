@@ -555,7 +555,7 @@
     <h1>Painel Admin - Isaac Barbearia</h1>
     
     <div class="tabs">
-      <button class="active" onclick="showTab('servicos')">Serviços</button>
+      <button class="active" onclick="showTab('servicos')">Serviços <span id="count-servicos" class="tab-count">(0)</span></button>
       <button onclick="showTab('profissionais')">Profissionais <span id="count-profissionais" class="tab-count">(0)</span></button>
       <button onclick="showTab('parceiros')">Parceiros <span id="count-parceiros" class="tab-count">(0)</span></button>
       <button onclick="showTab('participacoes')">Participação <span id="count-participacoes" class="tab-count">(0)</span></button>
@@ -805,6 +805,8 @@
         }
         
         list.innerHTML = rows.join('');
+        // Atualizar o contador na aba
+        document.getElementById('count-servicos').textContent = rows.length;
         console.log('✅ Renderizados', rows.length, 'serviços únicos de', snapshot.size, 'documentos');
       } finally {
         isLoadingServicos = false;
