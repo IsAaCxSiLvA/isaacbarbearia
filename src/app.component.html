@@ -198,9 +198,6 @@
                     }
 
                     @if (item.id === 'avisos' && avisos().length > 0) {
-                      <span class="ml-2 bg-white/10 text-gray-200 border border-white/10 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
-                        {{ avisos().length }}
-                      </span>
                       @if (countAvisosByType('info') > 0) {
                         <span class="ml-1 bg-blue-500/30 text-blue-300 border border-blue-500/40 text-[9px] font-bold px-2 py-0.5 rounded">
                           {{ countAvisosByType('info') }}
