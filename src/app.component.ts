@@ -105,6 +105,7 @@ export class AppComponent implements OnInit {
   telefoneLink = signal('tel:5585999999999');
   telefoneNumber = signal('(85) 99999-9999');
   agendamentoInfo = signal('O agendamento é feito preferencialmente via WhatsApp ou telefone.');
+  agendamentoObservacao = signal('');
   
   // Localização
   localizacaoEndereco = signal('Rua das Pedras, 123');
@@ -330,7 +331,7 @@ export class AppComponent implements OnInit {
 
       // Carregar dados de agendamento
       if (agendamentoSnap.exists()) {
-        const agendamentoData = agendamentoSnap.data() as { whatsapp?: string; telefone?: string; info?: string };
+        const agendamentoData = agendamentoSnap.data() as { whatsapp?: string; telefone?: string; info?: string; observacao?: string };
         
         if (agendamentoData.whatsapp) {
           const numeroWhats = agendamentoData.whatsapp.replace(/\D/g, '');
@@ -346,6 +347,10 @@ export class AppComponent implements OnInit {
         
         if (agendamentoData.info) {
           this.agendamentoInfo.set(agendamentoData.info);
+        }
+        
+        if (agendamentoData.observacao) {
+          this.agendamentoObservacao.set(agendamentoData.observacao);
         }
       }
 

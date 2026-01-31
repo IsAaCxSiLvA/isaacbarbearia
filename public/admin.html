@@ -896,6 +896,7 @@
         <input type="text" id="agen-whatsapp" placeholder="Número WhatsApp (ex: 11 99999-9999)" required>
         <input type="tel" id="agen-telefone" placeholder="Telefone (ex: 11 3333-3333)" required>
         <textarea id="agen-info" placeholder="Informações adicionais sobre agendamento" required></textarea>
+        <textarea id="agen-observacao" placeholder="Observação (ex: Agendamento confirmado por WhatsApp)"></textarea>
         <button type="submit">Salvar Agendamento</button>
       </form>
       <div id="agen-display" style="margin-top: 20px; padding: 15px; background: #2a2a2a; border-radius: 8px; border: 1px solid #333;"></div>
@@ -1636,7 +1637,8 @@
       const data = {
         whatsapp: document.getElementById('agen-whatsapp').value,
         telefone: document.getElementById('agen-telefone').value,
-        info: document.getElementById('agen-info').value
+        info: document.getElementById('agen-info').value,
+        observacao: document.getElementById('agen-observacao').value
       };
       await setDoc(doc(db, 'config', 'agendamento'), data);
       displayAgendamento(data);
@@ -1647,11 +1649,16 @@
       const display = document.getElementById('agen-display');
       const whatsappLink = `https://wa.me/${data.whatsapp.replace(/\D/g, '')}`;
       const telefoneLink = `tel:${data.telefone.replace(/\D/g, '')}`;
+      let observacaoHtml = '';
+      if (data.observacao) {
+        observacaoHtml = `<p style="margin-top: 10px; padding: 8px; background: #1a1a1a; border-left: 3px solid #ffd700; border-radius: 4px;"><strong>📝 Observação:</strong> ${data.observacao}</p>`;
+      }
       display.innerHTML = `
         <p><strong>📞 Agendamento</strong></p>
         <p>WhatsApp: <a href="${whatsappLink}" target="_blank" style="color: #ff8c00; text-decoration: none;">${data.whatsapp} 💬</a></p>
         <p>Telefone: <a href="${telefoneLink}" style="color: #ff8c00; text-decoration: none;">${data.telefone} ☎️</a></p>
         <p>${data.info}</p>
+        ${observacaoHtml}
       `;
     }
 
@@ -1663,6 +1670,7 @@
           document.getElementById('agen-whatsapp').value = data.whatsapp || '';
           document.getElementById('agen-telefone').value = data.telefone || '';
           document.getElementById('agen-info').value = data.info || '';
+          document.getElementById('agen-observacao').value = data.observacao || '';
           displayAgendamento(data);
         }
       } catch (error) {

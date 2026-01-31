@@ -267,6 +267,12 @@
                                <span>Telefone: {{ telefoneNumber() }}</span>
                              </a>
                            </div>
+                           @if (agendamentoObservacao()) {
+                             <div class="mt-4 p-3 bg-black/40 border-l-3 border-brand-fireOrange/60 rounded text-xs text-gray-400">
+                               <p class="font-semibold text-brand-fireOrange mb-1">📝 Observação:</p>
+                               <p>{{ agendamentoObservacao() }}</p>
+                             </div>
+                           }
                          </div>
                        } @else if (item.id === 'location') {
                          <div class="text-gray-300 font-light leading-relaxed text-sm animate-fade-in space-y-3">
