@@ -28,6 +28,18 @@
       margin-bottom: 30px; 
       border-bottom: 2px solid #333;
       flex-wrap: wrap;
+      overflow-x: auto;
+      padding-bottom: 10px;
+    }
+    .tabs::-webkit-scrollbar {
+      height: 6px;
+    }
+    .tabs::-webkit-scrollbar-track {
+      background: #1a1a1a;
+    }
+    .tabs::-webkit-scrollbar-thumb {
+      background: #ff8c00;
+      border-radius: 3px;
     }
     .tabs button {
       padding: 14px 24px; 
@@ -47,6 +59,24 @@
     .tabs button:hover { 
       background: #ff8c00; 
       color: #000; 
+    }
+    .tab-count {
+      background: #e74c3c;
+      color: white;
+      padding: 3px 8px;
+      border-radius: 50%;
+      font-size: 11px;
+      margin-left: 8px;
+      font-weight: bold;
+      min-width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 4px rgba(231, 76, 60, 0.3);
+    }
+    .tabs button.active .tab-count {
+      background: #c0392b;
     }
     .btn-logout { 
       margin-left: auto; 
@@ -158,6 +188,49 @@
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.4);
       border: 1px solid #444;
+      border-left: 4px solid #ff8c00;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.6);
+    }
+    .card.color-blue {
+      border-left-color: #3498db;
+    }
+    .card.color-blue h3 {
+      color: #3498db;
+    }
+    .card.color-green {
+      border-left-color: #27ae60;
+    }
+    .card.color-green h3 {
+      color: #27ae60;
+    }
+    .card.color-purple {
+      border-left-color: #9b59b6;
+    }
+    .card.color-purple h3 {
+      color: #9b59b6;
+    }
+    .card.color-red {
+      border-left-color: #e74c3c;
+    }
+    .card.color-red h3 {
+      color: #e74c3c;
+    }
+    .card.color-yellow {
+      border-left-color: #f39c12;
+    }
+    .card.color-yellow h3 {
+      color: #f39c12;
+    }
+    .card.color-pink {
+      border-left-color: #e91e63;
+    }
+    .card.color-pink h3 {
+      color: #e91e63;
     }
     .card h3 { 
       margin: 0 0 12px 0; 
@@ -177,6 +250,72 @@
       width: 100%; 
       margin-top: 15px; 
     }
+    .servicos-section {
+      margin-bottom: 50px;
+    }
+    .servicos-section-header {
+      font-size: 20px;
+      color: #ff8c00;
+      margin: 30px 0 0 0;
+      padding: 15px;
+      border-left: 4px solid #ff8c00;
+      background: rgba(255, 140, 0, 0.1);
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
+      transition: all 0.3s ease;
+    }
+    .servicos-section-header:hover {
+      background: rgba(255, 140, 0, 0.2);
+      transform: translateX(5px);
+    }
+    .servicos-section-header .arrow {
+      font-size: 18px;
+      transition: transform 0.3s ease;
+    }
+    .servicos-section-header.collapsed .arrow {
+      transform: rotate(-90deg);
+    }
+    .servicos-section.sim .servicos-section-header {
+      color: #27ae60;
+      border-left-color: #27ae60;
+      background: rgba(39, 174, 96, 0.1);
+    }
+    .servicos-section.sim .servicos-section-header:hover {
+      background: rgba(39, 174, 96, 0.2);
+    }
+    .servicos-section.embreve .servicos-section-header {
+      color: #f39c12;
+      border-left-color: #f39c12;
+      background: rgba(243, 156, 18, 0.1);
+    }
+    .servicos-section.embreve .servicos-section-header:hover {
+      background: rgba(243, 156, 18, 0.2);
+    }
+    .servicos-section.nao .servicos-section-header {
+      color: #e74c3c;
+      border-left-color: #e74c3c;
+      background: rgba(231, 76, 60, 0.1);
+    }
+    .servicos-section.nao .servicos-section-header:hover {
+      background: rgba(231, 76, 60, 0.2);
+    }
+    .servicos-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 20px;
+      max-height: 2000px;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+    }
+    .servicos-content.collapsed {
+      max-height: 0;
+      margin-top: 0;
+    }
 
     /* RESPONSIVO */
     @media (max-width: 768px) {
@@ -193,22 +332,33 @@
       }
       .tabs { 
         display: flex;
-        flex-direction: column;
         gap: 10px;
-        border-bottom: none;
+        border-bottom: 1px solid #333;
         margin-bottom: 20px;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 12px;
+        flex-wrap: nowrap;
       }
       .tabs button {
-        padding: 18px 16px; 
-        font-size: 16px;
-        border-radius: 10px;
-        font-weight: 600;
-        width: 100%;
+        padding: 12px 16px; 
+        font-size: 13px;
+        border-radius: 8px;
+        font-weight: 500;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .tab-count {
+        margin-left: 4px;
+        font-size: 10px;
+        min-width: 18px;
+        height: 18px;
       }
       .btn-logout { 
         background: #e74c3c !important;
-        margin-top: 5px;
-        width: 100%;
+        margin-left: auto;
+        flex-shrink: 0;
       }
       .tab-content {
         padding: 16px;
@@ -286,50 +436,140 @@
         padding: 0;
         box-sizing: border-box;
       }
+      body {
+        font-size: 14px;
+      }
       .container { 
         padding: 10px; 
       }
       h1 { 
-        font-size: 20px;
-        margin-bottom: 15px;
+        font-size: 18px;
+        margin-bottom: 12px;
       }
       h2 { 
-        font-size: 17px;
-        margin-bottom: 15px;
+        font-size: 16px;
+        margin-bottom: 12px;
       }
       .tabs { 
-        display: grid;
-        grid-template-columns: 1fr;
+        display: flex;
         gap: 8px;
-        border-bottom: none;
+        border-bottom: 1px solid #333;
         margin-bottom: 15px;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 10px;
+        flex-wrap: nowrap;
       }
       .tabs button {
-        padding: 16px 12px; 
-        font-size: 15px;
-        border-radius: 10px;
-        font-weight: 600;
-        width: 100%;
+        padding: 10px 12px; 
+        font-size: 12px;
+        border-radius: 8px;
+        font-weight: 500;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .tab-count {
+        margin-left: 3px;
+        font-size: 9px;
+        min-width: 16px;
+        height: 16px;
+        padding: 1px 5px;
       }
       .btn-logout { 
-        width: 100%;
-        padding: 16px 12px !important;
-        font-size: 15px !important;
         background: #e74c3c !important;
+        margin-left: auto;
+        flex-shrink: 0;
+        padding: 10px 12px !important;
+        font-size: 12px !important;
         order: 999;
       }
       .tab-content {
-        padding: 14px;
+        padding: 12px;
         border-radius: 10px;
         margin-bottom: 10px;
       }
       form {
-        padding: 14px; 
-        gap: 12px;
+        padding: 12px; 
+        gap: 10px;
         border-radius: 10px;
+        margin-bottom: 15px;
       }
       input, textarea {
         font-size: 16px;
+        padding: 12px;
+        border-radius: 8px;
+      }
+      button[type="submit"] {
+        padding: 14px;
+        font-size: 15px;
+        font-weight: 600;
+        border-radius: 8px;
+        width: 100%;
+      }
+      select {
+        width: 100%;
+        padding: 12px;
+        font-size: 14px;
+        border-radius: 8px;
+      }
+      
+      /* Tabelas */
+      table, thead, tbody, th, td, tr { 
+        display: block; 
+      }
+      thead tr { 
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+      }
+      tr { 
+        margin-bottom: 12px;
+        background: #2a2a2a;
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 12px;
+      }
+      td { 
+        border: none;
+        position: relative;
+        padding: 8px 8px 8px 45%;
+        text-align: right;
+        font-size: 13px;
+      }
+      td:before { 
+        content: attr(data-label);
+        position: absolute;
+        left: 12px;
+        width: 40%;
+        padding-right: 8px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        color: #ff8c00;
+        font-size: 12px;
+      }
+      .cards {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .card {
+        padding: 12px;
+      }
+      .card h3 { 
+        font-size: 15px;
+        margin-bottom: 8px;
+      }
+      .card p { 
+        font-size: 13px;
+      }
+      .btn-delete {
+        padding: 10px;
+        font-size: 13px;
+        width: 100%;
+        margin-top: 10px;
+      }
+    }
         padding: 14px;
         border-radius: 8px;
         width: 100%;
@@ -424,15 +664,15 @@
     <h1>Painel Admin - Isaac Barbearia</h1>
     
     <div class="tabs">
-      <button class="active" onclick="showTab('servicos')">Serviços</button>
-      <button onclick="showTab('profissionais')">Profissionais</button>
-      <button onclick="showTab('parceiros')">Parceiros</button>
-      <button onclick="showTab('participacoes')">Participação</button>
+      <button class="active" onclick="showTab('servicos')">Serviços <span id="count-servicos" class="tab-count">0</span></button>
+      <button onclick="showTab('profissionais')">Profissionais <span id="count-profissionais" class="tab-count">0</span></button>
+      <button onclick="showTab('parceiros')">Parceiros <span id="count-parceiros" class="tab-count">0</span></button>
+      <button onclick="showTab('participacoes')">Participação <span id="count-participacoes" class="tab-count">0</span></button>
       <button onclick="showTab('localizacao')">Localização</button>
       <button onclick="showTab('horarios')">Horários</button>
       <button onclick="showTab('agendamento')">Agendamento</button>
-      <button onclick="showTab('avaliacoes')">Feedback</button>
-      <button onclick="showTab('avisos')" id="btn-avisos">Avisos <span id="badge-avisos" style="display: none; background: #e74c3c; border-radius: 50%; width: 20px; height: 20px; color: white; font-size: 12px; font-weight: bold; display: inline-flex; align-items: center; justify-content: center; margin-left: 5px;">0</span></button>
+      <button onclick="showTab('avaliacoes')">Feedback <span id="count-avaliacoes" class="tab-count">0</span></button>
+      <button onclick="showTab('avisos')">Avisos <span id="count-avisos" class="tab-count">0</span></button>
       <button class="btn-logout" onclick="logout()">Sair</button>
     </div>
 
@@ -453,10 +693,7 @@
         <input type="number" id="serv-preco" placeholder="Preço (em R$)" step="0.01" min="0">
         <button type="submit">Adicionar Serviço</button>
       </form>
-      <table>
-        <thead><tr><th>Serviço</th><th>Realizamos?</th><th>Preço</th><th>Ações</th></tr></thead>
-        <tbody id="serv-list"></tbody>
-      </table>
+      <div class="cards" id="serv-list"></div>
     </div>
 
     <!-- PROFISSIONAIS -->
@@ -469,10 +706,7 @@
         <input type="url" id="prof-img" placeholder="Link da Imagem (URL)">
         <button type="submit">Adicionar Profissional</button>
       </form>
-      <table>
-        <thead><tr><th>Nome</th><th>Especialidade</th><th>Imagem</th><th>Ações</th></tr></thead>
-        <tbody id="prof-list"></tbody>
-      </table>
+      <div class="cards" id="prof-list"></div>
     </div>
 
     <!-- PARCEIROS -->
@@ -483,10 +717,7 @@
         <input type="url" id="parc-img" placeholder="Link do Logo (URL)" required>
         <button type="submit">Adicionar Parceria</button>
       </form>
-      <table>
-        <thead><tr><th>Nome</th><th>Logo</th><th>Ações</th></tr></thead>
-        <tbody id="parc-list"></tbody>
-      </table>
+      <div class="cards" id="parc-list"></div>
     </div>
 
     <!-- PARTICIPAÇÃO -->
@@ -598,10 +829,24 @@
 
     // Tabs
     window.showTab = (tabName) => {
+      // Fechar todas as seções de serviços
+      closeAllServicos();
+      
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
       document.getElementById(tabName).classList.add('active');
       event.target.classList.add('active');
+    };
+
+    // Fechar todas as seções de serviços
+    window.closeAllServicos = () => {
+      document.querySelectorAll('.servicos-section-header').forEach(header => {
+        const content = header.nextElementSibling;
+        if (content && !content.classList.contains('collapsed')) {
+          content.classList.add('collapsed');
+          header.classList.add('collapsed');
+        }
+      });
     };
 
     // Logout
@@ -650,8 +895,13 @@
           servicosPorNome[data.nome].push({ id: doc.id, data });
         });
         
-        // Exibe apenas um de cada serviço único
-        const rows = [];
+        // Agrupa serviços por status
+        const servicosPorStatus = {
+          sim: [],
+          nao: [],
+          embreve: []
+        };
+        
         for (const nome in servicosPorNome) {
           const servicos = servicosPorNome[nome];
           
@@ -663,18 +913,98 @@
           // Usa apenas o primeiro
           const servico = servicos[0];
           const data = servico.data;
-          const realizaText = data.realiza === true ? 'Sim' : data.realiza === false ? 'Não' : 'Em Breve';
-          const precoText = data.realiza === true && data.preco > 0 ? `R$ ${data.preco.toFixed(0)}` : '-';
-          rows.push(`<tr>
-            <td data-label="Serviço">${data.nome}</td>
-            <td data-label="Realizamos?">${realizaText}</td>
-            <td data-label="Preço">${precoText}</td>
-            <td data-label="Ações"><button class="btn-delete" onclick="deleteServico('${servico.id}')">Deletar</button></td>
-          </tr>`);
+          
+          if (data.realiza === true) {
+            servicosPorStatus.sim.push({ servico, data });
+          } else if (data.realiza === false) {
+            servicosPorStatus.nao.push({ servico, data });
+          } else {
+            servicosPorStatus.embreve.push({ servico, data });
+          }
+        }
+        
+        const rows = [];
+        
+        // Renderiza Sim (Verde)
+        if (servicosPorStatus.sim.length > 0) {
+          const cardsText = servicosPorStatus.sim.map((item, index) => {
+            const precoText = item.data.preco > 0 ? `R$ ${item.data.preco.toFixed(0)}` : '-';
+            return `<div class="card color-green">
+              <div style="position: absolute; top: 10px; right: 10px; background: #27ae60; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">${index + 1}</div>
+              <h3>${item.data.nome}</h3>
+              <p><strong>Preço:</strong> ${precoText}</p>
+              <button class="btn-delete" onclick="deleteServico('${item.servico.id}')">Deletar</button>
+            </div>`;
+          }).join('');
+          
+          rows.push(`
+            <div class="servicos-section sim">
+              <div class="servicos-section-header" onclick="toggleServicos(this)">
+                <span>✅ Realizamos (${servicosPorStatus.sim.length})</span>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="servicos-content">
+                ${cardsText}
+              </div>
+            </div>
+          `);
+        }
+        
+        // Renderiza Em Breve (Amarelo)
+        if (servicosPorStatus.embreve.length > 0) {
+          const cardsText = servicosPorStatus.embreve.map((item, index) => {
+            return `<div class="card color-yellow">
+              <div style="position: absolute; top: 10px; right: 10px; background: #f39c12; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">${index + 1}</div>
+              <h3>${item.data.nome}</h3>
+              <p><strong>Realizamos:</strong> Em Breve</p>
+              <p><strong>Preço:</strong> -</p>
+              <button class="btn-delete" onclick="deleteServico('${item.servico.id}')">Deletar</button>
+            </div>`;
+          }).join('');
+          
+          rows.push(`
+            <div class="servicos-section embreve">
+              <div class="servicos-section-header collapsed" onclick="toggleServicos(this)">
+                <span>⏳ Em Breve (${servicosPorStatus.embreve.length})</span>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="servicos-content collapsed">
+                ${cardsText}
+              </div>
+            </div>
+          `);
+        }
+        
+        // Renderiza Não (Vermelho)
+        if (servicosPorStatus.nao.length > 0) {
+          const cardsText = servicosPorStatus.nao.map((item, index) => {
+            return `<div class="card color-red">
+              <div style="position: absolute; top: 10px; right: 10px; background: #e74c3c; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">${index + 1}</div>
+              <h3>${item.data.nome}</h3>
+              <p><strong>Realizamos:</strong> Não</p>
+              <p><strong>Preço:</strong> -</p>
+              <button class="btn-delete" onclick="deleteServico('${item.servico.id}')">Deletar</button>
+            </div>`;
+          }).join('');
+          
+          rows.push(`
+            <div class="servicos-section nao">
+              <div class="servicos-section-header collapsed" onclick="toggleServicos(this)">
+                <span>❌ Não Realizamos (${servicosPorStatus.nao.length})</span>
+                <span class="arrow">▼</span>
+              </div>
+              <div class="servicos-content collapsed">
+                ${cardsText}
+              </div>
+            </div>
+          `);
         }
         
         list.innerHTML = rows.join('');
-        console.log('✅ Renderizados', rows.length, 'serviços únicos de', snapshot.size, 'documentos');
+        // Atualizar o contador na aba - contar total de itens
+        const totalServicos = servicosPorStatus.sim.length + servicosPorStatus.embreve.length + servicosPorStatus.nao.length;
+        document.getElementById('count-servicos').textContent = totalServicos;
+        console.log('✅ Renderizados', totalServicos, 'serviços únicos de', snapshot.size, 'documentos');
       } finally {
         isLoadingServicos = false;
       }
@@ -723,6 +1053,31 @@
       loadServicos();
     };
 
+    window.toggleServicos = (header) => {
+      const content = header.nextElementSibling;
+      const isCollapsed = content.classList.contains('collapsed');
+      
+      // Fechar todas as outras seções
+      document.querySelectorAll('.servicos-section-header').forEach(h => {
+        if (h !== header) {
+          const c = h.nextElementSibling;
+          if (c && !c.classList.contains('collapsed')) {
+            c.classList.add('collapsed');
+            h.classList.add('collapsed');
+          }
+        }
+      });
+      
+      // Toggle da seção clicada
+      if (isCollapsed) {
+        content.classList.remove('collapsed');
+        header.classList.remove('collapsed');
+      } else {
+        content.classList.add('collapsed');
+        header.classList.add('collapsed');
+      }
+    };
+
     // Profissionais
     window.addProfissional = async (e) => {
       e.preventDefault();
@@ -746,21 +1101,28 @@
         const snapshot = await getDocs(collection(db, 'profissionais'));
         const uniqueIds = new Set();
         const rows = [];
+        let colorIndex = 0;
+        const colors = ['color-blue', 'color-green', 'color-purple', 'color-pink', 'color-yellow', 'color-red'];
         
         snapshot.forEach(doc => {
           if (uniqueIds.has(doc.id)) return;
           uniqueIds.add(doc.id);
           
           const data = doc.data();
-          const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">` : '-';
-          rows.push(`<tr>
-            <td data-label="Nome">${data.nome}</td>
-            <td data-label="Especialidade">${data.especialidade}</td>
-            <td data-label="Imagem">${imgHtml}</td>
-            <td data-label="Ações"><button class="btn-delete" onclick="deleteProfissional('${doc.id}')">Deletar</button></td>
-          </tr>`);
+          const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;margin-bottom:10px;">` : '';
+          const color = colors[colorIndex % colors.length];
+          colorIndex++;
+          
+          rows.push(`<div class="card ${color}">
+            ${imgHtml}
+            <h3>${data.nome}</h3>
+            <p><strong>Especialidade:</strong> ${data.especialidade}</p>
+            <button class="btn-delete" onclick="deleteProfissional('${doc.id}')">Deletar</button>
+          </div>`);
         });
         list.innerHTML = rows.join('');
+        // Atualizar contador
+        document.getElementById('count-profissionais').textContent = rows.length;
       } finally {
         isLoadingProfissionais = false;
       }
@@ -792,20 +1154,27 @@
         const snapshot = await getDocs(collection(db, 'parceiros'));
         const uniqueIds = new Set();
         const rows = [];
+        let colorIndex = 0;
+        const colors = ['color-blue', 'color-green', 'color-purple', 'color-pink', 'color-yellow', 'color-red'];
         
         snapshot.forEach(doc => {
           if (uniqueIds.has(doc.id)) return;
           uniqueIds.add(doc.id);
           
           const data = doc.data();
-          const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;border:2px solid #ff8c00;">` : '-';
-          rows.push(`<tr>
-            <td data-label="Nome">${data.nome}</td>
-            <td data-label="Logo">${imgHtml}</td>
-            <td data-label="Ações"><button class="btn-delete" onclick="deleteParceiro('${doc.id}')">Deletar</button></td>
-        </tr>`);
+          const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:80px;height:auto;border-radius:8px;object-fit:cover;margin-bottom:10px;">` : '';
+          const color = colors[colorIndex % colors.length];
+          colorIndex++;
+          
+          rows.push(`<div class="card ${color}">
+            ${imgHtml}
+            <h3>${data.nome}</h3>
+            <button class="btn-delete" onclick="deleteParceiro('${doc.id}')">Deletar</button>
+          </div>`);
         });
         list.innerHTML = rows.join('');
+        // Atualizar contador
+        document.getElementById('count-parceiros').textContent = rows.length;
       } finally {
         isLoadingParceiros = false;
       }
@@ -838,12 +1207,18 @@
         const snapshot = await getDocs(collection(db, 'participacoes'));
         const uniqueIds = new Set();
         const cards = [];
+        let colorIndex = 0;
+        const colors = ['color-blue', 'color-green', 'color-purple', 'color-pink', 'color-yellow'];
+        
         snapshot.forEach(doc => {
           if (uniqueIds.has(doc.id)) return;
           uniqueIds.add(doc.id);
           
           const data = doc.data();
-        cards.push(`<div class="card">
+          const color = colors[colorIndex % colors.length];
+          colorIndex++;
+          
+        cards.push(`<div class="card ${color}">
           <h3>${data.titulo}</h3>
           <p>${data.descricao || ''}</p>
           <p><strong>Data:</strong> ${data.data}</p>
@@ -851,6 +1226,8 @@
         </div>`);
         });
         list.innerHTML = cards.join('');
+        // Atualizar contador
+        document.getElementById('count-participacoes').textContent = cards.length;
       } finally {
         isLoadingParticipacoes = false;
       }
@@ -883,13 +1260,19 @@
           
           const uniqueIds = new Set();
           const cards = [];
+          let colorIndex = 0;
+          const colors = ['color-blue', 'color-green', 'color-purple', 'color-pink', 'color-yellow'];
+          
           snapshot.forEach(doc => {
             if (uniqueIds.has(doc.id)) return;
             uniqueIds.add(doc.id);
             
             const data = doc.data();
+            const color = colors[colorIndex % colors.length];
+            colorIndex++;
+            
             console.log('Renderizando avaliação:', data);
-            cards.push(`<div class="card">
+            cards.push(`<div class="card ${color}">
               <h3>${data.cliente || 'Sem nome'}</h3>
               <p><strong>Estrelas:</strong> ${data.estrelas || 0}/5</p>
               <p>${data.comentario || 'Sem comentário'}</p>
@@ -898,6 +1281,8 @@
             </div>`);
           });
           list.innerHTML = cards.join('');
+          // Atualizar contador
+          document.getElementById('count-avaliacoes').textContent = cards.length;
         }, (error) => {
           console.error('Erro ao carregar avaliações:', error);
           list.innerHTML = '<p style="color: red;">Erro ao carregar avaliações</p>';
@@ -1066,7 +1451,6 @@
       try {
         const snapshot = await getDocs(collection(db, 'avisos'));
         const list = document.getElementById('avisos-list');
-        const badge = document.getElementById('badge-avisos');
         
         list.innerHTML = '';
         const avisos = [];
@@ -1077,8 +1461,8 @@
 
         avisos.sort((a, b) => new Date(b.data) - new Date(a.data));
 
-        badge.textContent = avisos.length;
-        badge.style.display = avisos.length > 0 ? 'inline-flex' : 'none';
+        // Atualizar o contador na aba
+        document.getElementById('count-avisos').textContent = avisos.length;
 
         avisos.forEach(aviso => {
           const tipoClass = aviso.tipo === 'danger' ? '#e74c3c' : aviso.tipo === 'warning' ? '#f39c12' : aviso.tipo === 'success' ? '#27ae60' : '#3498db';
