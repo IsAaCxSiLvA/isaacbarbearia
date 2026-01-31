@@ -1247,49 +1247,75 @@
 
     // Avaliações - Com listener em tempo real
     let avaliacoesUnsubscribe = null;
+    function renderAvaliacoes(list, docs) {
+      if (!docs || docs.length === 0) {
+        list.innerHTML = '<p style="text-align: center; color: #999;">Nenhuma avaliação ainda</p>';
+        document.getElementById('count-avaliacoes').textContent = 0;
+        return;
+      }
+
+      const uniqueIds = new Set();
+      const cards = [];
+      let colorIndex = 0;
+      const colors = ['color-blue', 'color-green', 'color-purple', 'color-pink', 'color-yellow'];
+
+      docs.forEach(doc => {
+        const key = doc?.ref?.parent?.id ? `${doc.ref.parent.id}:${doc.id}` : doc.id;
+        if (uniqueIds.has(key)) return;
+        uniqueIds.add(key);
+
+        const data = doc.data();
+        const color = colors[colorIndex % colors.length];
+        colorIndex++;
+
+        console.log('Renderizando avaliação:', data);
+        cards.push(`<div class="card ${color}">
+          <h3>${data.cliente || 'Sem nome'}</h3>
+          <p><strong>Estrelas:</strong> ${data.estrelas || 0}/5</p>
+          <p>${data.comentario || 'Sem comentário'}</p>
+          <p><small>${data.data || 'Sem data'}</small></p>
+          <button class="btn-delete" onclick="deleteAvaliacao('${doc.id}')">Deletar</button>
+        </div>`);
+      });
+
+      list.innerHTML = cards.join('');
+      document.getElementById('count-avaliacoes').textContent = cards.length;
+    }
+
+    async function loadAvaliacoesFallback(list) {
+      try {
+        const [feedbackSnap, feedbacksSnap] = await Promise.all([
+          getDocs(collection(db, 'feedback')),
+          getDocs(collection(db, 'feedbacks'))
+        ]);
+
+        const fallbackDocs = [...feedbackSnap.docs, ...feedbacksSnap.docs];
+        renderAvaliacoes(list, fallbackDocs);
+      } catch (error) {
+        console.error('Erro ao carregar avaliações (fallback):', error);
+        list.innerHTML = '<p style="color: red;">Erro ao carregar avaliações</p>';
+      }
+    }
+
     function loadAvaliacoes() {
       const list = document.getElementById('aval-list');
       console.log('Iniciando loadAvaliacoes...');
-      
+
       // Remove o listener anterior se existir
       if (avaliacoesUnsubscribe) {
         avaliacoesUnsubscribe();
       }
-      
+
       try {
-        avaliacoesUnsubscribe = onSnapshot(collection(db, 'avaliacoes'), (snapshot) => {
+        avaliacoesUnsubscribe = onSnapshot(collection(db, 'avaliacoes'), async (snapshot) => {
           console.log('Snapshot recebido:', snapshot.docs.length, 'documentos');
-          
+
           if (snapshot.empty) {
-            list.innerHTML = '<p style="text-align: center; color: #999;">Nenhuma avaliação ainda</p>';
+            await loadAvaliacoesFallback(list);
             return;
           }
-          
-          const uniqueIds = new Set();
-          const cards = [];
-          let colorIndex = 0;
-          const colors = ['color-blue', 'color-green', 'color-purple', 'color-pink', 'color-yellow'];
-          
-          snapshot.forEach(doc => {
-            if (uniqueIds.has(doc.id)) return;
-            uniqueIds.add(doc.id);
-            
-            const data = doc.data();
-            const color = colors[colorIndex % colors.length];
-            colorIndex++;
-            
-            console.log('Renderizando avaliação:', data);
-            cards.push(`<div class="card ${color}">
-              <h3>${data.cliente || 'Sem nome'}</h3>
-              <p><strong>Estrelas:</strong> ${data.estrelas || 0}/5</p>
-              <p>${data.comentario || 'Sem comentário'}</p>
-              <p><small>${data.data || 'Sem data'}</small></p>
-              <button class="btn-delete" onclick="deleteAvaliacao('${doc.id}')">Deletar</button>
-            </div>`);
-          });
-          list.innerHTML = cards.join('');
-          // Atualizar contador
-          document.getElementById('count-avaliacoes').textContent = cards.length;
+
+          renderAvaliacoes(list, snapshot.docs);
         }, (error) => {
           console.error('Erro ao carregar avaliações:', error);
           list.innerHTML = '<p style="color: red;">Erro ao carregar avaliações</p>';
