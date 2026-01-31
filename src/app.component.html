@@ -334,9 +334,11 @@
                      @if (item.type === 'projects') {
                        <div class="space-y-3 animate-fade-in">
                          @for (project of item.projectGallery; track project.title) {
-                           <div class="bg-gradient-to-br from-white/10 to-white/5 p-5 rounded-lg border border-brand-fireOrange/30 hover:border-brand-fireOrange/60 hover:shadow-[0_0_20px_rgba(255,140,0,0.2)] transition-all duration-300 group">
-                            <!-- Título em destaque -->
-                            <h4 class="font-bold text-white text-lg mb-3 group-hover:text-brand-fireOrange transition-colors uppercase tracking-wide">{{ project.title }}</h4>
+                          <div class="bg-gradient-to-br from-white/10 to-white/5 p-5 rounded-lg border border-brand-fireOrange/30 border-l-4 border-l-brand-fireOrange/80 hover:border-brand-fireOrange/60 hover:shadow-[0_0_20px_rgba(255,140,0,0.2)] transition-all duration-300 group">
+                           <!-- Título em destaque -->
+                           <h4 class="font-extrabold text-white text-xl mb-2 group-hover:text-brand-fireOrange transition-colors uppercase tracking-wider">
+                             🤝 {{ project.title }}
+                           </h4>
                             
                             <!-- Descrição (pode vir do campo location se description estiver vazio) -->
                             <p class="text-gray-300 text-sm leading-relaxed mb-4">{{ project.location || project.description || 'Participação comunitária' }}</p>
