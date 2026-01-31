@@ -254,12 +254,12 @@
       margin-top: auto;
     }
     .servicos-section {
-      margin-bottom: 20px;
+      margin-bottom: 8px;
     }
     .servicos-section-header {
       font-size: 20px;
       color: #ff8c00;
-      margin: 10px 0 0 0;
+      margin: 6px 0 0 0;
       padding: 15px;
       border-left: 4px solid #ff8c00;
       background: rgba(255, 140, 0, 0.1);
@@ -942,11 +942,11 @@
           
           rows.push(`
             <div class="servicos-section sim">
-              <div class="servicos-section-header" onclick="toggleServicos(this)">
+              <div class="servicos-section-header collapsed" onclick="toggleServicos(this)">
                 <span>✅ Realizamos (${servicosPorStatus.sim.length})</span>
                 <span class="arrow">▼</span>
               </div>
-              <div class="servicos-content">
+              <div class="servicos-content collapsed">
                 ${cardsText}
               </div>
             </div>
@@ -1004,6 +1004,10 @@
         }
         
         list.innerHTML = rows.join('');
+        // Garantir que tudo começa fechado
+        if (typeof closeAllServicos === 'function') {
+          closeAllServicos();
+        }
         // Atualizar o contador na aba - contar total de itens
         const totalServicos = servicosPorStatus.sim.length + servicosPorStatus.embreve.length + servicosPorStatus.nao.length;
         document.getElementById('count-servicos').textContent = totalServicos;
