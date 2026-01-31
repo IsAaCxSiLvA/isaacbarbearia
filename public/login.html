@@ -85,7 +85,7 @@
 
       try {
         await signInWithEmailAndPassword(auth, email, password);
-        window.location.href = '/admin.html?v=' + new Date().getTime();
+        window.location.href = './admin.html?v=' + new Date().getTime();
       } catch (error) {
         console.error('Erro de login:', error);
         const code = error?.code || 'auth/unknown';
