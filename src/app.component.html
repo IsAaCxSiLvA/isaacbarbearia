@@ -584,6 +584,11 @@
 
                      @if (item.type === 'text' && item.id === 'avisos') {
                        <div class="space-y-4 animate-fade-in">
+                         @if (avisos().length === 0) {
+                           <div class="text-gray-400 text-sm italic text-center py-4">
+                             Sem avisos no momento
+                           </div>
+                         }
                          <!-- SUB-ABAS DE AVISOS COM CONTEÚDO ANINHADO -->
                          <div class="flex flex-col gap-0">
                            <!-- INFORMATIVO -->
