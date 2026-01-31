@@ -816,8 +816,6 @@
         
         // Exibe apenas um de cada serviço único
         const rows = [];
-        let colorIndex = 0;
-        const colors = ['color-blue', 'color-green', 'color-purple', 'color-pink', 'color-yellow', 'color-red'];
         
         for (const nome in servicosPorNome) {
           const servicos = servicosPorNome[nome];
@@ -832,8 +830,14 @@
           const data = servico.data;
           const realizaText = data.realiza === true ? 'Sim' : data.realiza === false ? 'Não' : 'Em Breve';
           const precoText = data.realiza === true && data.preco > 0 ? `R$ ${data.preco.toFixed(0)}` : '-';
-          const color = colors[colorIndex % colors.length];
-          colorIndex++;
+          
+          // Define cor baseada no status
+          let color = 'color-yellow'; // Em Breve
+          if (data.realiza === true) {
+            color = 'color-green'; // Sim - Verde
+          } else if (data.realiza === false) {
+            color = 'color-red'; // Não - Vermelho
+          }
           
           rows.push(`<div class="card ${color}">
             <h3>${data.nome}</h3>
