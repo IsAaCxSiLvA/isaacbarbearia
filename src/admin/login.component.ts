@@ -28,7 +28,8 @@ export class LoginComponent {
 
     try {
       await this.firebaseService.login(this.email, this.password);
-      this.router.navigate(['/admin']);
+      // Redirecionar para admin.html ao invés do componente Angular
+      window.location.href = '/admin.html';
     } catch (error: any) {
       this.erro = 'Email ou senha incorretos!';
       console.error('Erro de login:', error);
