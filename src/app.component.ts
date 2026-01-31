@@ -492,6 +492,7 @@ export class AppComponent implements OnInit {
       return;
     }
 
+    const userEmail = this.currentUser()?.email;
     const name = this.currentUser()?.displayName || 'Usuário';
     const message = this.newReviewMessage().trim();
     const rating = this.newReviewRating();
@@ -502,11 +503,25 @@ export class AppComponent implements OnInit {
     }
 
     try {
+      // Verificar se já deixou feedback
+      const avaliacoesSnap = await getDocs(collection(this.db, 'avaliacoes'));
+      const jaAvaliou = avaliacoesSnap.docs.some(doc => {
+        const data = doc.data();
+        return data['email'] === userEmail;
+      });
+
+      if (jaAvaliou) {
+        alert('Você já deixou um feedback! Obrigado pela sua opinião.');
+        this.showReviewForm.set(false);
+        return;
+      }
+
       console.log('Salvando feedback:', { name, message, rating });
       
       // Salvar no Firestore
       const docRef = await addDoc(collection(this.db, 'avaliacoes'), {
         cliente: name,
+        email: userEmail,
         comentario: message,
         estrelas: rating,
         data: new Date().toLocaleDateString('pt-BR')
@@ -564,6 +579,7 @@ export class AppComponent implements OnInit {
   async signOutUser() {
     try {
       await signOut(this.auth);
+      this.showReviewForm.set(false); // Fechar formulário ao sair
       alert('Logout realizado com sucesso!');
     } catch (error) {
       console.error('Erro no logout:', error);
