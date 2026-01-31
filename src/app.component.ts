@@ -420,6 +420,11 @@ export class AppComponent implements OnInit {
         isOpen: item.id === id ? !item.isOpen : false 
       }))
     );
+    
+    // Se abrir a aba de avisos, resetar a sub-aba selecionada
+    if (id === 'avisos') {
+      this.avisoSelectedType.set(null);
+    }
   }
 
   toggleReviewForm() {

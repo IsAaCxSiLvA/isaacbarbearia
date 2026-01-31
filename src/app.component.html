@@ -531,7 +531,7 @@
                                    [class.shadow-blue-500/40]="avisoSelectedType() === 'info'"
                                    [class.shadow-xl]="avisoSelectedType() === 'info'"
                                    class="px-4 py-3 text-sm font-bold uppercase tracking-wider transition-all duration-300 text-left rounded flex items-center gap-3">
-                             <span class="text-2xl">●</span>
+                             <span class="text-2xl text-blue-400">●</span>
                              Informativo
                              @if (countAvisosByType('info') > 0) {
                                <span class="ml-auto bg-blue-500/30 px-2 py-0.5 rounded text-xs font-semibold">{{ countAvisosByType('info') }}</span>
@@ -552,7 +552,7 @@
                                    [class.shadow-yellow-500/40]="avisoSelectedType() === 'warning'"
                                    [class.shadow-xl]="avisoSelectedType() === 'warning'"
                                    class="px-4 py-3 text-sm font-bold uppercase tracking-wider transition-all duration-300 text-left rounded flex items-center gap-3">
-                             <span class="text-2xl">●</span>
+                             <span class="text-2xl text-yellow-400">●</span>
                              Aviso
                              @if (countAvisosByType('warning') > 0) {
                                <span class="ml-auto bg-yellow-500/40 px-2 py-0.5 rounded text-xs font-semibold">{{ countAvisosByType('warning') }}</span>
@@ -573,7 +573,7 @@
                                    [class.shadow-red-500/40]="avisoSelectedType() === 'danger'"
                                    [class.shadow-xl]="avisoSelectedType() === 'danger'"
                                    class="px-4 py-3 text-sm font-bold uppercase tracking-wider transition-all duration-300 text-left rounded flex items-center gap-3">
-                             <span class="text-2xl">●</span>
+                             <span class="text-2xl text-red-400">●</span>
                              Importante
                              @if (countAvisosByType('danger') > 0) {
                                <span class="ml-auto bg-red-500/40 px-2 py-0.5 rounded text-xs font-semibold">{{ countAvisosByType('danger') }}</span>
@@ -594,7 +594,7 @@
                                    [class.shadow-green-500/40]="avisoSelectedType() === 'success'"
                                    [class.shadow-xl]="avisoSelectedType() === 'success'"
                                    class="px-4 py-3 text-sm font-bold uppercase tracking-wider transition-all duration-300 text-left rounded flex items-center gap-3">
-                             <span class="text-2xl">●</span>
+                             <span class="text-2xl text-green-400">●</span>
                              Sucesso
                              @if (countAvisosByType('success') > 0) {
                                <span class="ml-auto bg-green-500/40 px-2 py-0.5 rounded text-xs font-semibold">{{ countAvisosByType('success') }}</span>
