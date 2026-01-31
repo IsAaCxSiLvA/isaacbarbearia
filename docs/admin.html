@@ -555,15 +555,15 @@
     <h1>Painel Admin - Isaac Barbearia</h1>
     
     <div class="tabs">
-      <button class="active" onclick="showTab('servicos')">Serviços <span id="count-servicos" class="tab-count">(0)</span></button>
-      <button onclick="showTab('profissionais')">Profissionais <span id="count-profissionais" class="tab-count">(0)</span></button>
-      <button onclick="showTab('parceiros')">Parceiros <span id="count-parceiros" class="tab-count">(0)</span></button>
-      <button onclick="showTab('participacoes')">Participação <span id="count-participacoes" class="tab-count">(0)</span></button>
+      <button class="active" onclick="showTab('servicos')">Serviços <span id="count-servicos" class="tab-count">0</span></button>
+      <button onclick="showTab('profissionais')">Profissionais <span id="count-profissionais" class="tab-count">0</span></button>
+      <button onclick="showTab('parceiros')">Parceiros <span id="count-parceiros" class="tab-count">0</span></button>
+      <button onclick="showTab('participacoes')">Participação <span id="count-participacoes" class="tab-count">0</span></button>
       <button onclick="showTab('localizacao')">Localização</button>
       <button onclick="showTab('horarios')">Horários</button>
       <button onclick="showTab('agendamento')">Agendamento</button>
-      <button onclick="showTab('avaliacoes')">Feedback <span id="count-avaliacoes" class="tab-count">(0)</span></button>
-      <button onclick="showTab('avisos')" id="btn-avisos">Avisos <span id="badge-avisos" style="display: none; background: #e74c3c; border-radius: 50%; width: 20px; height: 20px; color: white; font-size: 12px; font-weight: bold; display: inline-flex; align-items: center; justify-content: center; margin-left: 5px;">0</span></button>
+      <button onclick="showTab('avaliacoes')">Feedback <span id="count-avaliacoes" class="tab-count">0</span></button>
+      <button onclick="showTab('avisos')">Avisos <span id="count-avisos" class="tab-count">0</span></button>
       <button class="btn-logout" onclick="logout()">Sair</button>
     </div>
 
@@ -1207,7 +1207,6 @@
       try {
         const snapshot = await getDocs(collection(db, 'avisos'));
         const list = document.getElementById('avisos-list');
-        const badge = document.getElementById('badge-avisos');
         
         list.innerHTML = '';
         const avisos = [];
@@ -1218,8 +1217,8 @@
 
         avisos.sort((a, b) => new Date(b.data) - new Date(a.data));
 
-        badge.textContent = avisos.length;
-        badge.style.display = avisos.length > 0 ? 'inline-flex' : 'none';
+        // Atualizar o contador na aba
+        document.getElementById('count-avisos').textContent = avisos.length;
 
         avisos.forEach(aviso => {
           const tipoClass = aviso.tipo === 'danger' ? '#e74c3c' : aviso.tipo === 'warning' ? '#f39c12' : aviso.tipo === 'success' ? '#27ae60' : '#3498db';
