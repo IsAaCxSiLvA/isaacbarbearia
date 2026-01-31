@@ -39,7 +39,23 @@ interface Particle {
   selector: 'app-root',
   imports: [CommonModule, FormsModule, NgOptimizedImage],
   templateUrl: './app.component.html',
-  styleUrls: []
+  styleUrls: [],
+  styles: [`
+    @keyframes pulse-soft {
+      0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.85;
+        transform: scale(1.02);
+      }
+    }
+    
+    .animate-pulse-soft {
+      animation: pulse-soft 3s ease-in-out infinite;
+    }
+  `]
 })
 export class AppComponent implements OnInit {
   constructor(private ngZone: NgZone) {}
