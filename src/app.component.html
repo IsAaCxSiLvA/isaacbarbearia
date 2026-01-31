@@ -509,7 +509,7 @@
                                   <img [src]="review.photoUrl" [alt]="review.name" class="w-7 h-7 rounded-full object-cover border border-white/10" />
                                 } @else {
                                   <div class="w-7 h-7 rounded-full bg-brand-gold/20 text-brand-gold text-[10px] font-bold flex items-center justify-center border border-brand-gold/40">
-                                    {{ getInitials(review.name) }}
+                                    {{ (review.name || 'U').trim().slice(0,2).toUpperCase() }}
                                   </div>
                                 }
                                 <span class="text-brand-gold text-xs font-bold">{{ review.name }}</span>
