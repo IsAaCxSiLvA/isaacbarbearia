@@ -633,6 +633,17 @@ export class AppComponent implements OnInit {
     }
   }
 
+  getFeedbackCount() {
+    const feedbackItem = this.items().find(item => item.id === 'feedback');
+    return feedbackItem?.testimonials?.length || 0;
+  }
+
+  getNewestFeedbackName() {
+    const feedbackItem = this.items().find(item => item.id === 'feedback');
+    const newest = feedbackItem?.testimonials?.find((t: any) => t.isNew);
+    return newest?.name || '';
+  }
+
   editReview(review: any) {
     // Preencher o formulário com os dados atuais
     this.newReviewMessage.set(review.comment);
