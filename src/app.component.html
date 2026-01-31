@@ -587,6 +587,7 @@
                          <!-- SUB-ABAS DE AVISOS COM CONTEÚDO ANINHADO -->
                          <div class="flex flex-col gap-0">
                            <!-- INFORMATIVO -->
+                           @if (countAvisosByType('info') > 0) {
                            <div>
                              <button (click)="toggleAvisoType('info')"
                                      [class.border-l-4]="avisoSelectedType() === 'info'"
@@ -620,8 +621,10 @@
                                </div>
                              }
                            </div>
+                           }
 
                            <!-- AVISO -->
+                           @if (countAvisosByType('warning') > 0) {
                            <div class="mt-2">
                              <button (click)="toggleAvisoType('warning')"
                                      [class.border-l-4]="avisoSelectedType() === 'warning'"
@@ -655,8 +658,10 @@
                                </div>
                              }
                            </div>
+                           }
 
                            <!-- IMPORTANTE -->
+                           @if (countAvisosByType('danger') > 0) {
                            <div class="mt-2">
                              <button (click)="toggleAvisoType('danger')"
                                      [class.border-l-4]="avisoSelectedType() === 'danger'"
@@ -690,8 +695,10 @@
                                </div>
                              }
                            </div>
+                           }
 
                            <!-- SUCESSO -->
+                           @if (countAvisosByType('success') > 0) {
                            <div class="mt-2">
                              <button (click)="toggleAvisoType('success')"
                                      [class.border-l-4]="avisoSelectedType() === 'success'"
@@ -725,6 +732,7 @@
                                </div>
                              }
                            </div>
+                           }
                          </div>
                        </div>
                      }
