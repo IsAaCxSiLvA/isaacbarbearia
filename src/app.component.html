@@ -214,9 +214,10 @@
                </button>
   
                <!-- Expandable Body -->
-               <div class="overflow-hidden transition-all duration-300 ease-in-out"
-                    [style.maxHeight]="item.isOpen ? '2000px' : '0px'">
-                 <div class="px-6 pb-6 pt-2 border-t border-brand-fireOrange/20 bg-black/40">
+               <div class="grid transition-all duration-300 ease-in-out" 
+                    [style.grid-template-rows]="item.isOpen ? '1fr' : '0fr'">
+                 <div class="overflow-hidden">
+                   <div class="px-6 pb-6 pt-2 border-t border-brand-fireOrange/20 bg-black/40">
                      
                      <!-- Content Switch -->
                      @if (item.type === 'text') {
@@ -707,6 +708,7 @@
   
                    </div>
                  </div>
+               </div>
   
             </div>
           </div>
