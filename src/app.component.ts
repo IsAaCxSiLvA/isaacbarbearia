@@ -629,6 +629,15 @@ export class AppComponent implements OnInit {
     this.deleteReview(review);
   }
 
+  getUserFeedback() {
+    if (!this.currentUser()?.email) return null;
+    
+    const feedbackItem = this.items().find(item => item.id === 'feedback');
+    if (!feedbackItem?.testimonials) return null;
+    
+    return feedbackItem.testimonials.find(t => t.email === this.currentUser()?.email) || null;
+  }
+
   // Métodos para filtrar serviços por categoria
   getServicesBy(services: any[], status: boolean | string): any[] {
     return services.filter(s => s.available === status);

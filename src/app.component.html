@@ -462,20 +462,6 @@
                                </div>
                              </div>
                              <p class="text-gray-400 text-xs italic">"{{ review.comment }}"</p>
-                             
-                             <!-- Botões de Editar/Apagar (só aparece se for o próprio feedback) -->
-                             @if (currentUser()?.email === review.email) {
-                               <div class="flex gap-2 mt-2">
-                                 <button (click)="editReview(review)" 
-                                         class="flex-1 bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border border-blue-500/30 px-3 py-1 rounded text-xs uppercase tracking-wider font-bold transition-all duration-300">
-                                   ✏️ Editar
-                                 </button>
-                                 <button (click)="deleteReview(review)" 
-                                         class="flex-1 bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30 px-3 py-1 rounded text-xs uppercase tracking-wider font-bold transition-all duration-300">
-                                   🗑️ Apagar
-                                 </button>
-                               </div>
-                             }
                            </div>
                          }
   
@@ -507,10 +493,22 @@
                                     Sair
                                   </button>
                                 </div>
-                                <button (click)="toggleReviewForm()" 
-                                        class="bg-white/10 text-white hover:bg-brand-fireOrange hover:text-black border border-white/20 px-6 py-2 rounded-full text-xs uppercase tracking-widest font-bold transition-all duration-300">
-                                   {{ showReviewForm() ? 'Cancelar' : 'Escrever Feedback' }}
-                                </button>
+                                <div class="flex gap-2 w-full">
+                                  <button (click)="toggleReviewForm()" 
+                                          class="flex-1 bg-white/10 text-white hover:bg-brand-fireOrange hover:text-black border border-white/20 px-6 py-2 rounded-full text-xs uppercase tracking-widest font-bold transition-all duration-300">
+                                     {{ showReviewForm() ? 'Cancelar' : 'Escrever Feedback' }}
+                                  </button>
+                                  @if (getUserFeedback()) {
+                                    <button (click)="editReview(getUserFeedback()!)" 
+                                            class="bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border border-blue-500/30 px-4 py-2 rounded-full text-xs uppercase tracking-wider font-bold transition-all duration-300">
+                                      ✏️
+                                    </button>
+                                    <button (click)="deleteReview(getUserFeedback()!)" 
+                                            class="bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30 px-4 py-2 rounded-full text-xs uppercase tracking-wider font-bold transition-all duration-300">
+                                      🗑️
+                                    </button>
+                                  }
+                                </div>
                               </div>
                             }
                          </div>
