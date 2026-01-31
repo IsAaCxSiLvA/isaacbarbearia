@@ -62,6 +62,7 @@ export class AppComponent implements OnInit {
   
   // Avisos
   avisos = signal<Aviso[]>([]);
+  avisoSelectedType = signal<'info' | 'warning' | 'danger' | 'success'>('info');
   
   // Agendamento
   whatsappLink = signal('https://wa.me/5585999999999');
@@ -369,6 +370,14 @@ export class AppComponent implements OnInit {
 
   formatDate(dateString: string): string {
     return new Date(dateString).toLocaleDateString('pt-BR');
+  }
+
+  getAvisosByType(type: 'info' | 'warning' | 'danger' | 'success'): Aviso[] {
+    return this.avisos().filter(a => a.tipo === type);
+  }
+
+  countAvisosByType(type: 'info' | 'warning' | 'danger' | 'success'): number {
+    return this.getAvisosByType(type).length;
   }
 
   generateEmbers() {

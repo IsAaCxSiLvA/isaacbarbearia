@@ -514,18 +514,70 @@
                      }
 
                      @if (item.type === 'text' && item.id === 'avisos') {
-                       @if (avisos().length > 0) {
-                         <div class="space-y-4 animate-fade-in">
-                           @for (aviso of avisos(); track aviso.id) {
-                             <div class="backdrop-blur-md bg-white/5 border-l-4 rounded-lg p-6 hover:bg-white/10 transition-all"
-                                  [ngClass]="{
-                                    'border-l-blue-500': aviso.tipo === 'info',
-                                    'border-l-yellow-500': aviso.tipo === 'warning',
-                                    'border-l-red-500': aviso.tipo === 'danger',
-                                    'border-l-green-500': aviso.tipo === 'success'
-                                  }">
-                               <div class="flex items-start justify-between mb-3">
-                                 <h3 class="text-lg font-bold text-white flex-1"
+                       <div class="space-y-4 animate-fade-in">
+                         <!-- SUB-ABAS DE AVISOS -->
+                         <div class="flex gap-2 border-b border-white/10 pb-3 overflow-x-auto">
+                           <button (click)="avisoSelectedType.set('info')"
+                                   [class.border-b-2]="avisoSelectedType() === 'info'"
+                                   [class.border-blue-400]="avisoSelectedType() === 'info'"
+                                   [class.text-blue-400]="avisoSelectedType() === 'info'"
+                                   [class.text-gray-400]="avisoSelectedType() !== 'info'"
+                                   class="px-3 py-2 text-sm font-bold uppercase tracking-wider transition-colors whitespace-nowrap">
+                             ℹ️ Informativo
+                             @if (countAvisosByType('info') > 0) {
+                               <span class="ml-2 bg-blue-500/30 px-2 py-0.5 rounded text-xs">{{ countAvisosByType('info') }}</span>
+                             }
+                           </button>
+
+                           <button (click)="avisoSelectedType.set('warning')"
+                                   [class.border-b-2]="avisoSelectedType() === 'warning'"
+                                   [class.border-yellow-400]="avisoSelectedType() === 'warning'"
+                                   [class.text-yellow-400]="avisoSelectedType() === 'warning'"
+                                   [class.text-gray-400]="avisoSelectedType() !== 'warning'"
+                                   class="px-3 py-2 text-sm font-bold uppercase tracking-wider transition-colors whitespace-nowrap">
+                             ⚠️ Aviso
+                             @if (countAvisosByType('warning') > 0) {
+                               <span class="ml-2 bg-yellow-500/30 px-2 py-0.5 rounded text-xs">{{ countAvisosByType('warning') }}</span>
+                             }
+                           </button>
+
+                           <button (click)="avisoSelectedType.set('danger')"
+                                   [class.border-b-2]="avisoSelectedType() === 'danger'"
+                                   [class.border-red-400]="avisoSelectedType() === 'danger'"
+                                   [class.text-red-400]="avisoSelectedType() === 'danger'"
+                                   [class.text-gray-400]="avisoSelectedType() !== 'danger'"
+                                   class="px-3 py-2 text-sm font-bold uppercase tracking-wider transition-colors whitespace-nowrap">
+                             🔴 Importante
+                             @if (countAvisosByType('danger') > 0) {
+                               <span class="ml-2 bg-red-500/30 px-2 py-0.5 rounded text-xs">{{ countAvisosByType('danger') }}</span>
+                             }
+                           </button>
+
+                           <button (click)="avisoSelectedType.set('success')"
+                                   [class.border-b-2]="avisoSelectedType() === 'success'"
+                                   [class.border-green-400]="avisoSelectedType() === 'success'"
+                                   [class.text-green-400]="avisoSelectedType() === 'success'"
+                                   [class.text-gray-400]="avisoSelectedType() !== 'success'"
+                                   class="px-3 py-2 text-sm font-bold uppercase tracking-wider transition-colors whitespace-nowrap">
+                             ✅ Sucesso
+                             @if (countAvisosByType('success') > 0) {
+                               <span class="ml-2 bg-green-500/30 px-2 py-0.5 rounded text-xs">{{ countAvisosByType('success') }}</span>
+                             }
+                           </button>
+                         </div>
+
+                         <!-- CONTEÚDO DAS SUB-ABAS -->
+                         @if (getAvisosByType(avisoSelectedType()).length > 0) {
+                           <div class="space-y-4">
+                             @for (aviso of getAvisosByType(avisoSelectedType()); track aviso.id) {
+                               <div class="backdrop-blur-md bg-white/5 border-l-4 rounded-lg p-6 hover:bg-white/10 transition-all"
+                                    [ngClass]="{
+                                      'border-l-blue-500': aviso.tipo === 'info',
+                                      'border-l-yellow-500': aviso.tipo === 'warning',
+                                      'border-l-red-500': aviso.tipo === 'danger',
+                                      'border-l-green-500': aviso.tipo === 'success'
+                                    }">
+                                 <h3 class="text-lg font-bold text-white mb-3"
                                      [ngClass]="{
                                        'text-blue-400': aviso.tipo === 'info',
                                        'text-yellow-400': aviso.tipo === 'warning',
@@ -534,28 +586,17 @@
                                      }">
                                    {{ aviso.titulo }}
                                  </h3>
-                               </div>
-                               <p class="text-gray-300 mb-3">{{ aviso.conteudo }}</p>
-                               <div class="flex items-center justify-between">
+                                 <p class="text-gray-300 mb-3">{{ aviso.conteudo }}</p>
                                  <small class="text-gray-500">{{ formatDate(aviso.data) }}</small>
-                                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
-                                       [ngClass]="{
-                                         'bg-blue-500/20 text-blue-300 border border-blue-500/30': aviso.tipo === 'info',
-                                         'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30': aviso.tipo === 'warning',
-                                         'bg-red-500/20 text-red-300 border border-red-500/30': aviso.tipo === 'danger',
-                                         'bg-green-500/20 text-green-300 border border-green-500/30': aviso.tipo === 'success'
-                                       }">
-                                   {{ aviso.tipo === 'info' ? 'ℹ️ Info' : aviso.tipo === 'warning' ? '⚠️ Aviso' : aviso.tipo === 'danger' ? '🔴 Importante' : '✅ Sucesso' }}
-                                 </span>
                                </div>
-                             </div>
-                           }
-                         </div>
-                       } @else {
-                         <div class="text-center py-8 text-gray-500">
-                           <p>Nenhum aviso no momento.</p>
-                         </div>
-                       }
+                             }
+                           </div>
+                         } @else {
+                           <div class="text-center py-8 text-gray-500">
+                             <p>Nenhum aviso deste tipo no momento.</p>
+                           </div>
+                         }
+                       </div>
                      }
   
                    </div>
