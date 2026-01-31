@@ -1607,7 +1607,7 @@
       }
       
       if (data.observacao) {
-        html += `<p style="margin-top: 10px; font-size: 12px; color: #e74c3c; font-style: italic;">ℹ️ ${data.observacao}</p>`;
+        html += `<p style="margin-top: 10px; font-size: 12px; color: #e74c3c; font-style: italic;"><svg style="width: 14px; height: 14px; display: inline; margin-right: 6px; vertical-align: middle; stroke: #e74c3c; fill: none; stroke-width: 1.5;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01" stroke-linecap="round"/></svg>${data.observacao}</p>`;
       }
       
       display.innerHTML = html;

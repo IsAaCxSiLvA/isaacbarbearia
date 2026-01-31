@@ -311,8 +311,9 @@
                            ⏸️ {{ horariosPausa() }}
                          </div>
                          @if (horariosObservacao()) {
-                           <div class="pt-2 text-xs text-red-400 italic">
-                             ℹ️ {{ horariosObservacao() }}
+                           <div class="pt-2 text-xs text-red-400 italic flex items-center justify-center gap-2">
+                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="1.5"/><path d="M12 8v4M12 16h.01" stroke-width="1.5" stroke-linecap="round"/></svg>
+                             <span>{{ horariosObservacao() }}</span>
                            </div>
                          }
                        </div>
