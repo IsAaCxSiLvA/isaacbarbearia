@@ -908,6 +908,7 @@
       <form onsubmit="return addAvaliacaoManual(event)">
         <input type="text" id="aval-nome" placeholder="Nome do cliente" required>
         <input type="email" id="aval-email" placeholder="Email (opcional)">
+        <input type="url" id="aval-foto" placeholder="URL da foto (opcional)">
         <select id="aval-estrelas" required>
           <option value="">Nota (1 a 5)</option>
           <option value="5">5</option>
@@ -1449,6 +1450,7 @@
         const data = {
           cliente: document.getElementById('aval-nome').value.trim(),
           email: document.getElementById('aval-email').value.trim() || '',
+          photoURL: document.getElementById('aval-foto').value.trim() || '',
           estrelas: Number(document.getElementById('aval-estrelas').value),
           comentario: document.getElementById('aval-comentario').value.trim(),
           data: new Date().toISOString(),
