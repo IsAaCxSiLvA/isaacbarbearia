@@ -338,7 +338,7 @@
                        @if (item.teamMembers && item.teamMembers.length > 0) {
                          <div class="space-y-4 animate-fade-in">
                            @for (member of item.teamMembers; track member.name) {
-                             <div class="flex items-center gap-4 bg-white/5 p-3 rounded-lg border border-white/10">
+                            <div class="flex items-center gap-4 bg-white/5 p-3 rounded-lg border border-white/10 border-l-4 border-l-brand-gold">
                                <img [src]="member.imageUrl" [alt]="member.name" class="w-16 h-16 rounded-full object-cover border-2 border-brand-gold">
                                <div>
                                  <h4 class="font-bold text-white text-sm">{{ member.name }}</h4>
