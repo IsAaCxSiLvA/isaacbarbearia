@@ -964,11 +964,11 @@
           
           rows.push(`
             <div class="servicos-section embreve">
-              <div class="servicos-section-header" onclick="toggleServicos(this)">
+              <div class="servicos-section-header collapsed" onclick="toggleServicos(this)">
                 <span>⏳ Em Breve (${servicosPorStatus.embreve.length})</span>
                 <span class="arrow">▼</span>
               </div>
-              <div class="servicos-content">
+              <div class="servicos-content collapsed">
                 ${cardsText}
               </div>
             </div>
@@ -989,11 +989,11 @@
           
           rows.push(`
             <div class="servicos-section nao">
-              <div class="servicos-section-header" onclick="toggleServicos(this)">
+              <div class="servicos-section-header collapsed" onclick="toggleServicos(this)">
                 <span>❌ Não Realizamos (${servicosPorStatus.nao.length})</span>
                 <span class="arrow">▼</span>
               </div>
-              <div class="servicos-content">
+              <div class="servicos-content collapsed">
                 ${cardsText}
               </div>
             </div>
@@ -1001,9 +1001,10 @@
         }
         
         list.innerHTML = rows.join('');
-        // Atualizar o contador na aba
-        document.getElementById('count-servicos').textContent = rows.length;
-        console.log('✅ Renderizados', rows.length, 'serviços únicos de', snapshot.size, 'documentos');
+        // Atualizar o contador na aba - contar total de itens
+        const totalServicos = servicosPorStatus.sim.length + servicosPorStatus.embreve.length + servicosPorStatus.nao.length;
+        document.getElementById('count-servicos').textContent = totalServicos;
+        console.log('✅ Renderizados', totalServicos, 'serviços únicos de', snapshot.size, 'documentos');
       } finally {
         isLoadingServicos = false;
       }
