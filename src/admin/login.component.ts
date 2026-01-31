@@ -22,7 +22,7 @@ export class LoginComponent {
     // Verificar se o email é o admin
     const adminEmail = 'admin@isaacbarbearia.com';
     if (this.email !== adminEmail) {
-      this.erro = 'Apenas admin@isaacbarbearia.com pode fazer login!';
+      this.erro = 'Apenas o admin pode fazer login!';
       return;
     }
 
