@@ -905,6 +905,20 @@
     <!-- FEEDBACK -->
     <div id="avaliacoes" class="tab-content">
       <h2>Feedback dos Clientes</h2>
+      <form onsubmit="addAvaliacaoManual(event)">
+        <input type="text" id="aval-nome" placeholder="Nome do cliente" required>
+        <input type="email" id="aval-email" placeholder="Email (opcional)">
+        <select id="aval-estrelas" required>
+          <option value="">Nota (1 a 5)</option>
+          <option value="5">5</option>
+          <option value="4">4</option>
+          <option value="3">3</option>
+          <option value="2">2</option>
+          <option value="1">1</option>
+        </select>
+        <textarea id="aval-comentario" placeholder="Comentário do cliente" required></textarea>
+        <button type="submit">Adicionar Feedback</button>
+      </form>
       <div class="cards" id="aval-list"></div>
     </div>
 
@@ -1428,6 +1442,20 @@
       const foto = data.photoURL ?? data.photoUrl ?? data.foto ?? data.fotoUrl ?? data.avatar ?? data.image ?? data.imagem ?? data.profilePhoto ?? '';
       return { cliente, comentario, estrelas, dataTexto, email, foto };
     }
+
+    window.addAvaliacaoManual = async (e) => {
+      e.preventDefault();
+      const data = {
+        cliente: document.getElementById('aval-nome').value.trim(),
+        email: document.getElementById('aval-email').value.trim() || '',
+        estrelas: Number(document.getElementById('aval-estrelas').value),
+        comentario: document.getElementById('aval-comentario').value.trim(),
+        data: new Date().toISOString(),
+        manual: true
+      };
+      await addDoc(collection(db, 'avaliacoes'), data);
+      e.target.reset();
+    };
 
     function renderAvaliacoes(list, docs) {
       if (!docs || docs.length === 0) {
