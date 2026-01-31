@@ -10,7 +10,7 @@ interface AccordionItem {
   title: string;
   isOpen: boolean;
   type: 'text' | 'list' | 'hours' | 'feedback' | 'partners' | 'team' | 'projects';
-  icon: 'scissors' | 'star' | 'calendar' | 'clock' | 'map' | 'briefcase' | 'users' | 'image';
+  icon: 'scissors' | 'star' | 'calendar' | 'clock' | 'map' | 'briefcase' | 'users' | 'image' | 'link';
   featured?: boolean;
   content?: string;
   listItems?: { name: string; price: string; available: boolean | string }[];
@@ -164,7 +164,7 @@ export class AppComponent implements OnInit {
       title: 'Parcerias',
       isOpen: false,
       type: 'partners',
-      icon: 'briefcase',
+      icon: 'link',
       partners: []
     },
     {
