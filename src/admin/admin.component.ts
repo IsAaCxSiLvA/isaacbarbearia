@@ -121,7 +121,8 @@ export class AdminComponent implements OnInit {
   async logout() {
     try {
       await this.firebaseService.logout();
-      this.router.navigate(['/']);
+      // Usar window.location para forçar recarga completa
+      window.location.href = '/';
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
     }
