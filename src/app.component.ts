@@ -253,13 +253,11 @@ export class AppComponent implements OnInit {
 
   async loadDynamicData() {
     try {
-      const [profissionaisSnap, parceirosSnap, participacoesSnap, avaliacoesSnap, reviewsSnap, ReviewsSnap, servicosSnap, agendamentoSnap, localizacaoSnap, horariosSnap, avisosSnap] = await Promise.all([
+      const [profissionaisSnap, parceirosSnap, participacoesSnap, avaliacoesSnap, servicosSnap, agendamentoSnap, localizacaoSnap, horariosSnap, avisosSnap] = await Promise.all([
         getDocs(collection(this.db, 'profissionais')),
         getDocs(collection(this.db, 'parceiros')),
         getDocs(collection(this.db, 'participacoes')),
         getDocs(collection(this.db, 'avaliacoes')),
-        getDocs(collection(this.db, 'reviews')),
-        getDocs(collection(this.db, 'Reviews')),
         getDocs(collection(this.db, 'servicos')),
         getDoc(doc(this.db, 'config', 'agendamento')),
         getDoc(doc(this.db, 'config', 'localizacao')),
@@ -306,31 +304,16 @@ export class AppComponent implements OnInit {
         };
       });
 
-      const normalizeReview = (data: Record<string, any>, id: string, source: string) => {
-        const name = data.cliente ?? data.customer ?? data.nome ?? data.name ?? 'Cliente';
-        const comment = data.comentario ?? data.comments ?? data.comment ?? 'Ótimo atendimento!';
-        const rating = data.estrelas ?? data.Stars ?? data.stars ?? data.rating ?? 5;
-        const email = data.email ?? data.Email ?? data.emailAddress ?? '';
-        const photoUrl = data.photoURL ?? data.photoUrl ?? data.foto ?? data.fotoUrl ?? data.avatar ?? data.image ?? data.imagem ?? data.profilePhoto ?? '';
-        const date = data.data ?? data.date ?? data.Data ?? '';
-        return { id, name, comment, rating, email, photoUrl, date, source };
-      };
-
-      const reviewDocs = [
-        ...avaliacoesSnap.docs.map(doc => ({ doc, source: 'avaliacoes' })),
-        ...reviewsSnap.docs.map(doc => ({ doc, source: 'reviews' })),
-        ...ReviewsSnap.docs.map(doc => ({ doc, source: 'Reviews' }))
-      ];
-
-      const seenReviewIds = new Set<string>();
-      const testimonials = reviewDocs
-        .map(({ doc, source }) => normalizeReview(doc.data() as Record<string, any>, doc.id, source))
-        .filter(review => {
-          const key = `${review.source}:${review.id}`;
-          if (seenReviewIds.has(key)) return false;
-          seenReviewIds.add(key);
-          return true;
-        });
+      const testimonials = avaliacoesSnap.docs.map(doc => {
+        const data = doc.data() as { cliente?: string; comentario?: string; estrelas?: number; email?: string };
+        return {
+          id: doc.id,
+          name: data.cliente || 'Cliente',
+          comment: data.comentario || 'Ótimo atendimento!',
+          rating: data.estrelas || 5,
+          email: data.email || ''
+        };
+      });
 
       // Carregar dados de agendamento
       if (agendamentoSnap.exists()) {
@@ -504,14 +487,6 @@ export class AppComponent implements OnInit {
     this.newReviewRating.set(stars);
   }
 
-  getInitials(name?: string, email?: string) {
-    const base = (name && name.trim()) ? name.trim() : (email || '');
-    if (!base) return 'U';
-    const parts = base.split(/\s+/).filter(Boolean);
-    if (parts.length === 1) return parts[0].slice(0, 2);
-    return `${parts[0][0] || ''}${parts[1][0] || ''}`.trim();
-  }
-
   async submitReview() {
     // Verificar se está logado
     if (!this.currentUser()) {
@@ -521,7 +496,6 @@ export class AppComponent implements OnInit {
 
     const userEmail = this.currentUser()?.email;
     const name = this.currentUser()?.displayName || 'Usuário';
-    const photoUrl = this.currentUser()?.photoURL || '';
     const message = this.newReviewMessage().trim();
     const rating = this.newReviewRating();
 
@@ -552,8 +526,7 @@ export class AppComponent implements OnInit {
         email: userEmail,
         comentario: message,
         estrelas: rating,
-        data: new Date().toLocaleDateString('pt-BR'),
-        photoURL: photoUrl
+        data: new Date().toLocaleDateString('pt-BR')
       });
       
       console.log('Feedback salvo com ID:', docRef.id);
@@ -571,7 +544,6 @@ export class AppComponent implements OnInit {
                   email: userEmail,
                   comment: message,
                   rating: rating,
-                  photoUrl: photoUrl,
                   isNew: true
                 },
                 ...item.testimonials
