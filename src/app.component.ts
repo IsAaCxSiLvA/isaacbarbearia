@@ -2,7 +2,7 @@ import { Component, signal, OnInit, NgZone } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, addDoc, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, collection, getDocs, addDoc, doc, getDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, User } from 'firebase/auth';
 
 interface AccordionItem {
@@ -14,7 +14,7 @@ interface AccordionItem {
   featured?: boolean;
   content?: string;
   listItems?: { name: string; price: string; available: boolean | string }[];
-  testimonials?: { name: string; comment: string; rating: number; isNew?: boolean }[];
+  testimonials?: { name: string; comment: string; rating: number; isNew?: boolean; email?: string; id?: string }[];
   partners?: { name: string; role: string; imageUrl: string }[];
   teamMembers?: { name: string; specialty: string; imageUrl: string }[];
   projectGallery?: { title: string; imageUrl: string; projectUrl: string; date: string; location: string; }[];
@@ -305,11 +305,13 @@ export class AppComponent implements OnInit {
       });
 
       const testimonials = avaliacoesSnap.docs.map(doc => {
-        const data = doc.data() as { cliente?: string; comentario?: string; estrelas?: number };
+        const data = doc.data() as { cliente?: string; comentario?: string; estrelas?: number; email?: string };
         return {
+          id: doc.id,
           name: data.cliente || 'Cliente',
           comment: data.comentario || 'Ótimo atendimento!',
-          rating: data.estrelas || 5
+          rating: data.estrelas || 5,
+          email: data.email || ''
         };
       });
 
@@ -537,7 +539,9 @@ export class AppComponent implements OnInit {
               ...item,
               testimonials: [
                 {
+                  id: docRef.id,
                   name: name,
+                  email: userEmail,
                   comment: message,
                   rating: rating,
                   isNew: true
@@ -584,6 +588,45 @@ export class AppComponent implements OnInit {
     } catch (error) {
       console.error('Erro no logout:', error);
     }
+  }
+
+  async deleteReview(review: any) {
+    if (!confirm('Tem certeza que deseja apagar seu feedback?')) {
+      return;
+    }
+
+    try {
+      // Deletar do Firebase
+      await deleteDoc(doc(this.db, 'avaliacoes', review.id));
+      
+      // Atualizar estado local
+      this.items.update(items => {
+        return items.map(item => {
+          if (item.id === 'feedback' && item.testimonials) {
+            return {
+              ...item,
+              testimonials: item.testimonials.filter(t => t.id !== review.id)
+            };
+          }
+          return item;
+        });
+      });
+      
+      alert('Feedback apagado com sucesso!');
+    } catch (error) {
+      console.error('Erro ao apagar feedback:', error);
+      alert('Erro ao apagar feedback. Tente novamente.');
+    }
+  }
+
+  editReview(review: any) {
+    // Preencher o formulário com os dados atuais
+    this.newReviewMessage.set(review.comment);
+    this.newReviewRating.set(review.rating);
+    this.showReviewForm.set(true);
+    
+    // Deletar o feedback antigo
+    this.deleteReview(review);
   }
 
   // Métodos para filtrar serviços por categoria

@@ -462,6 +462,20 @@
                                </div>
                              </div>
                              <p class="text-gray-400 text-xs italic">"{{ review.comment }}"</p>
+                             
+                             <!-- Botões de Editar/Apagar (só aparece se for o próprio feedback) -->
+                             @if (currentUser()?.email === review.email) {
+                               <div class="flex gap-2 mt-2">
+                                 <button (click)="editReview(review)" 
+                                         class="flex-1 bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 border border-blue-500/30 px-3 py-1 rounded text-xs uppercase tracking-wider font-bold transition-all duration-300">
+                                   ✏️ Editar
+                                 </button>
+                                 <button (click)="deleteReview(review)" 
+                                         class="flex-1 bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30 px-3 py-1 rounded text-xs uppercase tracking-wider font-bold transition-all duration-300">
+                                   🗑️ Apagar
+                                 </button>
+                               </div>
+                             }
                            </div>
                          }
   
