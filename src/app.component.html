@@ -453,14 +453,19 @@
                              @if(review.isNew) {
                                <span class="absolute top-0 right-0 bg-brand-fireOrange text-black text-[9px] px-2 py-0.5 font-bold uppercase rounded-bl-md">Novo</span>
                              }
-                             <div class="flex justify-between mb-1">
-                               <span class="text-brand-gold text-xs font-bold">{{ review.name }}</span>
-                               <div class="flex text-brand-fireOrange text-[10px]">
-                                 @for (i of [1,2,3,4,5]; track i) {
-                                   @if (i <= review.rating) { ★ } @else { ☆ }
-                                 }
-                               </div>
-                             </div>
+                            <div class="flex justify-between mb-1">
+                              <div class="flex items-center gap-2">
+                                @if (review.photoUrl) {
+                                  <img [src]="review.photoUrl" [alt]="review.name" class="w-7 h-7 rounded-full object-cover border border-white/10" />
+                                }
+                                <span class="text-brand-gold text-xs font-bold">{{ review.name }}</span>
+                              </div>
+                              <div class="flex text-brand-fireOrange text-[10px]">
+                                @for (i of [1,2,3,4,5]; track i) {
+                                  @if (i <= review.rating) { ★ } @else { ☆ }
+                                }
+                              </div>
+                            </div>
                              <p class="text-gray-400 text-xs italic">"{{ review.comment }}"</p>
                            </div>
                          }

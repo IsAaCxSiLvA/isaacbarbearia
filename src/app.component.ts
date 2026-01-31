@@ -305,13 +305,24 @@ export class AppComponent implements OnInit {
       });
 
       const testimonials = avaliacoesSnap.docs.map(doc => {
-        const data = doc.data() as { cliente?: string; comentario?: string; estrelas?: number; email?: string };
+        const data = doc.data() as {
+          cliente?: string;
+          comentario?: string;
+          estrelas?: number;
+          email?: string;
+          photoURL?: string;
+          photoUrl?: string;
+          foto?: string;
+          avatar?: string;
+          image?: string;
+        };
         return {
           id: doc.id,
           name: data.cliente || 'Cliente',
           comment: data.comentario || 'Ótimo atendimento!',
           rating: data.estrelas || 5,
-          email: data.email || ''
+          email: data.email || '',
+          photoUrl: data.photoURL || data.photoUrl || data.foto || data.avatar || data.image || ''
         };
       });
 
@@ -496,6 +507,7 @@ export class AppComponent implements OnInit {
 
     const userEmail = this.currentUser()?.email;
     const name = this.currentUser()?.displayName || 'Usuário';
+    const photoUrl = this.currentUser()?.photoURL || '';
     const message = this.newReviewMessage().trim();
     const rating = this.newReviewRating();
 
@@ -526,7 +538,8 @@ export class AppComponent implements OnInit {
         email: userEmail,
         comentario: message,
         estrelas: rating,
-        data: new Date().toLocaleDateString('pt-BR')
+        data: new Date().toLocaleDateString('pt-BR'),
+        photoURL: photoUrl
       });
       
       console.log('Feedback salvo com ID:', docRef.id);
@@ -544,6 +557,7 @@ export class AppComponent implements OnInit {
                   email: userEmail,
                   comment: message,
                   rating: rating,
+                  photoUrl: photoUrl,
                   isNew: true
                 },
                 ...item.testimonials
