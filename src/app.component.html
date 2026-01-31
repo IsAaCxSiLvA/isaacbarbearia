@@ -534,18 +534,20 @@
                                      }">
                                    {{ aviso.titulo }}
                                  </h3>
-                                 <span class="ml-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider"
+                               </div>
+                               <p class="text-gray-300 mb-3">{{ aviso.conteudo }}</p>
+                               <div class="flex items-center justify-between">
+                                 <small class="text-gray-500">{{ formatDate(aviso.data) }}</small>
+                                 <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider"
                                        [ngClass]="{
-                                         'bg-blue-500/20 text-blue-300 border border-blue-500/50': aviso.tipo === 'info',
-                                         'bg-yellow-500/20 text-yellow-300 border border-yellow-500/50': aviso.tipo === 'warning',
-                                         'bg-red-500/20 text-red-300 border border-red-500/50': aviso.tipo === 'danger',
-                                         'bg-green-500/20 text-green-300 border border-green-500/50': aviso.tipo === 'success'
+                                         'bg-blue-500/20 text-blue-300 border border-blue-500/30': aviso.tipo === 'info',
+                                         'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30': aviso.tipo === 'warning',
+                                         'bg-red-500/20 text-red-300 border border-red-500/30': aviso.tipo === 'danger',
+                                         'bg-green-500/20 text-green-300 border border-green-500/30': aviso.tipo === 'success'
                                        }">
-                                   {{ aviso.tipo === 'info' ? 'ℹ️ Informativo' : aviso.tipo === 'warning' ? '⚠️ Aviso' : aviso.tipo === 'danger' ? '🔴 Importante' : '✅ Sucesso' }}
+                                   {{ aviso.tipo === 'info' ? 'ℹ️ Info' : aviso.tipo === 'warning' ? '⚠️ Aviso' : aviso.tipo === 'danger' ? '🔴 Importante' : '✅ Sucesso' }}
                                  </span>
                                </div>
-                               <p class="text-gray-300 mb-2">{{ aviso.conteudo }}</p>
-                               <small class="text-gray-500">{{ formatDate(aviso.data) }}</small>
                              </div>
                            }
                          </div>
