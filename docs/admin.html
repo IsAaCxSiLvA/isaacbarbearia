@@ -626,10 +626,7 @@
         <input type="number" id="serv-preco" placeholder="Preço (em R$)" step="0.01" min="0">
         <button type="submit">Adicionar Serviço</button>
       </form>
-      <table>
-        <thead><tr><th>Serviço</th><th>Realizamos?</th><th>Preço</th><th>Ações</th></tr></thead>
-        <tbody id="serv-list"></tbody>
-      </table>
+      <div class="cards" id="serv-list"></div>
     </div>
 
     <!-- PROFISSIONAIS -->
@@ -642,10 +639,7 @@
         <input type="url" id="prof-img" placeholder="Link da Imagem (URL)">
         <button type="submit">Adicionar Profissional</button>
       </form>
-      <table>
-        <thead><tr><th>Nome</th><th>Especialidade</th><th>Imagem</th><th>Ações</th></tr></thead>
-        <tbody id="prof-list"></tbody>
-      </table>
+      <div class="cards" id="prof-list"></div>
     </div>
 
     <!-- PARCEIROS -->
@@ -656,10 +650,7 @@
         <input type="url" id="parc-img" placeholder="Link do Logo (URL)" required>
         <button type="submit">Adicionar Parceria</button>
       </form>
-      <table>
-        <thead><tr><th>Nome</th><th>Logo</th><th>Ações</th></tr></thead>
-        <tbody id="parc-list"></tbody>
-      </table>
+      <div class="cards" id="parc-list"></div>
     </div>
 
     <!-- PARTICIPAÇÃO -->
@@ -825,6 +816,9 @@
         
         // Exibe apenas um de cada serviço único
         const rows = [];
+        let colorIndex = 0;
+        const colors = ['color-blue', 'color-green', 'color-purple', 'color-pink', 'color-yellow', 'color-red'];
+        
         for (const nome in servicosPorNome) {
           const servicos = servicosPorNome[nome];
           
@@ -838,12 +832,15 @@
           const data = servico.data;
           const realizaText = data.realiza === true ? 'Sim' : data.realiza === false ? 'Não' : 'Em Breve';
           const precoText = data.realiza === true && data.preco > 0 ? `R$ ${data.preco.toFixed(0)}` : '-';
-          rows.push(`<tr>
-            <td data-label="Serviço">${data.nome}</td>
-            <td data-label="Realizamos?">${realizaText}</td>
-            <td data-label="Preço">${precoText}</td>
-            <td data-label="Ações"><button class="btn-delete" onclick="deleteServico('${servico.id}')">Deletar</button></td>
-          </tr>`);
+          const color = colors[colorIndex % colors.length];
+          colorIndex++;
+          
+          rows.push(`<div class="card ${color}">
+            <h3>${data.nome}</h3>
+            <p><strong>Realizamos:</strong> ${realizaText}</p>
+            <p><strong>Preço:</strong> ${precoText}</p>
+            <button class="btn-delete" onclick="deleteServico('${servico.id}')">Deletar</button>
+          </div>`);
         }
         
         list.innerHTML = rows.join('');
@@ -921,19 +918,24 @@
         const snapshot = await getDocs(collection(db, 'profissionais'));
         const uniqueIds = new Set();
         const rows = [];
+        let colorIndex = 0;
+        const colors = ['color-blue', 'color-green', 'color-purple', 'color-pink', 'color-yellow', 'color-red'];
         
         snapshot.forEach(doc => {
           if (uniqueIds.has(doc.id)) return;
           uniqueIds.add(doc.id);
           
           const data = doc.data();
-          const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:50px;height:50px;border-radius:50%;object-fit:cover;">` : '-';
-          rows.push(`<tr>
-            <td data-label="Nome">${data.nome}</td>
-            <td data-label="Especialidade">${data.especialidade}</td>
-            <td data-label="Imagem">${imgHtml}</td>
-            <td data-label="Ações"><button class="btn-delete" onclick="deleteProfissional('${doc.id}')">Deletar</button></td>
-          </tr>`);
+          const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;margin-bottom:10px;">` : '';
+          const color = colors[colorIndex % colors.length];
+          colorIndex++;
+          
+          rows.push(`<div class="card ${color}">
+            ${imgHtml}
+            <h3>${data.nome}</h3>
+            <p><strong>Especialidade:</strong> ${data.especialidade}</p>
+            <button class="btn-delete" onclick="deleteProfissional('${doc.id}')">Deletar</button>
+          </div>`);
         });
         list.innerHTML = rows.join('');
         // Atualizar contador
@@ -969,18 +971,23 @@
         const snapshot = await getDocs(collection(db, 'parceiros'));
         const uniqueIds = new Set();
         const rows = [];
+        let colorIndex = 0;
+        const colors = ['color-blue', 'color-green', 'color-purple', 'color-pink', 'color-yellow', 'color-red'];
         
         snapshot.forEach(doc => {
           if (uniqueIds.has(doc.id)) return;
           uniqueIds.add(doc.id);
           
           const data = doc.data();
-          const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:60px;height:60px;border-radius:8px;object-fit:cover;border:2px solid #ff8c00;">` : '-';
-          rows.push(`<tr>
-            <td data-label="Nome">${data.nome}</td>
-            <td data-label="Logo">${imgHtml}</td>
-            <td data-label="Ações"><button class="btn-delete" onclick="deleteParceiro('${doc.id}')">Deletar</button></td>
-        </tr>`);
+          const imgHtml = data.imagem ? `<img src="${data.imagem}" alt="${data.nome}" style="width:80px;height:auto;border-radius:8px;object-fit:cover;margin-bottom:10px;">` : '';
+          const color = colors[colorIndex % colors.length];
+          colorIndex++;
+          
+          rows.push(`<div class="card ${color}">
+            ${imgHtml}
+            <h3>${data.nome}</h3>
+            <button class="btn-delete" onclick="deleteParceiro('${doc.id}')">Deletar</button>
+          </div>`);
         });
         list.innerHTML = rows.join('');
         // Atualizar contador
