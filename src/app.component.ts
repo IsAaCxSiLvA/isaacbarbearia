@@ -114,9 +114,11 @@ export class AppComponent implements OnInit {
   googleMapsLink = signal('https://share.google/Q4GvyJhu3aPv7HcgA');
   
   // Horários
-  horariosSegSex = signal('09:00 às 20:00');
-  horariosSabado = signal('09:00 às 18:00');
+  horariosSegSex = signal('08:00 às 18:30');
+  horariosSabado = signal('14:30 às 18:30');
   horariosDomingo = signal('Fechado');
+  horariosPausa = signal('12:00 às 15:00 de segunda a sexta');
+  horariosObservacao = signal('');
   
   locationLink = signal('#');
   
@@ -364,11 +366,13 @@ export class AppComponent implements OnInit {
 
       // Carregar dados de horários
       if (horariosSnap.exists()) {
-        const horData = horariosSnap.data() as { segSex?: string; sabado?: string; domingo?: string };
+        const horData = horariosSnap.data() as { segSex?: string; sabado?: string; domingo?: string; pausa?: string; observacao?: string };
         
         if (horData.segSex) this.horariosSegSex.set(horData.segSex);
         if (horData.sabado) this.horariosSabado.set(horData.sabado);
         if (horData.domingo) this.horariosDomingo.set(horData.domingo);
+        if (horData.pausa) this.horariosPausa.set(horData.pausa);
+        if (horData.observacao) this.horariosObservacao.set(horData.observacao);
       }
 
       if (teamMembers.length || partners.length || projectGallery.length || testimonials.length || listItems.length) {

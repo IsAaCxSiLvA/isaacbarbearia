@@ -16,24 +16,20 @@ service cloud.firestore {
 
 		// Reviews (coleções alternativas)
 		match /reviews/{doc=**} {
-			allow read: if isAdmin();
-			allow create, update, delete: if isAdmin();
+			allow read, create, update, delete: if isAdmin();
 		}
 
 		match /Reviews/{doc=**} {
-			allow read: if isAdmin();
-			allow create, update, delete: if isAdmin();
+			allow read, create, update, delete: if isAdmin();
 		}
 
 		// Feedback (coleções antigas)
 		match /feedback/{doc=**} {
-			allow read: if isAdmin();
-			allow create, update, delete: if isAdmin();
+			allow read, create, update, delete: if isAdmin();
 		}
 
 		match /feedbacks/{doc=**} {
-			allow read: if isAdmin();
-			allow create, update, delete: if isAdmin();
+			allow read, create, update, delete: if isAdmin();
 		}
 
 		// Profissionais (Professionals)

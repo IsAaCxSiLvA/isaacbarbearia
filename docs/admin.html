@@ -879,9 +879,11 @@
     <div id="horarios" class="tab-content">
       <h2>Horários de Funcionamento</h2>
       <form onsubmit="saveHorarios(event)">
-        <input type="text" id="hor-seg-sex" placeholder="Seg-Sex (ex: 09:00 às 20:00)" required>
-        <input type="text" id="hor-sabado" placeholder="Sábado (ex: 09:00 às 18:00)" required>
+        <input type="text" id="hor-seg-sex" placeholder="Seg-Sex (ex: 08:00 às 18:30)" required>
+        <input type="text" id="hor-sabado" placeholder="Sábado (ex: 14:30 às 18:30)" required>
         <input type="text" id="hor-domingo" placeholder="Domingo (ex: Fechado)" required>
+        <input type="text" id="hor-pausa" placeholder="Pausa (ex: 12:00 às 15:00 de segunda a sexta)" required>
+        <textarea id="hor-observacao" placeholder="Observação adicional (opcional)"></textarea>
         <button type="submit">Salvar Horários</button>
       </form>
       <div id="hor-display" style="margin-top: 20px; padding: 15px; background: #2a2a2a; border-radius: 8px; border: 1px solid #333;"></div>
@@ -1582,7 +1584,9 @@
       const data = {
         segSex: document.getElementById('hor-seg-sex').value,
         sabado: document.getElementById('hor-sabado').value,
-        domingo: document.getElementById('hor-domingo').value
+        domingo: document.getElementById('hor-domingo').value,
+        pausa: document.getElementById('hor-pausa').value,
+        observacao: document.getElementById('hor-observacao').value || ''
       };
       await setDoc(doc(db, 'config', 'horarios'), data);
       displayHorarios(data);
@@ -1591,12 +1595,22 @@
 
     async function displayHorarios(data) {
       const display = document.getElementById('hor-display');
-      display.innerHTML = `
+      let html = `
         <p><strong>⏰ Horários de Funcionamento</strong></p>
         <p>Segunda a Sexta: ${data.segSex}</p>
         <p>Sábado: ${data.sabado}</p>
         <p>Domingo: ${data.domingo}</p>
       `;
+      
+      if (data.pausa) {
+        html += `<p style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #444;">⏸️ Pausa: ${data.pausa}</p>`;
+      }
+      
+      if (data.observacao) {
+        html += `<p style="margin-top: 10px; font-size: 12px; color: #bbb; font-style: italic;">ℹ️ ${data.observacao}</p>`;
+      }
+      
+      display.innerHTML = html;
     }
 
     async function loadHorarios() {
@@ -1607,6 +1621,8 @@
           document.getElementById('hor-seg-sex').value = data.segSex || '';
           document.getElementById('hor-sabado').value = data.sabado || '';
           document.getElementById('hor-domingo').value = data.domingo || '';
+          document.getElementById('hor-pausa').value = data.pausa || '';
+          document.getElementById('hor-observacao').value = data.observacao || '';
           displayHorarios(data);
         }
       } catch (error) {
