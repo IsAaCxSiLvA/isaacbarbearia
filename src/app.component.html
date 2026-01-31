@@ -198,9 +198,29 @@
                     }
 
                     @if (item.id === 'avisos' && avisos().length > 0) {
-                      <span class="ml-2 bg-red-500/20 text-red-400 border border-red-500/50 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
+                      <span class="ml-2 bg-white/10 text-gray-200 border border-white/10 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
                         {{ avisos().length }}
                       </span>
+                      @if (countAvisosByType('info') > 0) {
+                        <span class="ml-1 bg-blue-500/30 text-blue-300 border border-blue-500/40 text-[9px] font-bold px-2 py-0.5 rounded">
+                          {{ countAvisosByType('info') }}
+                        </span>
+                      }
+                      @if (countAvisosByType('warning') > 0) {
+                        <span class="ml-1 bg-yellow-500/30 text-yellow-300 border border-yellow-500/40 text-[9px] font-bold px-2 py-0.5 rounded">
+                          {{ countAvisosByType('warning') }}
+                        </span>
+                      }
+                      @if (countAvisosByType('danger') > 0) {
+                        <span class="ml-1 bg-red-500/30 text-red-300 border border-red-500/40 text-[9px] font-bold px-2 py-0.5 rounded">
+                          {{ countAvisosByType('danger') }}
+                        </span>
+                      }
+                      @if (countAvisosByType('success') > 0) {
+                        <span class="ml-1 bg-green-500/30 text-green-300 border border-green-500/40 text-[9px] font-bold px-2 py-0.5 rounded">
+                          {{ countAvisosByType('success') }}
+                        </span>
+                      }
                     }
                     @if (item.id === 'feedback' && getFeedbackCount() > 0) {
                       <span class="ml-2 bg-brand-fireOrange/20 text-brand-fireOrange border border-brand-fireOrange/50 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded animate-pulse">
