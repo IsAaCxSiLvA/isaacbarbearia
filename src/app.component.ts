@@ -126,7 +126,6 @@ export class AppComponent implements OnInit {
 
   // Review Form State
   showReviewForm = signal(false);
-  newReviewName = signal('');
   newReviewMessage = signal('');
   newReviewRating = signal(5);
 
@@ -493,12 +492,12 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    const name = this.newReviewName().trim();
+    const name = this.currentUser()?.displayName || 'Usuário';
     const message = this.newReviewMessage().trim();
     const rating = this.newReviewRating();
 
-    if (!name || !message) {
-      alert('Por favor, preencha nome e comentário!');
+    if (!message) {
+      alert('Por favor, escreva seu comentário!');
       return;
     }
 
@@ -537,7 +536,6 @@ export class AppComponent implements OnInit {
       });
 
       // Reset Form
-      this.newReviewName.set('');
       this.newReviewMessage.set('');
       this.newReviewRating.set(5);
       this.showReviewForm.set(false);
