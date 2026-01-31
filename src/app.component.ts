@@ -3,6 +3,7 @@ import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, getDocs, addDoc, doc, getDoc } from 'firebase/firestore';
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, User } from 'firebase/auth';
 
 interface AccordionItem {
   id: string;
@@ -83,6 +84,11 @@ export class AppComponent implements OnInit {
   };
   private app = initializeApp(this.firebaseConfig);
   private db = getFirestore(this.app);
+  private auth = getAuth(this.app);
+  
+  // Auth State
+  currentUser = signal<User | null>(null);
+  isAuthLoading = signal(false);
   
   // Loading State
   isLoading = signal(true);
@@ -208,6 +214,13 @@ export class AppComponent implements OnInit {
     }
     this.generateEmbers();
     this.generateSparks();
+    
+    // Monitor auth state
+    onAuthStateChanged(this.auth, (user) => {
+      this.ngZone.run(() => {
+        this.currentUser.set(user);
+      });
+    });
   }
 
   async startLoading() {
@@ -474,6 +487,12 @@ export class AppComponent implements OnInit {
   }
 
   async submitReview() {
+    // Verificar se está logado
+    if (!this.currentUser()) {
+      alert('Por favor, faça login com o Google para deixar seu feedback!');
+      return;
+    }
+
     const name = this.newReviewName().trim();
     const message = this.newReviewMessage().trim();
     const rating = this.newReviewRating();
@@ -527,6 +546,29 @@ export class AppComponent implements OnInit {
     } catch (error) {
       console.error('Erro ao salvar feedback:', error);
       alert('Erro ao salvar feedback. Verifique o console.');
+    }
+  }
+
+  async signInWithGoogle() {
+    this.isAuthLoading.set(true);
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(this.auth, provider);
+      alert('Login realizado com sucesso!');
+    } catch (error) {
+      console.error('Erro no login:', error);
+      alert('Erro ao fazer login. Tente novamente.');
+    } finally {
+      this.isAuthLoading.set(false);
+    }
+  }
+
+  async signOutUser() {
+    try {
+      await signOut(this.auth);
+      alert('Logout realizado com sucesso!');
+    } catch (error) {
+      console.error('Erro no logout:', error);
     }
   }
 
