@@ -524,15 +524,26 @@
                                     'border-l-red-500': aviso.tipo === 'danger',
                                     'border-l-green-500': aviso.tipo === 'success'
                                   }">
-                               <h3 class="text-lg font-bold mb-2 text-white"
-                                   [ngClass]="{
-                                     'text-blue-400': aviso.tipo === 'info',
-                                     'text-yellow-400': aviso.tipo === 'warning',
-                                     'text-red-400': aviso.tipo === 'danger',
-                                     'text-green-400': aviso.tipo === 'success'
-                                   }">
-                                 {{ aviso.titulo }}
-                               </h3>
+                               <div class="flex items-start justify-between mb-3">
+                                 <h3 class="text-lg font-bold text-white flex-1"
+                                     [ngClass]="{
+                                       'text-blue-400': aviso.tipo === 'info',
+                                       'text-yellow-400': aviso.tipo === 'warning',
+                                       'text-red-400': aviso.tipo === 'danger',
+                                       'text-green-400': aviso.tipo === 'success'
+                                     }">
+                                   {{ aviso.titulo }}
+                                 </h3>
+                                 <span class="ml-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider"
+                                       [ngClass]="{
+                                         'bg-blue-500/20 text-blue-300 border border-blue-500/50': aviso.tipo === 'info',
+                                         'bg-yellow-500/20 text-yellow-300 border border-yellow-500/50': aviso.tipo === 'warning',
+                                         'bg-red-500/20 text-red-300 border border-red-500/50': aviso.tipo === 'danger',
+                                         'bg-green-500/20 text-green-300 border border-green-500/50': aviso.tipo === 'success'
+                                       }">
+                                   {{ aviso.tipo === 'info' ? 'ℹ️ Informativo' : aviso.tipo === 'warning' ? '⚠️ Aviso' : aviso.tipo === 'danger' ? '🔴 Importante' : '✅ Sucesso' }}
+                                 </span>
+                               </div>
                                <p class="text-gray-300 mb-2">{{ aviso.conteudo }}</p>
                                <small class="text-gray-500">{{ formatDate(aviso.data) }}</small>
                              </div>
