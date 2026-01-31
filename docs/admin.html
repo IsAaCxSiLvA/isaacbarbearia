@@ -249,6 +249,33 @@
       width: 100%; 
       margin-top: 15px; 
     }
+    .servicos-section {
+      margin-bottom: 40px;
+    }
+    .servicos-section h3 {
+      font-size: 20px;
+      color: #ff8c00;
+      margin: 30px 0 20px 0;
+      padding: 15px;
+      border-left: 4px solid #ff8c00;
+      background: rgba(255, 140, 0, 0.1);
+      border-radius: 4px;
+    }
+    .servicos-section.sim h3 {
+      color: #27ae60;
+      border-left-color: #27ae60;
+      background: rgba(39, 174, 96, 0.1);
+    }
+    .servicos-section.embreve h3 {
+      color: #f39c12;
+      border-left-color: #f39c12;
+      background: rgba(243, 156, 18, 0.1);
+    }
+    .servicos-section.nao h3 {
+      color: #e74c3c;
+      border-left-color: #e74c3c;
+      background: rgba(231, 76, 60, 0.1);
+    }
 
     /* RESPONSIVO */
     @media (max-width: 768px) {
@@ -845,35 +872,43 @@
         const rows = [];
         
         // Renderiza Sim (Verde)
-        servicosPorStatus.sim.forEach(item => {
-          const precoText = item.data.preco > 0 ? `R$ ${item.data.preco.toFixed(0)}` : '-';
-          rows.push(`<div class="card color-green">
-            <h3>${item.data.nome}</h3>
-            <p><strong>Realizamos:</strong> Sim</p>
-            <p><strong>Preço:</strong> ${precoText}</p>
-            <button class="btn-delete" onclick="deleteServico('${item.servico.id}')">Deletar</button>
-          </div>`);
-        });
-        
-        // Renderiza Não (Vermelho)
-        servicosPorStatus.nao.forEach(item => {
-          rows.push(`<div class="card color-red">
-            <h3>${item.data.nome}</h3>
-            <p><strong>Realizamos:</strong> Não</p>
-            <p><strong>Preço:</strong> -</p>
-            <button class="btn-delete" onclick="deleteServico('${item.servico.id}')">Deletar</button>
-          </div>`);
-        });
+        if (servicosPorStatus.sim.length > 0) {
+          rows.push(`<div class="servicos-section sim"><h3>✅ Realizamos</h3></div>`);
+          servicosPorStatus.sim.forEach(item => {
+            const precoText = item.data.preco > 0 ? `R$ ${item.data.preco.toFixed(0)}` : '-';
+            rows.push(`<div class="card color-green">
+              <h3>${item.data.nome}</h3>
+              <p><strong>Preço:</strong> ${precoText}</p>
+              <button class="btn-delete" onclick="deleteServico('${item.servico.id}')">Deletar</button>
+            </div>`);
+          });
+        }
         
         // Renderiza Em Breve (Amarelo)
-        servicosPorStatus.embreve.forEach(item => {
-          rows.push(`<div class="card color-yellow">
-            <h3>${item.data.nome}</h3>
-            <p><strong>Realizamos:</strong> Em Breve</p>
-            <p><strong>Preço:</strong> -</p>
-            <button class="btn-delete" onclick="deleteServico('${item.servico.id}')">Deletar</button>
-          </div>`);
-        });
+        if (servicosPorStatus.embreve.length > 0) {
+          rows.push(`<div class="servicos-section embreve"><h3>⏳ Em Breve</h3></div>`);
+          servicosPorStatus.embreve.forEach(item => {
+            rows.push(`<div class="card color-yellow">
+              <h3>${item.data.nome}</h3>
+              <p><strong>Realizamos:</strong> Em Breve</p>
+              <p><strong>Preço:</strong> -</p>
+              <button class="btn-delete" onclick="deleteServico('${item.servico.id}')">Deletar</button>
+            </div>`);
+          });
+        }
+        
+        // Renderiza Não (Vermelho)
+        if (servicosPorStatus.nao.length > 0) {
+          rows.push(`<div class="servicos-section nao"><h3>❌ Não Realizamos</h3></div>`);
+          servicosPorStatus.nao.forEach(item => {
+            rows.push(`<div class="card color-red">
+              <h3>${item.data.nome}</h3>
+              <p><strong>Realizamos:</strong> Não</p>
+              <p><strong>Preço:</strong> -</p>
+              <button class="btn-delete" onclick="deleteServico('${item.servico.id}')">Deletar</button>
+            </div>`);
+          });
+        }
         
         list.innerHTML = rows.join('');
         // Atualizar o contador na aba
