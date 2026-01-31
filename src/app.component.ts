@@ -672,5 +672,5 @@ export class AppComponent implements OnInit {
     return services.some(s => s.available === status);
   }
 
-  currentYear = new Date().getFullYear();
+  currentYear = 2024;
 }
