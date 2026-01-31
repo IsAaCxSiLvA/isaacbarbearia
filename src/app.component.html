@@ -214,7 +214,7 @@
                </button>
   
                <!-- Expandable Body -->
-               <div [style.display]="item.isOpen ? 'block' : 'none'">
+               <div [class.hidden]="!item.isOpen">
                  <div class="px-6 pb-6 pt-2 border-t border-brand-fireOrange/20 bg-black/40">
                      
                      <!-- Content Switch -->
