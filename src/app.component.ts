@@ -509,6 +509,12 @@ export class AppComponent implements OnInit {
       return;
     }
 
+    // Verificar se tem email (Google Auth)
+    if (!this.currentUser()?.email) {
+      alert('Erro: não foi possível obter seus dados. Faça login novamente.');
+      return;
+    }
+
     const userEmail = this.currentUser()?.email;
     const name = this.currentUser()?.displayName || 'Usuário';
     const photoUrl = this.currentUser()?.photoURL || '';
@@ -597,6 +603,9 @@ export class AppComponent implements OnInit {
       this.isAuthLoading.set(false);
     }
   }
+
+  // Alias para template
+  signInGoogle = this.signInWithGoogle.bind(this);
 
   async signOutUser() {
     try {
