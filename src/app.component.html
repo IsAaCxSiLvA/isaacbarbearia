@@ -307,8 +307,9 @@
                            <span class="text-gray-400">Domingo:</span>
                            <span class="font-semibold text-red-400">{{ horariosDomingo() }}</span>
                          </div>
-                         <div class="pt-2 mt-2 border-t border-white/10 text-xs text-gray-500">
-                           ⏸️ {{ horariosPausa() }}
+                         <div class="pt-2 mt-2 border-t border-white/10 text-xs text-yellow-400 flex items-center justify-center gap-2">
+                           <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="4" width="3" height="16" rx="1"/><rect x="15" y="4" width="3" height="16" rx="1"/></svg>
+                           <span>{{ horariosPausa() }}</span>
                          </div>
                          @if (horariosObservacao()) {
                            <div class="pt-2 text-xs text-red-400 italic flex items-center justify-center gap-2">
