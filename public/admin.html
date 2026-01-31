@@ -905,7 +905,7 @@
     <!-- FEEDBACK -->
     <div id="avaliacoes" class="tab-content">
       <h2>Feedback dos Clientes</h2>
-      <form onsubmit="addAvaliacaoManual(event)">
+      <form onsubmit="return addAvaliacaoManual(event)">
         <input type="text" id="aval-nome" placeholder="Nome do cliente" required>
         <input type="email" id="aval-email" placeholder="Email (opcional)">
         <select id="aval-estrelas" required>
@@ -1445,16 +1445,22 @@
 
     window.addAvaliacaoManual = async (e) => {
       e.preventDefault();
-      const data = {
-        cliente: document.getElementById('aval-nome').value.trim(),
-        email: document.getElementById('aval-email').value.trim() || '',
-        estrelas: Number(document.getElementById('aval-estrelas').value),
-        comentario: document.getElementById('aval-comentario').value.trim(),
-        data: new Date().toISOString(),
-        manual: true
-      };
-      await addDoc(collection(db, 'avaliacoes'), data);
-      e.target.reset();
+      try {
+        const data = {
+          cliente: document.getElementById('aval-nome').value.trim(),
+          email: document.getElementById('aval-email').value.trim() || '',
+          estrelas: Number(document.getElementById('aval-estrelas').value),
+          comentario: document.getElementById('aval-comentario').value.trim(),
+          data: new Date().toISOString(),
+          manual: true
+        };
+        await addDoc(collection(db, 'avaliacoes'), data);
+        e.target.reset();
+      } catch (error) {
+        console.error('Erro ao adicionar feedback manual:', error);
+        alert('Erro ao adicionar feedback. Verifique as permissões.');
+      }
+      return false;
     };
 
     function renderAvaliacoes(list, docs) {
