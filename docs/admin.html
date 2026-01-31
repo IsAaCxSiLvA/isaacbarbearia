@@ -188,6 +188,48 @@
       border-radius: 10px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.4);
       border: 1px solid #444;
+      border-left: 4px solid #ff8c00;
+      transition: all 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0,0,0,0.6);
+    }
+    .card.color-blue {
+      border-left-color: #3498db;
+    }
+    .card.color-blue h3 {
+      color: #3498db;
+    }
+    .card.color-green {
+      border-left-color: #27ae60;
+    }
+    .card.color-green h3 {
+      color: #27ae60;
+    }
+    .card.color-purple {
+      border-left-color: #9b59b6;
+    }
+    .card.color-purple h3 {
+      color: #9b59b6;
+    }
+    .card.color-red {
+      border-left-color: #e74c3c;
+    }
+    .card.color-red h3 {
+      color: #e74c3c;
+    }
+    .card.color-yellow {
+      border-left-color: #f39c12;
+    }
+    .card.color-yellow h3 {
+      color: #f39c12;
+    }
+    .card.color-pink {
+      border-left-color: #e91e63;
+    }
+    .card.color-pink h3 {
+      color: #e91e63;
     }
     .card h3 { 
       margin: 0 0 12px 0; 
@@ -975,12 +1017,18 @@
         const snapshot = await getDocs(collection(db, 'participacoes'));
         const uniqueIds = new Set();
         const cards = [];
+        let colorIndex = 0;
+        const colors = ['color-blue', 'color-green', 'color-purple', 'color-pink', 'color-yellow'];
+        
         snapshot.forEach(doc => {
           if (uniqueIds.has(doc.id)) return;
           uniqueIds.add(doc.id);
           
           const data = doc.data();
-        cards.push(`<div class="card">
+          const color = colors[colorIndex % colors.length];
+          colorIndex++;
+          
+        cards.push(`<div class="card ${color}">
           <h3>${data.titulo}</h3>
           <p>${data.descricao || ''}</p>
           <p><strong>Data:</strong> ${data.data}</p>
@@ -1022,13 +1070,19 @@
           
           const uniqueIds = new Set();
           const cards = [];
+          let colorIndex = 0;
+          const colors = ['color-blue', 'color-green', 'color-purple', 'color-pink', 'color-yellow'];
+          
           snapshot.forEach(doc => {
             if (uniqueIds.has(doc.id)) return;
             uniqueIds.add(doc.id);
             
             const data = doc.data();
+            const color = colors[colorIndex % colors.length];
+            colorIndex++;
+            
             console.log('Renderizando avaliação:', data);
-            cards.push(`<div class="card">
+            cards.push(`<div class="card ${color}">
               <h3>${data.cliente || 'Sem nome'}</h3>
               <p><strong>Estrelas:</strong> ${data.estrelas || 0}/5</p>
               <p>${data.comentario || 'Sem comentário'}</p>
