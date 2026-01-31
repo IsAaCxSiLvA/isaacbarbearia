@@ -432,6 +432,7 @@
       <button onclick="showTab('horarios')">Horários</button>
       <button onclick="showTab('agendamento')">Agendamento</button>
       <button onclick="showTab('avaliacoes')">Feedback</button>
+      <button onclick="showTab('avisos')" id="btn-avisos">Avisos <span id="badge-avisos" style="display: none; background: #e74c3c; border-radius: 50%; width: 20px; height: 20px; color: white; font-size: 12px; font-weight: bold; display: inline-flex; align-items: center; justify-content: center; margin-left: 5px;">0</span></button>
       <button class="btn-logout" onclick="logout()">Sair</button>
     </div>
 
@@ -542,6 +543,24 @@
     <div id="avaliacoes" class="tab-content">
       <h2>Feedback dos Clientes</h2>
       <div class="cards" id="aval-list"></div>
+    </div>
+
+    <!-- AVISOS -->
+    <div id="avisos" class="tab-content">
+      <h2>Gerenciar Avisos</h2>
+      <form onsubmit="addAviso(event)">
+        <input type="text" id="aviso-titulo" placeholder="Título do Aviso" required>
+        <textarea id="aviso-conteudo" placeholder="Conteúdo do Aviso" required></textarea>
+        <select id="aviso-tipo" required>
+          <option value="">Tipo de Aviso</option>
+          <option value="info">Informativo</option>
+          <option value="warning">Aviso</option>
+          <option value="danger">Importante</option>
+          <option value="success">Sucesso</option>
+        </select>
+        <button type="submit">Adicionar Aviso</button>
+      </form>
+      <div class="cards" id="avisos-list"></div>
     </div>
   </div>
 
@@ -1028,6 +1047,63 @@
     loadHorarios();
     loadAgendamento();
     loadAvaliacoes();
+    loadAvisos();
+
+    // AVISOS
+    window.addAviso = async (e) => {
+      e.preventDefault();
+      await addDoc(collection(db, 'avisos'), {
+        titulo: document.getElementById('aviso-titulo').value,
+        conteudo: document.getElementById('aviso-conteudo').value,
+        tipo: document.getElementById('aviso-tipo').value,
+        data: new Date().toISOString()
+      });
+      e.target.reset();
+      loadAvisos();
+    };
+
+    async function loadAvisos() {
+      try {
+        const snapshot = await getDocs(collection(db, 'avisos'));
+        const list = document.getElementById('avisos-list');
+        const badge = document.getElementById('badge-avisos');
+        
+        list.innerHTML = '';
+        const avisos = [];
+        
+        snapshot.forEach(doc => {
+          avisos.push({ id: doc.id, ...doc.data() });
+        });
+
+        avisos.sort((a, b) => new Date(b.data) - new Date(a.data));
+
+        badge.textContent = avisos.length;
+        badge.style.display = avisos.length > 0 ? 'inline-flex' : 'none';
+
+        avisos.forEach(aviso => {
+          const tipoClass = aviso.tipo === 'danger' ? '#e74c3c' : aviso.tipo === 'warning' ? '#f39c12' : aviso.tipo === 'success' ? '#27ae60' : '#3498db';
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.style.borderLeft = `4px solid ${tipoClass}`;
+          card.innerHTML = `
+            <h3 style="color: ${tipoClass};">${aviso.titulo}</h3>
+            <p>${aviso.conteudo}</p>
+            <small>${new Date(aviso.data).toLocaleString('pt-BR')}</small>
+            <button class="btn-delete" onclick="deleteAviso('${aviso.id}')">Deletar</button>
+          `;
+          list.appendChild(card);
+        });
+      } catch (error) {
+        console.error('Erro ao carregar avisos:', error);
+      }
+    }
+
+    window.deleteAviso = async (id) => {
+      if (confirm('Deseja deletar este aviso?')) {
+        await deleteDoc(doc(db, 'avisos', id));
+        loadAvisos();
+      }
+    };
   </script>
 </body>
 </html>

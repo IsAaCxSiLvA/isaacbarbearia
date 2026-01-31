@@ -19,6 +19,14 @@ interface AccordionItem {
   projectGallery?: { title: string; imageUrl: string; projectUrl: string; date: string; location: string; }[];
 }
 
+interface Aviso {
+  id: string;
+  titulo: string;
+  conteudo: string;
+  tipo: 'info' | 'warning' | 'danger' | 'success';
+  data: string;
+}
+
 interface Particle {
   left: string;
   animationDuration: string;
@@ -51,6 +59,9 @@ export class AppComponent implements OnInit {
   isLoading = signal(true);
   loadingProgress = signal(0);
   private hasLoadingStarted = false; // Guard para só rodar uma vez
+  
+  // Avisos
+  avisos = signal<Aviso[]>([]);
   
   // Agendamento
   whatsappLink = signal('https://wa.me/5585999999999');
@@ -192,7 +203,7 @@ export class AppComponent implements OnInit {
 
   async loadDynamicData() {
     try {
-      const [profissionaisSnap, parceirosSnap, participacoesSnap, avaliacoesSnap, servicosSnap, agendamentoSnap, localizacaoSnap, horariosSnap] = await Promise.all([
+      const [profissionaisSnap, parceirosSnap, participacoesSnap, avaliacoesSnap, servicosSnap, agendamentoSnap, localizacaoSnap, horariosSnap, avisosSnap] = await Promise.all([
         getDocs(collection(this.db, 'profissionais')),
         getDocs(collection(this.db, 'parceiros')),
         getDocs(collection(this.db, 'participacoes')),
@@ -200,7 +211,8 @@ export class AppComponent implements OnInit {
         getDocs(collection(this.db, 'servicos')),
         getDoc(doc(this.db, 'config', 'agendamento')),
         getDoc(doc(this.db, 'config', 'localizacao')),
-        getDoc(doc(this.db, 'config', 'horarios'))
+        getDoc(doc(this.db, 'config', 'horarios')),
+        getDocs(collection(this.db, 'avisos'))
       ]);
 
       const teamMembers = profissionaisSnap.docs.map(doc => {
@@ -326,9 +338,29 @@ export class AppComponent implements OnInit {
           return item;
         }));
       }
+
+      // Carregar avisos
+      const avisos = avisosSnap.docs.map(doc => {
+        const data = doc.data() as { titulo?: string; conteudo?: string; tipo?: 'info' | 'warning' | 'danger' | 'success'; data?: string };
+        return {
+          id: doc.id,
+          titulo: data.titulo || 'Aviso',
+          conteudo: data.conteudo || '',
+          tipo: data.tipo || 'info',
+          data: data.data || new Date().toISOString()
+        };
+      });
+      
+      // Ordenar por data mais recente
+      avisos.sort((a, b) => new Date(b.data).getTime() - new Date(a.data).getTime());
+      this.avisos.set(avisos);
     } catch (error) {
       console.error('Erro ao carregar dados do Firebase:', error);
     }
+  }
+
+  formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString('pt-BR');
   }
 
   generateEmbers() {

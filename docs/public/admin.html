@@ -208,6 +208,7 @@
       .btn-logout { 
         background: #e74c3c !important;
         margin-top: 5px;
+        width: 100%;
       }
       .tab-content {
         padding: 16px;
@@ -227,6 +228,13 @@
         padding: 18px;
         font-size: 17px;
         font-weight: 600;
+        border-radius: 10px;
+        width: 100%;
+      }
+      select {
+        width: 100%;
+        padding: 16px;
+        font-size: 16px;
         border-radius: 10px;
       }
       
@@ -273,81 +281,127 @@
     }
 
     @media (max-width: 480px) {
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
       .container { 
-        padding: 8px; 
+        padding: 10px; 
       }
       h1 { 
         font-size: 20px;
-        margin-bottom: 12px;
+        margin-bottom: 15px;
       }
       h2 { 
-        font-size: 16px;
-        margin-bottom: 12px;
+        font-size: 17px;
+        margin-bottom: 15px;
       }
       .tabs { 
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+        border-bottom: none;
+        margin-bottom: 15px;
       }
       .tabs button {
-        padding: 18px; 
-        font-size: 16px;
+        padding: 16px 12px; 
+        font-size: 15px;
         border-radius: 10px;
         font-weight: 600;
         width: 100%;
       }
       .btn-logout { 
-        order: 999;
-        padding: 18px !important;
-        font-size: 16px !important;
-        margin-top: 10px;
+        width: 100%;
+        padding: 16px 12px !important;
+        font-size: 15px !important;
         background: #e74c3c !important;
+        order: 999;
       }
       .tab-content {
-        padding: 16px;
-        border-radius: 12px;
+        padding: 14px;
+        border-radius: 10px;
+        margin-bottom: 10px;
       }
       form {
-        padding: 16px; 
-        gap: 14px;
-        border-radius: 12px;
+        padding: 14px; 
+        gap: 12px;
+        border-radius: 10px;
       }
       input, textarea {
         font-size: 16px;
-        padding: 16px;
-        border-radius: 10px;
+        padding: 14px;
+        border-radius: 8px;
+        width: 100%;
+      }
+      select {
+        width: 100%;
+        padding: 14px;
+        font-size: 16px;
+        border-radius: 8px;
+        background: #1a1a1a;
+        color: #e0e0e0;
+        border: 1px solid #444;
       }
       button[type="submit"] {
-        padding: 18px;
-        font-size: 17px;
+        padding: 16px;
+        font-size: 16px;
         font-weight: 600;
-        border-radius: 10px;
+        border-radius: 8px;
+        width: 100%;
+      }
+      
+      /* Tabelas viram cards no mobile */
+      table, thead, tbody, th, td, tr { 
+        display: block;
+        width: 100%;
+      }
+      thead tr { 
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+      }
+      tr { 
+        margin-bottom: 12px;
+        background: #2a2a2a;
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 12px;
       }
       td { 
-        padding: 14px 14px 14px 50%;
-        font-size: 15px;
-      }
-      td:before {
+        border: none;
+        position: relative;
+        padding: 10px 10px 10px 48%;
+        text-align: right;
         font-size: 14px;
-        font-weight: 600;
+      }
+      td:before { 
+        content: attr(data-label);
+        position: absolute;
+        left: 12px;
+        width: 45%;
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        color: #ff8c00;
+        font-size: 13px;
+      }
+      .cards {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .card {
+        padding: 12px;
+        border-radius: 8px;
       }
       .btn-delete {
-        padding: 14px 16px;
-        font-size: 16px;
+        padding: 14px 12px;
+        font-size: 15px;
         font-weight: 600;
         width: 100%;
         margin-top: 10px;
-        border-radius: 10px;
-      }
-        font-weight: bold;
-        color: #ff8c00;
-        display: inline-block;
-        width: 100px;
-        margin-right: 10px;
-      }
-      .btn-delete {
-        width: 100%;
-        padding: 10px;
+        border-radius: 8px;
       }
       .cards {
         grid-template-columns: 1fr;
@@ -378,6 +432,7 @@
       <button onclick="showTab('horarios')">Horários</button>
       <button onclick="showTab('agendamento')">Agendamento</button>
       <button onclick="showTab('avaliacoes')">Feedback</button>
+      <button onclick="showTab('avisos')" id="btn-avisos">Avisos <span id="badge-avisos" style="display: none; background: #e74c3c; border-radius: 50%; width: 20px; height: 20px; color: white; font-size: 12px; font-weight: bold; display: inline-flex; align-items: center; justify-content: center; margin-left: 5px;">0</span></button>
       <button class="btn-logout" onclick="logout()">Sair</button>
     </div>
 
@@ -489,6 +544,24 @@
       <h2>Feedback dos Clientes</h2>
       <div class="cards" id="aval-list"></div>
     </div>
+
+    <!-- AVISOS -->
+    <div id="avisos" class="tab-content">
+      <h2>Gerenciar Avisos</h2>
+      <form onsubmit="addAviso(event)">
+        <input type="text" id="aviso-titulo" placeholder="Título do Aviso" required>
+        <textarea id="aviso-conteudo" placeholder="Conteúdo do Aviso" required></textarea>
+        <select id="aviso-tipo" required>
+          <option value="">Tipo de Aviso</option>
+          <option value="info">Informativo</option>
+          <option value="warning">Aviso</option>
+          <option value="danger">Importante</option>
+          <option value="success">Sucesso</option>
+        </select>
+        <button type="submit">Adicionar Aviso</button>
+      </form>
+      <div class="cards" id="avisos-list"></div>
+    </div>
   </div>
 
   <script type="module">
@@ -512,7 +585,7 @@
     // Verifica autenticação
     onAuthStateChanged(auth, (user) => {
       if (!user) {
-        window.location.href = '/isaacbarbearia/login.html';
+        window.location.href = '/login.html';
       } else {
         // Carregar dados APÓS autenticação
         console.log('Usuário autenticado, carregando dados...');
@@ -534,7 +607,7 @@
     // Logout
     window.logout = async () => {
       await signOut(auth);
-      window.location.href = '/isaacbarbearia/login.html';
+      window.location.href = '/login.html';
     };
 
     // Serviços
@@ -974,6 +1047,63 @@
     loadHorarios();
     loadAgendamento();
     loadAvaliacoes();
+    loadAvisos();
+
+    // AVISOS
+    window.addAviso = async (e) => {
+      e.preventDefault();
+      await addDoc(collection(db, 'avisos'), {
+        titulo: document.getElementById('aviso-titulo').value,
+        conteudo: document.getElementById('aviso-conteudo').value,
+        tipo: document.getElementById('aviso-tipo').value,
+        data: new Date().toISOString()
+      });
+      e.target.reset();
+      loadAvisos();
+    };
+
+    async function loadAvisos() {
+      try {
+        const snapshot = await getDocs(collection(db, 'avisos'));
+        const list = document.getElementById('avisos-list');
+        const badge = document.getElementById('badge-avisos');
+        
+        list.innerHTML = '';
+        const avisos = [];
+        
+        snapshot.forEach(doc => {
+          avisos.push({ id: doc.id, ...doc.data() });
+        });
+
+        avisos.sort((a, b) => new Date(b.data) - new Date(a.data));
+
+        badge.textContent = avisos.length;
+        badge.style.display = avisos.length > 0 ? 'inline-flex' : 'none';
+
+        avisos.forEach(aviso => {
+          const tipoClass = aviso.tipo === 'danger' ? '#e74c3c' : aviso.tipo === 'warning' ? '#f39c12' : aviso.tipo === 'success' ? '#27ae60' : '#3498db';
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.style.borderLeft = `4px solid ${tipoClass}`;
+          card.innerHTML = `
+            <h3 style="color: ${tipoClass};">${aviso.titulo}</h3>
+            <p>${aviso.conteudo}</p>
+            <small>${new Date(aviso.data).toLocaleString('pt-BR')}</small>
+            <button class="btn-delete" onclick="deleteAviso('${aviso.id}')">Deletar</button>
+          `;
+          list.appendChild(card);
+        });
+      } catch (error) {
+        console.error('Erro ao carregar avisos:', error);
+      }
+    }
+
+    window.deleteAviso = async (id) => {
+      if (confirm('Deseja deletar este aviso?')) {
+        await deleteDoc(doc(db, 'avisos', id));
+        loadAvisos();
+      }
+    };
   </script>
 </body>
 </html>
