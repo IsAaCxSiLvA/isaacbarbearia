@@ -427,6 +427,15 @@ export class AppComponent implements OnInit {
     }
   }
 
+  toggleAvisoType(type: 'info' | 'warning' | 'danger' | 'success') {
+    // Se já está selecionado, fechar (null). Senão, abrir (type)
+    if (this.avisoSelectedType() === type) {
+      this.avisoSelectedType.set(null);
+    } else {
+      this.avisoSelectedType.set(type);
+    }
+  }
+
   toggleReviewForm() {
     this.showReviewForm.update(v => !v);
   }

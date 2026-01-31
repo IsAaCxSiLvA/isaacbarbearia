@@ -519,7 +519,7 @@
                          <div class="flex flex-col gap-0">
                            <!-- INFORMATIVO -->
                            <div>
-                             <button (click)="avisoSelectedType.set('info')"
+                             <button (click)="toggleAvisoType('info')"
                                      [class.border-l-4]="avisoSelectedType() === 'info'"
                                      [class.border-blue-400]="avisoSelectedType() === 'info'"
                                      [class.text-blue-400]="avisoSelectedType() === 'info'"
@@ -554,7 +554,7 @@
 
                            <!-- AVISO -->
                            <div class="mt-2">
-                             <button (click)="avisoSelectedType.set('warning')"
+                             <button (click)="toggleAvisoType('warning')"
                                      [class.border-l-4]="avisoSelectedType() === 'warning'"
                                      [class.border-yellow-400]="avisoSelectedType() === 'warning'"
                                      [class.text-yellow-400]="avisoSelectedType() === 'warning'"
@@ -589,7 +589,7 @@
 
                            <!-- IMPORTANTE -->
                            <div class="mt-2">
-                             <button (click)="avisoSelectedType.set('danger')"
+                             <button (click)="toggleAvisoType('danger')"
                                      [class.border-l-4]="avisoSelectedType() === 'danger'"
                                      [class.border-red-400]="avisoSelectedType() === 'danger'"
                                      [class.text-red-400]="avisoSelectedType() === 'danger'"
@@ -624,7 +624,7 @@
 
                            <!-- SUCESSO -->
                            <div class="mt-2">
-                             <button (click)="avisoSelectedType.set('success')"
+                             <button (click)="toggleAvisoType('success')"
                                      [class.border-l-4]="avisoSelectedType() === 'success'"
                                      [class.border-green-400]="avisoSelectedType() === 'success'"
                                      [class.text-green-400]="avisoSelectedType() === 'success'"
