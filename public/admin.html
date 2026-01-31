@@ -240,6 +240,22 @@
       color: #ff8c00;
       font-size: 18px;
     }
+    .card .servico-index {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #555;
+      color: #fff;
+      font-size: 12px;
+      margin-right: 8px;
+      flex-shrink: 0;
+    }
+    .card.color-green .servico-index { background: #27ae60; }
+    .card.color-yellow .servico-index { background: #f39c12; }
+    .card.color-red .servico-index { background: #e74c3c; }
     .card p { 
       margin: 8px 0; 
       color: #d0d0d0;
@@ -933,8 +949,8 @@
           const cardsText = servicosPorStatus.sim.map((item, index) => {
             const precoText = item.data.preco > 0 ? `R$ ${item.data.preco.toFixed(0)}` : '-';
             return `<div class="card color-green">
-              <div style="position: absolute; top: 10px; right: 10px; background: #27ae60; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">${index + 1}</div>
-              <h3>${item.data.nome}</h3>
+              <h3><span class="servico-index">${index + 1}</span>${item.data.nome}</h3>
+              <p><strong>Realizamos:</strong> Sim</p>
               <p><strong>Preço:</strong> ${precoText}</p>
               <button class="btn-delete" onclick="deleteServico('${item.servico.id}')">Deletar</button>
             </div>`;
@@ -957,8 +973,7 @@
         if (servicosPorStatus.embreve.length > 0) {
           const cardsText = servicosPorStatus.embreve.map((item, index) => {
             return `<div class="card color-yellow">
-              <div style="position: absolute; top: 10px; right: 10px; background: #f39c12; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">${index + 1}</div>
-              <h3>${item.data.nome}</h3>
+              <h3><span class="servico-index">${index + 1}</span>${item.data.nome}</h3>
               <p><strong>Realizamos:</strong> Em Breve</p>
               <p><strong>Preço:</strong> -</p>
               <button class="btn-delete" onclick="deleteServico('${item.servico.id}')">Deletar</button>
@@ -982,8 +997,7 @@
         if (servicosPorStatus.nao.length > 0) {
           const cardsText = servicosPorStatus.nao.map((item, index) => {
             return `<div class="card color-red">
-              <div style="position: absolute; top: 10px; right: 10px; background: #e74c3c; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">${index + 1}</div>
-              <h3>${item.data.nome}</h3>
+              <h3><span class="servico-index">${index + 1}</span>${item.data.nome}</h3>
               <p><strong>Realizamos:</strong> Não</p>
               <p><strong>Preço:</strong> -</p>
               <button class="btn-delete" onclick="deleteServico('${item.servico.id}')">Deletar</button>
