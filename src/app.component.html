@@ -518,58 +518,62 @@
                          <!-- SUB-ABAS DE AVISOS -->
                          <div class="flex flex-col gap-2 pb-3">
                            <button (click)="avisoSelectedType.set('info')"
-                                   [class.border-l-2]="avisoSelectedType() === 'info'"
+                                   [class.border-l-4]="avisoSelectedType() === 'info'"
                                    [class.border-blue-400]="avisoSelectedType() === 'info'"
                                    [class.text-blue-400]="avisoSelectedType() === 'info'"
                                    [class.text-gray-400]="avisoSelectedType() !== 'info'"
                                    [class.bg-blue-500/10]="avisoSelectedType() === 'info'"
                                    [class.bg-white/5]="avisoSelectedType() !== 'info'"
-                                   class="px-4 py-3 text-sm font-bold uppercase tracking-wider transition-colors text-left rounded">
+                                   class="px-4 py-3 text-sm font-bold uppercase tracking-wider transition-colors text-left rounded flex items-center gap-3">
+                             <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                              Informativo
                              @if (countAvisosByType('info') > 0) {
-                               <span class="ml-2 bg-blue-500/30 px-2 py-0.5 rounded text-xs">{{ countAvisosByType('info') }}</span>
+                               <span class="ml-auto bg-blue-500/30 px-2 py-0.5 rounded text-xs">{{ countAvisosByType('info') }}</span>
                              }
                            </button>
 
                            <button (click)="avisoSelectedType.set('warning')"
-                                   [class.border-l-2]="avisoSelectedType() === 'warning'"
+                                   [class.border-l-4]="avisoSelectedType() === 'warning'"
                                    [class.border-yellow-400]="avisoSelectedType() === 'warning'"
                                    [class.text-yellow-400]="avisoSelectedType() === 'warning'"
                                    [class.text-gray-400]="avisoSelectedType() !== 'warning'"
                                    [class.bg-yellow-500/10]="avisoSelectedType() === 'warning'"
                                    [class.bg-white/5]="avisoSelectedType() !== 'warning'"
-                                   class="px-4 py-3 text-sm font-bold uppercase tracking-wider transition-colors text-left rounded">
+                                   class="px-4 py-3 text-sm font-bold uppercase tracking-wider transition-colors text-left rounded flex items-center gap-3">
+                             <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4v2m0 4v2M8.228 4.228a9 9 0 1 1 12.77 12.77M8.23 4.228a9 9 0 0 0 12.77 12.77M9 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0m6 0a1 1 0 1 1 2 0 1 1 0 0 1-2 0"/></svg>
                              Aviso
                              @if (countAvisosByType('warning') > 0) {
-                               <span class="ml-2 bg-yellow-500/30 px-2 py-0.5 rounded text-xs">{{ countAvisosByType('warning') }}</span>
+                               <span class="ml-auto bg-yellow-500/30 px-2 py-0.5 rounded text-xs">{{ countAvisosByType('warning') }}</span>
                              }
                            </button>
 
                            <button (click)="avisoSelectedType.set('danger')"
-                                   [class.border-l-2]="avisoSelectedType() === 'danger'"
+                                   [class.border-l-4]="avisoSelectedType() === 'danger'"
                                    [class.border-red-400]="avisoSelectedType() === 'danger'"
                                    [class.text-red-400]="avisoSelectedType() === 'danger'"
                                    [class.text-gray-400]="avisoSelectedType() !== 'danger'"
                                    [class.bg-red-500/10]="avisoSelectedType() === 'danger'"
                                    [class.bg-white/5]="avisoSelectedType() !== 'danger'"
-                                   class="px-4 py-3 text-sm font-bold uppercase tracking-wider transition-colors text-left rounded">
+                                   class="px-4 py-3 text-sm font-bold uppercase tracking-wider transition-colors text-left rounded flex items-center gap-3">
+                             <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4v.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                              Importante
                              @if (countAvisosByType('danger') > 0) {
-                               <span class="ml-2 bg-red-500/30 px-2 py-0.5 rounded text-xs">{{ countAvisosByType('danger') }}</span>
+                               <span class="ml-auto bg-red-500/30 px-2 py-0.5 rounded text-xs">{{ countAvisosByType('danger') }}</span>
                              }
                            </button>
 
                            <button (click)="avisoSelectedType.set('success')"
-                                   [class.border-l-2]="avisoSelectedType() === 'success'"
+                                   [class.border-l-4]="avisoSelectedType() === 'success'"
                                    [class.border-green-400]="avisoSelectedType() === 'success'"
                                    [class.text-green-400]="avisoSelectedType() === 'success'"
                                    [class.text-gray-400]="avisoSelectedType() !== 'success'"
                                    [class.bg-green-500/10]="avisoSelectedType() === 'success'"
                                    [class.bg-white/5]="avisoSelectedType() !== 'success'"
-                                   class="px-4 py-3 text-sm font-bold uppercase tracking-wider transition-colors text-left rounded">
+                                   class="px-4 py-3 text-sm font-bold uppercase tracking-wider transition-colors text-left rounded flex items-center gap-3">
+                             <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                              Sucesso
                              @if (countAvisosByType('success') > 0) {
-                               <span class="ml-2 bg-green-500/30 px-2 py-0.5 rounded text-xs">{{ countAvisosByType('success') }}</span>
+                               <span class="ml-auto bg-green-500/30 px-2 py-0.5 rounded text-xs">{{ countAvisosByType('success') }}</span>
                              }
                            </button>
                          </div>
