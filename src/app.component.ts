@@ -138,6 +138,14 @@ export class AppComponent implements OnInit {
       testimonials: []
     },
     {
+      id: 'avisos',
+      title: 'Avisos',
+      isOpen: false,
+      type: 'text',
+      icon: 'briefcase',
+      content: ''
+    },
+    {
       id: 'booking',
       title: 'Agendamento',
       isOpen: false,

@@ -195,6 +195,12 @@
                         Essencial
                       </span>
                     }
+
+                    @if (item.id === 'avisos' && avisos().length > 0) {
+                      <span class="ml-2 bg-red-500/20 text-red-400 border border-red-500/50 text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">
+                        {{ avisos().length }}
+                      </span>
+                    }
                   </div>
   
                   <!-- Chevron -->
@@ -503,8 +509,40 @@
                              </div>
                            </div>
                          }
-  
+
                         </div>
+                     }
+
+                     @if (item.type === 'text' && item.id === 'avisos') {
+                       @if (avisos().length > 0) {
+                         <div class="space-y-4 animate-fade-in">
+                           @for (aviso of avisos(); track aviso.id) {
+                             <div class="backdrop-blur-md bg-white/5 border-l-4 rounded-lg p-6 hover:bg-white/10 transition-all"
+                                  [ngClass]="{
+                                    'border-l-blue-500': aviso.tipo === 'info',
+                                    'border-l-yellow-500': aviso.tipo === 'warning',
+                                    'border-l-red-500': aviso.tipo === 'danger',
+                                    'border-l-green-500': aviso.tipo === 'success'
+                                  }">
+                               <h3 class="text-lg font-bold mb-2 text-white"
+                                   [ngClass]="{
+                                     'text-blue-400': aviso.tipo === 'info',
+                                     'text-yellow-400': aviso.tipo === 'warning',
+                                     'text-red-400': aviso.tipo === 'danger',
+                                     'text-green-400': aviso.tipo === 'success'
+                                   }">
+                                 {{ aviso.titulo }}
+                               </h3>
+                               <p class="text-gray-300 mb-2">{{ aviso.conteudo }}</p>
+                               <small class="text-gray-500">{{ formatDate(aviso.data) }}</small>
+                             </div>
+                           }
+                         </div>
+                       } @else {
+                         <div class="text-center py-8 text-gray-500">
+                           <p>Nenhum aviso no momento.</p>
+                         </div>
+                       }
                      }
   
                    </div>
@@ -518,36 +556,6 @@
   
     </div>
   
-    <!-- AVISOS -->
-    @if (avisos().length > 0) {
-      <div class="w-full max-w-4xl mx-auto mb-8">
-        <h2 class="text-2xl font-bold text-brand-fireOrange mb-6 text-center">📢 Avisos Importantes</h2>
-        <div class="space-y-4">
-          @for (aviso of avisos(); track aviso.id) {
-            <div class="backdrop-blur-md bg-white/5 border-l-4 rounded-lg p-6 hover:bg-white/10 transition-all"
-                 [ngClass]="{
-                   'border-l-blue-500': aviso.tipo === 'info',
-                   'border-l-yellow-500': aviso.tipo === 'warning',
-                   'border-l-red-500': aviso.tipo === 'danger',
-                   'border-l-green-500': aviso.tipo === 'success'
-                 }">
-              <h3 class="text-lg font-bold mb-2 text-white"
-                  [ngClass]="{
-                    'text-blue-400': aviso.tipo === 'info',
-                    'text-yellow-400': aviso.tipo === 'warning',
-                    'text-red-400': aviso.tipo === 'danger',
-                    'text-green-400': aviso.tipo === 'success'
-                  }">
-                {{ aviso.titulo }}
-              </h3>
-              <p class="text-gray-300 mb-2">{{ aviso.conteudo }}</p>
-              <small class="text-gray-500">{{ formatDate(aviso.data) }}</small>
-            </div>
-          }
-        </div>
-      </div>
-    }
-
     <footer class="mt-auto py-8 text-center opacity-60">
       <p class="text-[9px] text-gray-500 uppercase tracking-widest">Isaac Barbearia &copy; {{ currentYear }}</p>
     </footer>
