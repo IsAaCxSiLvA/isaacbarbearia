@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "ng serve",
-    "build": "ng build && node scripts/copy-to-docs.js",
+    "build": "ng build && node scripts/copy-to-docs.cjs",
     "preview": "ng serve --configuration=production"
   },
   "dependencies": {
