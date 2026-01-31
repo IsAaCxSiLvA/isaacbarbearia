@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { FirebaseService } from '../services/firebase.service';
 import { Router } from '@angular/router';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 
 @Component({
   selector: 'app-admin',
@@ -13,6 +14,7 @@ import { Router } from '@angular/router';
 })
 export class AdminComponent implements OnInit {
   tabAtual = 'profissionais';
+  usuarioLogado: any = null;
 
   profissionais: any[] = [];
   parceiros: any[] = [];
@@ -26,7 +28,17 @@ export class AdminComponent implements OnInit {
   constructor(private firebaseService: FirebaseService, private router: Router) { }
 
   ngOnInit() {
-    this.carregarDados();
+    // Verificar se usuário está autenticado
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.usuarioLogado = user;
+        this.carregarDados();
+      } else {
+        // Se não está autenticado, redireciona para login
+        this.router.navigate(['/admin/login']);
+      }
+    });
   }
 
   async carregarDados() {
