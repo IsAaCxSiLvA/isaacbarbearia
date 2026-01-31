@@ -6,26 +6,17 @@
       <!-- Fire Background Effect -->
       <div class="absolute inset-0 bg-gradient-radial from-brand-fireOrange/20 via-black to-black animate-pulse-slow"></div>
       
-      <!-- Logo com Partículas de Fogo ao Redor -->
-      <div class="relative mb-8 w-80 h-80 flex items-center justify-center">
-        <!-- Partículas de Fogo Contornando a Logo -->
-        <div class="absolute inset-0 logo-fire-particles">
-          @for (i of [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]; track i) {
-            <div class="fire-particle" 
-                 [style.animation-delay.s]="i * 0.15"
-                 [style.--rotation]="i * 18 + 'deg'"></div>
-          }
-        </div>
-        
-        <!-- Logo -->
+      <!-- Logo com Efeito Pulsante -->
+      <div class="relative mb-8 animate-pulse-soft">
         <img src="https://i.postimg.cc/283QNmDj/Design-sem-nome-removebg-preview.png" 
              alt="Isaac Barbearia" 
-             class="relative z-10 w-80 h-auto animate-fade-in">
+             class="relative z-10 w-80 h-auto">
       </div>
 
       <!-- Loading Text -->
       <div class="relative z-10 text-center mb-8">
         <p class="text-brand-gold/80 text-sm tracking-wider">Preparando a experiência...</p>
+        <p class="text-brand-fireOrange text-xs mt-2 tracking-wide">Aguarde carregando<span class="loading-dots"></span></p>
       </div>
 
       <!-- Progress Bar -->

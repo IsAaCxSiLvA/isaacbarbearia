@@ -56,44 +56,17 @@ interface Particle {
       animation: pulse-soft 3s ease-in-out infinite;
     }
 
-    .logo-fire-particles {
-      pointer-events: none;
+    .loading-dots::after {
+      content: '';
+      animation: loading-dots 1.5s infinite;
     }
 
-    .fire-particle {
-      position: absolute;
-      width: 8px;
-      height: 8px;
-      background: radial-gradient(circle, #ff8c00 0%, #ff6400 50%, transparent 70%);
-      border-radius: 50%;
-      top: 50%;
-      left: 50%;
-      transform-origin: center;
-      animation: orbit-fire 3s ease-in-out infinite;
-      box-shadow: 0 0 10px #ff8c00, 0 0 20px #ff6400;
-      filter: blur(1px);
-    }
-
-    @keyframes orbit-fire {
-      0% {
-        transform: translate(-50%, -50%) rotate(var(--rotation)) translateX(140px) scale(0.8);
-        opacity: 0;
-      }
-      25% {
-        opacity: 1;
-        transform: translate(-50%, -50%) rotate(var(--rotation)) translateX(150px) scale(1);
-      }
-      50% {
-        transform: translate(-50%, -50%) rotate(var(--rotation)) translateX(155px) scale(1.1);
-      }
-      75% {
-        opacity: 1;
-        transform: translate(-50%, -50%) rotate(var(--rotation)) translateX(150px) scale(0.9);
-      }
-      100% {
-        transform: translate(-50%, -50%) rotate(var(--rotation)) translateX(140px) scale(0.8);
-        opacity: 0;
-      }
+    @keyframes loading-dots {
+      0% { content: ''; }
+      25% { content: '.'; }
+      50% { content: '..'; }
+      75% { content: '...'; }
+      100% { content: ''; }
     }
   `]
 })
