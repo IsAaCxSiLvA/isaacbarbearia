@@ -190,6 +190,7 @@
       border: 1px solid #444;
       border-left: 4px solid #ff8c00;
       transition: all 0.3s ease;
+      position: relative;
     }
     .card:hover {
       transform: translateY(-5px);
@@ -250,7 +251,7 @@
       margin-top: 15px; 
     }
     .servicos-section {
-      margin-bottom: 20px;
+      margin-bottom: 50px;
     }
     .servicos-section-header {
       font-size: 20px;
@@ -305,7 +306,7 @@
     .servicos-content {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
+      gap: 30px;
       margin-top: 20px;
       max-height: 2000px;
       overflow: hidden;
@@ -828,10 +829,24 @@
 
     // Tabs
     window.showTab = (tabName) => {
+      // Fechar todas as seções de serviços
+      closeAllServicos();
+      
       document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
       document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
       document.getElementById(tabName).classList.add('active');
       event.target.classList.add('active');
+    };
+
+    // Fechar todas as seções de serviços
+    window.closeAllServicos = () => {
+      document.querySelectorAll('.servicos-section-header').forEach(header => {
+        const content = header.nextElementSibling;
+        if (content && !content.classList.contains('collapsed')) {
+          content.classList.add('collapsed');
+          header.classList.add('collapsed');
+        }
+      });
     };
 
     // Logout
@@ -912,9 +927,10 @@
         
         // Renderiza Sim (Verde)
         if (servicosPorStatus.sim.length > 0) {
-          const cardsText = servicosPorStatus.sim.map(item => {
+          const cardsText = servicosPorStatus.sim.map((item, index) => {
             const precoText = item.data.preco > 0 ? `R$ ${item.data.preco.toFixed(0)}` : '-';
             return `<div class="card color-green">
+              <div style="position: absolute; top: 10px; right: 10px; background: #27ae60; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">${index + 1}</div>
               <h3>${item.data.nome}</h3>
               <p><strong>Preço:</strong> ${precoText}</p>
               <button class="btn-delete" onclick="deleteServico('${item.servico.id}')">Deletar</button>
@@ -924,7 +940,7 @@
           rows.push(`
             <div class="servicos-section sim">
               <div class="servicos-section-header" onclick="toggleServicos(this)">
-                <span>✅ Realizamos</span>
+                <span>✅ Realizamos (${servicosPorStatus.sim.length})</span>
                 <span class="arrow">▼</span>
               </div>
               <div class="servicos-content">
@@ -936,8 +952,9 @@
         
         // Renderiza Em Breve (Amarelo)
         if (servicosPorStatus.embreve.length > 0) {
-          const cardsText = servicosPorStatus.embreve.map(item => {
+          const cardsText = servicosPorStatus.embreve.map((item, index) => {
             return `<div class="card color-yellow">
+              <div style="position: absolute; top: 10px; right: 10px; background: #f39c12; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">${index + 1}</div>
               <h3>${item.data.nome}</h3>
               <p><strong>Realizamos:</strong> Em Breve</p>
               <p><strong>Preço:</strong> -</p>
@@ -947,11 +964,11 @@
           
           rows.push(`
             <div class="servicos-section embreve">
-              <div class="servicos-section-header" onclick="toggleServicos(this)">
-                <span>⏳ Em Breve</span>
+              <div class="servicos-section-header collapsed" onclick="toggleServicos(this)">
+                <span>⏳ Em Breve (${servicosPorStatus.embreve.length})</span>
                 <span class="arrow">▼</span>
               </div>
-              <div class="servicos-content">
+              <div class="servicos-content collapsed">
                 ${cardsText}
               </div>
             </div>
@@ -960,8 +977,9 @@
         
         // Renderiza Não (Vermelho)
         if (servicosPorStatus.nao.length > 0) {
-          const cardsText = servicosPorStatus.nao.map(item => {
+          const cardsText = servicosPorStatus.nao.map((item, index) => {
             return `<div class="card color-red">
+              <div style="position: absolute; top: 10px; right: 10px; background: #e74c3c; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">${index + 1}</div>
               <h3>${item.data.nome}</h3>
               <p><strong>Realizamos:</strong> Não</p>
               <p><strong>Preço:</strong> -</p>
@@ -971,11 +989,11 @@
           
           rows.push(`
             <div class="servicos-section nao">
-              <div class="servicos-section-header" onclick="toggleServicos(this)">
-                <span>❌ Não Realizamos</span>
+              <div class="servicos-section-header collapsed" onclick="toggleServicos(this)">
+                <span>❌ Não Realizamos (${servicosPorStatus.nao.length})</span>
                 <span class="arrow">▼</span>
               </div>
-              <div class="servicos-content">
+              <div class="servicos-content collapsed">
                 ${cardsText}
               </div>
             </div>
@@ -983,9 +1001,10 @@
         }
         
         list.innerHTML = rows.join('');
-        // Atualizar o contador na aba
-        document.getElementById('count-servicos').textContent = rows.length;
-        console.log('✅ Renderizados', rows.length, 'serviços únicos de', snapshot.size, 'documentos');
+        // Atualizar o contador na aba - contar total de itens
+        const totalServicos = servicosPorStatus.sim.length + servicosPorStatus.embreve.length + servicosPorStatus.nao.length;
+        document.getElementById('count-servicos').textContent = totalServicos;
+        console.log('✅ Renderizados', totalServicos, 'serviços únicos de', snapshot.size, 'documentos');
       } finally {
         isLoadingServicos = false;
       }
@@ -1036,9 +1055,21 @@
 
     window.toggleServicos = (header) => {
       const content = header.nextElementSibling;
-      const arrow = header.querySelector('.arrow');
+      const isCollapsed = content.classList.contains('collapsed');
       
-      if (content.classList.contains('collapsed')) {
+      // Fechar todas as outras seções
+      document.querySelectorAll('.servicos-section-header').forEach(h => {
+        if (h !== header) {
+          const c = h.nextElementSibling;
+          if (c && !c.classList.contains('collapsed')) {
+            c.classList.add('collapsed');
+            h.classList.add('collapsed');
+          }
+        }
+      });
+      
+      // Toggle da seção clicada
+      if (isCollapsed) {
         content.classList.remove('collapsed');
         header.classList.remove('collapsed');
       } else {
