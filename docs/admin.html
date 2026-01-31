@@ -1438,9 +1438,16 @@
       const cliente = data.cliente ?? data.customer ?? data.nome ?? data.name ?? 'Sem nome';
       const comentario = data.comentario ?? data.comments ?? data.comment ?? 'Sem comentário';
       const estrelas = data.estrelas ?? data.Stars ?? data.stars ?? data.rating ?? 0;
-      const dataTexto = data.data ?? data.date ?? data.Data ?? '';
+      const dataTextoBruto = data.data ?? data.date ?? data.Data ?? '';
       const email = data.email ?? data.Email ?? data.emailAddress ?? '';
       const foto = data.photoURL ?? data.photoUrl ?? data.foto ?? data.fotoUrl ?? data.avatar ?? data.image ?? data.imagem ?? data.profilePhoto ?? '';
+      let dataTexto = dataTextoBruto;
+      if (typeof dataTextoBruto === 'string' && dataTextoBruto.includes('T')) {
+        const parsed = new Date(dataTextoBruto);
+        if (!isNaN(parsed.getTime())) {
+          dataTexto = parsed.toLocaleDateString('pt-BR');
+        }
+      }
       return { cliente, comentario, estrelas, dataTexto, email, foto };
     }
 
