@@ -811,6 +811,17 @@
       <button onclick="limparDuplicatas()" style="margin-bottom: 15px; background: #e74c3c; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
         🗑️ Limpar Duplicatas do Firebase
       </button>
+      
+      <!-- Observação de Serviços -->
+      <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 2px solid #ffd700;">
+        <h3 style="color: #ffd700; margin-bottom: 15px;">📌 Observação de Serviços & Preços</h3>
+        <form onsubmit="saveObservacaoServicos(event)">
+          <textarea id="obs-servicos" placeholder="Ex: Aumento de 10% nos cortes a partir de 01/03/2026" style="min-height: 100px;"></textarea>
+          <button type="submit" style="background: #ffd700; color: #000; font-weight: bold;">Salvar Observação</button>
+        </form>
+        <div id="obs-servicos-display" style="margin-top: 15px; padding: 10px; background: #1a1a1a; border-radius: 4px; color: #ffd700; font-style: italic;"></div>
+      </div>
+      
       <form onsubmit="addServico(event)">
         <input type="text" id="serv-nome" placeholder="Nome do Serviço" required>
         <select id="serv-realiza" required>
@@ -971,6 +982,7 @@
         loadParceiros();
         loadParticipacoes();
         loadAvaliacoes();
+        loadObservacaoServicos();
       }
     });
 
@@ -1212,6 +1224,33 @@
     window.deleteServico = async (id) => {
       await deleteDoc(doc(db, 'servicos', id));
       loadServicos();
+    };
+
+    // Observação de Serviços
+    window.saveObservacaoServicos = async (e) => {
+      e.preventDefault();
+      const texto = document.getElementById('obs-servicos').value;
+      
+      try {
+        const docRef = doc(db, 'config', 'servicos');
+        await setDoc(docRef, { observacao: texto }, { merge: true });
+        loadObservacaoServicos();
+      } catch (err) {
+        alert('Erro ao salvar: ' + err.message);
+      }
+    };
+
+    window.loadObservacaoServicos = async () => {
+      try {
+        const docRef = doc(db, 'config', 'servicos');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists() && docSnap.data().observacao) {
+          document.getElementById('obs-servicos').value = docSnap.data().observacao;
+          document.getElementById('obs-servicos-display').innerHTML = docSnap.data().observacao;
+        }
+      } catch (err) {
+        console.log('Erro ao carregar observação:', err);
+      }
     };
 
     window.toggleServicos = (header) => {

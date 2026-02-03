@@ -107,6 +107,9 @@ export class AppComponent implements OnInit {
   agendamentoInfo = signal('O agendamento é feito preferencialmente via WhatsApp ou telefone.');
   agendamentoObservacao = signal('');
   
+  // Serviços
+  servicosObservacao = signal('');
+  
   // Localização
   localizacaoEndereco = signal('Rua das Pedras, 123');
   localizacaoBairro = signal('Centro');
@@ -256,7 +259,7 @@ export class AppComponent implements OnInit {
 
   async loadDynamicData() {
     try {
-      const [profissionaisSnap, parceirosSnap, participacoesSnap, avaliacoesSnap, servicosSnap, agendamentoSnap, localizacaoSnap, horariosSnap, avisosSnap] = await Promise.all([
+      const [profissionaisSnap, parceirosSnap, participacoesSnap, avaliacoesSnap, servicosSnap, agendamentoSnap, localizacaoSnap, horariosSnap, avisosSnap, servicosConfigSnap] = await Promise.all([
         getDocs(collection(this.db, 'profissionais')),
         getDocs(collection(this.db, 'parceiros')),
         getDocs(collection(this.db, 'participacoes')),
@@ -265,7 +268,8 @@ export class AppComponent implements OnInit {
         getDoc(doc(this.db, 'config', 'agendamento')),
         getDoc(doc(this.db, 'config', 'localizacao')),
         getDoc(doc(this.db, 'config', 'horarios')),
-        getDocs(collection(this.db, 'avisos'))
+        getDocs(collection(this.db, 'avisos')),
+        getDoc(doc(this.db, 'config', 'servicos'))
       ]);
 
       const teamMembers = profissionaisSnap.docs.map(doc => {
@@ -351,6 +355,14 @@ export class AppComponent implements OnInit {
         
         if (agendamentoData.observacao) {
           this.agendamentoObservacao.set(agendamentoData.observacao);
+        }
+      }
+
+      // Carregar dados de serviços (observação)
+      if (servicosConfigSnap.exists()) {
+        const servicosData = servicosConfigSnap.data() as { observacao?: string };
+        if (servicosData.observacao) {
+          this.servicosObservacao.set(servicosData.observacao);
         }
       }
 
