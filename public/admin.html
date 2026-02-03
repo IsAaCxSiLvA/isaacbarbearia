@@ -971,6 +971,31 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // Função para carregar observação de serviços
+    window.loadObservacaoServicos = async () => {
+      try {
+        console.log('Tentando carregar observação...');
+        const docRef = doc(db, 'config', 'servicos');
+        const docSnap = await getDoc(docRef);
+        console.log('Doc snap exists?', docSnap.exists());
+        if (docSnap.exists()) {
+          console.log('Dados do doc:', docSnap.data());
+          const observacao = docSnap.data().observacao;
+          if (observacao) {
+            console.log('Observação encontrada:', observacao);
+            const textarea = document.getElementById('obs-servicos');
+            const display = document.getElementById('obs-servicos-display');
+            console.log('Textarea encontrado?', textarea);
+            console.log('Display encontrado?', display);
+            if (textarea) textarea.value = observacao;
+            if (display) display.innerHTML = observacao;
+          }
+        }
+      } catch (err) {
+        console.log('Erro ao carregar observação:', err);
+      }
+    };
+
     // Verifica autenticação
     onAuthStateChanged(auth, (user) => {
       if (!user) {
@@ -1238,30 +1263,6 @@
         loadObservacaoServicos();
       } catch (err) {
         alert('Erro ao salvar: ' + err.message);
-      }
-    };
-
-    window.loadObservacaoServicos = async () => {
-      try {
-        console.log('Tentando carregar observação...');
-        const docRef = doc(db, 'config', 'servicos');
-        const docSnap = await getDoc(docRef);
-        console.log('Doc snap exists?', docSnap.exists());
-        if (docSnap.exists()) {
-          console.log('Dados do doc:', docSnap.data());
-          const observacao = docSnap.data().observacao;
-          if (observacao) {
-            console.log('Observação encontrada:', observacao);
-            const textarea = document.getElementById('obs-servicos');
-            const display = document.getElementById('obs-servicos-display');
-            console.log('Textarea encontrado?', textarea);
-            console.log('Display encontrado?', display);
-            if (textarea) textarea.value = observacao;
-            if (display) display.innerHTML = observacao;
-          }
-        }
-      } catch (err) {
-        console.log('Erro ao carregar observação:', err);
       }
     };
 
