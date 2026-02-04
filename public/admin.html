@@ -1004,17 +1004,19 @@
       } else {
         // Carregar dados APÓS autenticação
         console.log('Usuário autenticado, carregando dados...');
-        console.log('1 - Chamando loadProfissionais...');
-        loadProfissionais();
-        console.log('2 - Chamando loadParceiros...');
-        loadParceiros();
-        console.log('3 - Chamando loadParticipacoes...');
-        loadParticipacoes();
-        console.log('4 - Chamando loadAvaliacoes...');
-        loadAvaliacoes();
-        console.log('5 - Chamando loadObservacaoServicos...');
-        loadObservacaoServicos();
-        console.log('6 - Todas as funções foram chamadas!');
+        setTimeout(() => {
+          console.log('1 - Chamando loadProfissionais...');
+          loadProfissionais();
+          console.log('2 - Chamando loadParceiros...');
+          loadParceiros();
+          console.log('3 - Chamando loadParticipacoes...');
+          loadParticipacoes();
+          console.log('4 - Chamando loadAvaliacoes...');
+          loadAvaliacoes();
+          console.log('5 - Chamando loadObservacaoServicos...');
+          loadObservacaoServicos();
+          console.log('6 - Todas as funções foram chamadas!');
+        }, 0);
       }
     });
 
