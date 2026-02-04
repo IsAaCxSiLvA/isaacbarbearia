@@ -975,11 +975,13 @@
     // Função para carregar observação de serviços
     window.loadObservacaoServicos = async () => {
       try {
+        console.log('🔵 loadObservacaoServicos chamada!');
         const docRef = doc(db, 'config', 'servicos');
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const observacao = docSnap.data().observacao;
           if (observacao) {
+            console.log('🟢 Observação encontrada:', observacao);
             const textarea = document.getElementById('obs-servicos');
             const display = document.getElementById('obs-servicos-display');
             if (textarea) textarea.value = observacao;
@@ -987,7 +989,7 @@
           }
         }
       } catch (err) {
-        console.log('Erro ao carregar observação:', err);
+        console.log('🔴 Erro ao carregar observação:', err);
       }
     };
 
