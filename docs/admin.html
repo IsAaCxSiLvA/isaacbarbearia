@@ -817,7 +817,10 @@
         <h3 style="color: #ffd700; margin-bottom: 15px;">📌 Observação de Serviços & Preços</h3>
         <form onsubmit="saveObservacaoServicos(event)">
           <textarea id="obs-servicos" placeholder="Ex: Aumento de 10% nos cortes a partir de 01/03/2026" style="min-height: 100px;"></textarea>
-          <button type="submit" style="background: #ffd700; color: #000; font-weight: bold;">Salvar Observação</button>
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <button type="submit" style="background: #ffd700; color: #000; font-weight: bold;">Salvar Observação</button>
+            <button type="button" onclick="clearObservacaoServicos()" style="background: #444; color: #fff; font-weight: bold;">Limpar Observação</button>
+          </div>
         </form>
         <div id="obs-servicos-display" style="margin-top: 15px; padding: 10px; background: #1a1a1a; border-radius: 4px; color: #ffd700; font-style: italic;"></div>
       </div>
@@ -1235,6 +1238,19 @@
         loadObservacaoServicos();
       } catch (err) {
         alert('Erro ao salvar: ' + err.message);
+      }
+    };
+
+    window.clearObservacaoServicos = async () => {
+      try {
+        const docRef = doc(db, 'config', 'servicos');
+        await setDoc(docRef, { observacao: '' }, { merge: true });
+        const textarea = document.getElementById('obs-servicos');
+        const display = document.getElementById('obs-servicos-display');
+        if (textarea) textarea.value = '';
+        if (display) display.innerHTML = '';
+      } catch (err) {
+        alert('Erro ao limpar: ' + err.message);
       }
     };
 
