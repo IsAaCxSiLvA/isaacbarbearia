@@ -1000,6 +1000,18 @@
       } else {
         // Carregar dados APÓS autenticação
         console.log('Usuário autenticado, carregando dados...');
+        
+        // Carregar tudo ao autenticar
+        loadServicos();
+        loadProfissionais();
+        loadParceiros();
+        loadParticipacoes();
+        loadLocalizacao();
+        loadHorarios();
+        loadAgendamento();
+        loadAvaliacoes();
+        loadObservacaoServicos();
+        loadAvisos();
       }
     });
 
@@ -1764,17 +1776,7 @@
       }
     }
 
-    // Carregar tudo ao iniciar
-    loadServicos();
-    loadProfissionais();
-    loadParceiros();
-    loadParticipacoes();
-    loadLocalizacao();
-    loadHorarios();
-    loadAgendamento();
-    loadAvaliacoes();
-    loadObservacaoServicos();
-    loadAvisos();
+    // Fim do script
 
     // AVISOS
     window.addAviso = async (e) => {
