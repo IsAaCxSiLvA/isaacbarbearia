@@ -421,7 +421,10 @@
                          <!-- OBSERVAÇÃO DE SERVIÇOS (Amarelo) -->
                          @if (servicosObservacao()) {
                            <div style="background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%); padding: 16px; border-radius: 8px; border-left: 4px solid #ff8c00; color: #000;">
-                             <span style="font-weight: 600; font-size: 14px;">{{ servicosObservacao() }}</span>
+                             <div style="display: flex; align-items: center; gap: 10px;">
+                               <svg style="width: 20px; height: 20px; fill: #ff8c00;" viewBox="0 0 24 24"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>
+                               <span style="font-weight: 600; font-size: 14px;">{{ servicosObservacao() }}</span>
+                             </div>
                            </div>
                          }
                          

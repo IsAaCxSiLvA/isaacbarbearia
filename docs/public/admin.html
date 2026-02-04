@@ -815,7 +815,7 @@
       
       <!-- Observação de Serviços -->
       <div style="background: #2a2a2a; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 2px solid #ffd700;">
-        <h3 style="color: #ffd700; margin-bottom: 15px;">📌 Observação de Serviços & Preços</h3>
+        <h3 style="color: #ffd700; margin-bottom: 15px;">📌 Serviços & Preços</h3>
         <form onsubmit="saveObservacaoServicos(event)">
           <textarea id="obs-servicos" placeholder="Ex: Aumento de 10% nos cortes a partir de 01/03/2026" style="min-height: 100px;"></textarea>
           <div style="display: flex; gap: 10px; flex-wrap: wrap;">
@@ -823,7 +823,7 @@
             <button type="button" onclick="clearObservacaoServicos()" style="background: #c0392b; color: #fff; font-weight: bold; border-radius: 8px; padding: 10px 16px; border: none; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.25);">Limpar Observação</button>
           </div>
         </form>
-        <div id="obs-servicos-display" style="margin-top: 15px; padding: 10px; background: #1a1a1a; border-radius: 4px; color: #ffd700; font-style: italic;"></div>
+        <div id="obs-servicos-display" style="margin-top: 15px; padding: 10px; background: #1a1a1a; border-radius: 4px; color: #ffd700; font-style: italic; display: none;"></div>
       </div>
       
       <form onsubmit="addServico(event)">
@@ -996,7 +996,10 @@
         const textarea = document.getElementById('obs-servicos');
         const display = document.getElementById('obs-servicos-display');
         if (textarea) textarea.value = '';
-        if (display) display.innerHTML = '';
+        if (display) {
+          display.innerHTML = '';
+          display.style.display = 'none';
+        }
       } catch (err) {
         alert('Erro ao limpar: ' + err.message);
       }
@@ -1270,7 +1273,7 @@
     };
 
     // Observação de Serviços
-    window.saveObservacaoServicos = async (e) => {
+    window.loadObservacaoServicos = async () => {
       e.preventDefault();
       const texto = document.getElementById('obs-servicos').value;
       
@@ -1280,7 +1283,16 @@
         loadObservacaoServicos();
       } catch (err) {
         alert('Erro ao salvar: ' + err.message);
-      }
+            if (display) {
+              display.innerHTML = observacao;
+              display.style.display = 'block';
+            }
+          } else {
+            const display = document.getElementById('obs-servicos-display');
+            if (display) {
+              display.innerHTML = '';
+              display.style.display = 'none';
+            }
     };
 
     window.toggleServicos = (header) => {
