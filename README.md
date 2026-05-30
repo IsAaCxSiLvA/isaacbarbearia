@@ -4,11 +4,10 @@
 
 <div align="center">
 
-Projeto desenvolvido por **Snepdog** ⚡
+Projeto desenvolvido por **snep-isc** ⚡
 
-💻 Full Stack Developer  
-🎮 SA-MP Developer  
-🛡️ Cybersecurity Enthusiast  
+💻 Full Stack
+ 
 
 </div>
 
